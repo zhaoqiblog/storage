@@ -1,0 +1,16 @@
+{
+    "dependencies":{},
+    "hidden":false,
+    "autoDownload":true,
+    "relatesTo":[],
+    "dependsOn":[],
+    "dependsTo":[],
+    "releaseNote":"门店库位管理",
+    "build":46,
+    "name":"门店库位管理",
+    "identifier":"yh.storage",
+    "action":"",
+    "index":"index.html",
+    "isPcTest":0,
+    "version":"1.2.16"
+}

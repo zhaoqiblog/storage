@@ -1,0 +1,83 @@
+.cm-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  display: flex;
+  height: 48px;
+  .btn-add, .btn-submit {
+    flex: 1;
+    height: 100%;
+  }
+  .btn-add {
+    background-color: #fff;
+    color: #3DA5FE;
+    box-shadow: 0 -3px 8px 0 rgba(12,12,12,0.08);
+    line-height: 50px;
+    font-size: 16px;
+    span {
+      padding-left: 25px;
+      background: url('../assets/common/icon_scanblue.png') left no-repeat;
+      background-size: 16px;
+      line-height: 48px;
+    }
+    &:active {
+      span {
+        opacity: .5;
+      }
+    }
+  }
+  .btnblue-del {
+    flex: 1;
+    height: 100%;
+    background-color: #fff;
+    color: #fc494c;
+    box-shadow: 0 -3px 8px 0 rgba(12,12,12,0.08);
+    span {
+      padding-left: 25px;
+      background: url('../assets/common/icon_delete.png') left center no-repeat;
+      background-size: 16px;
+      line-height: 48px;
+    }
+    &:active {
+      span {
+        opacity: .5;
+      }
+    }
+  }
+  .btnblue-add {
+    flex: 1;
+    height: 100%;
+    background-color: #3DA5FE;
+    color: #F9F9FA;
+    line-height: 48px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    &:active {
+      background-color: #3183CB;
+    }
+    &:disabled {
+      background-color: #c7c7c7;
+    }
+  }
+  .btn-submit {
+    button {
+      background-color: transparent;
+      border: none;
+      font-size: 16px;
+      color: #fff;
+      width: 100%;
+      height: 100%;
+      background-color: #3DA5FE;
+      &:active {
+        background-color: #3183CB;
+      }
+      &:disabled {
+        background-color: #c7c7c7;
+      }
+    }
+  }
+}

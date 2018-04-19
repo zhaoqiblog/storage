@@ -1,0 +1,247 @@
+@c-red: #f00;
+@c-white: #fff;
+@bg-c-grey: #f2f2f2;
+@border-c-grey: #e4e4e4;
+@c-blue: #198cfa;
+@f-simhei: "simhei";
+@f-simsun: "simsun";
+
+/* public classes */
+html,body{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  // font-family: @f-simhei;
+  background-color: @bg-c-grey;
+  -webkit-overflow-scroll: touch;
+}
+// *{ font-family: @f-simhei !important; }
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+a:hover { text-decoration: none !important; }
+ul,
+ol,
+li,
+dt,
+dd { list-style: none; }
+.dis-in-b{ display: inline-block; }
+.dis-block{ display: block; }
+.no-p { padding: 0 !important; }
+.no-m { margin: 0; }
+.pa{position: absolute;}
+.pr {position: relative;}
+.no-border { border: none !important; }
+.svg-inc {
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 0 !important;
+  visibility:hidden !important;
+}
+.fs-12 {
+  font-size: 12px !important;
+}
+.fs-13 {
+  font-size: 13px !important;
+}
+.fs-14 {
+  font-size: 14px !important;
+}
+.fs-15 {
+  font-size: 15px !important;
+}
+.fs-16 {
+  font-size: 16px !important;
+}
+.fs-17 {
+  font-size: 17px !important;
+}
+.fs-18 {
+  font-size: 18px !important;
+}
+.c-white {
+  color: @c-white;
+}
+.bg-white { background: @c-white; }
+.row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 5px;
+  width: 100%
+}
+.row-no-padding,
+.row-no-padding > .col {
+  padding: 0
+}
+.col {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -moz-box-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: block;
+  padding: 5px;
+  width: 100%
+}
+.col-10 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 10%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 10%;
+  -ms-flex: 0 0 10%;
+  flex: 0 0 10%;
+  max-width: 10%
+}
+.col-20 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 20%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 20%;
+  -ms-flex: 0 0 20%;
+  flex: 0 0 20%;
+  max-width: 20%
+}
+.col-25 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 25%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 25%;
+  -ms-flex: 0 0 25%;
+  flex: 0 0 25%;
+  max-width: 25%
+}
+.col-33,
+.col-34 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 33.3333%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 33.3333%;
+  -ms-flex: 0 0 33.3333%;
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%
+}
+.col-50 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 50%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 50%;
+  -ms-flex: 0 0 50%;
+  flex: 0 0 50%;
+  max-width: 50%
+}
+.col-66,
+.col-67 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 66.6666%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 66.6666%;
+  -ms-flex: 0 0 66.6666%;
+  flex: 0 0 66.6666%;
+  max-width: 66.6666%
+}
+.col-75 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 75%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 75%;
+  -ms-flex: 0 0 75%;
+  flex: 0 0 75%;
+  max-width: 75%
+}
+.col-80 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 80%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 80%;
+  -ms-flex: 0 0 80%;
+  flex: 0 0 80%;
+  max-width: 80%
+}
+.col-90 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 90%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 90%;
+  -ms-flex: 0 0 90%;
+  flex: 0 0 90%;
+  max-width: 90%
+}
+.col-17{
+  -webkit-box-flex:0;
+  -webkit-flex:0 0 17%;
+  -moz-box-flex:0;
+  -moz-flex:0 0 17%;
+  -ms-flex:0 0 17%;
+  flex:0 0 17%;
+  max-width:17%
+}
+.col-83{
+  -webkit-box-flex:0;
+  -webkit-flex:0 0 83%;
+  -moz-box-flex:0;
+  -moz-flex:0 0 83%;
+  -ms-flex:0 0 83%;
+  flex:0 0 83%;
+  max-width:83%
+}
+.titlebar {
+  display: flex;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 43px;
+  border-bottom: solid 1px #f4f4f4;
+  background-color: #ffffff;
+  .title {
+    flex: 1 1;
+    line-height: 43px;
+    text-align: center;
+    color: #000;
+    font-size: 17px;
+    overflow: hidden;
+  }
+  .button {
+    flex: 0 0 40px;
+    height: 43px;
+    line-height: 39px;
+    font-size: 14px;
+    z-index: 1;
+    color: @c-blue;
+    &.back-btn {
+      background: url(../assets/back_arrows.png) no-repeat left;
+      background-position-x: right;
+      background-size: 20px;
+    }
+  }
+}
+.scroll-content {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling : touch; 
+  .scroll-view {
+    position: relative;
+    width: 100%;
+    height: 100% !important;
+  }
+}
+button:active, button:focus {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+}
+.router-view{
+    
+}
