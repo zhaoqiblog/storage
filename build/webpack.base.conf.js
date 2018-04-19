@@ -22,7 +22,7 @@ const webpackConfig = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
-      'jquery': 'jquery/dist/jquery.js',
+//    'jquery': 'jquery/dist/jquery.js',
       'configuration': resolve(process.env.NODE_ENV === 'production' ?
         './src/configuration/product' :
         './src/configuration/test')
