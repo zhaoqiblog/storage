@@ -5,7 +5,7 @@ import Qs from 'qs/dist/qs'
 import CONFIG from 'configuration';
 import store from '../vuex/store'
 
-Axios.defaults.timeout = 30000;
+//Axios.defaults.timeout = 100000;
 Axios.defaults.withCredentials = true; //默认跨越
 Axios.defaults.headers['Content-Type'] = 'application/json';
 
@@ -23,7 +23,7 @@ Axios.interceptors.request.use((config) => {
     config.headers['userName'] = store.getters.getCommonInfo.id
     config.headers['costNumber'] = store.getters.getCommonInfo.costNumber
   }else{
-  	config.headers['userName'] = '80739054'
+  	config.headers['userName'] = CONFIG.userTest.uid
   	config.headers['costNumber'] = store.getters.getCommonInfo.costNumber
   }
   return config;

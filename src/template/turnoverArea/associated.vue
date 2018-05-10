@@ -97,7 +97,7 @@ export default {
 								listNames.push(r.goodsName)
 							})
 						})
-	//							listNames=re.data.goodslist.split(",")
+	//				listNames=re.data.goodslist.split(",")
 						if(listNames.length>3){
 							this.trayInfo.goodslist=listNames.splice(0,4).join(",")
 							this.trayInfo.goodslist+="..."
@@ -108,7 +108,6 @@ export default {
 						 this.$router.push({path:'/fail',query:{text: re.message,title: '托盘入库',info: '', path:'/scanEntry?key=trayStorage'}})
 					}
 				})
-			
 	},
      toShowPlace(){  //扫描二维码显示库位码
      	if(window.Cordova){
