@@ -39,12 +39,10 @@ export default{
 	},
 	watch: {
     value(value) {
-    	console.log("pp")
     	this.$emit("input",this.value);
     	this.$emit("change",this.filter(this.value),this.value);
     },
     actualVal(actualVal){
-    	console.log("ll")
     	this.$emit("input",this.actualVal);
     }
   }

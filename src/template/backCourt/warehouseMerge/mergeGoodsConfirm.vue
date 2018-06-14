@@ -98,7 +98,6 @@ export default {
   	let obj = {
   		warehousePlaceCode:this.$route.query.scanResult,
 			costCenterNum:this.commonInfo.costNumber,
-//			costCenterNum:'0090120001',
 			warehouseType:0,
 		}
 		
@@ -175,13 +174,20 @@ export default {
   	 },
 		commit(){
 			let obj={
-				costCenterNum:this.commonInfo.costNumber,
+//				costCenterNum:this.commonInfo.costNumber,
 				targetPlaceCode:this.targetPlaceCode,
 			}
 			obj.opWarehouseDetailDTOList=this.inventoryToConfirm.map(item=>{
-					return {goodsCode:item.goodsCode,goodsWarehouseId:item.id,supplyNum:item.allNums,warehouseId:item.warehouseId}
+					return {
+						goodsCode:item.goodsCode,
+						goodsBarCode:item.goodsBarCode,
+						goodsName:item.goodsName,
+						goodsWarehouseId:item.id,
+						supplyNum:item.allNums,
+						warehousePlaceId :item.warehouseId
+					}
 				})
-			$request.post("/api/goods-warehouse/v1/protected/sumWarehouseSupply",obj).then(res=>{
+				$request.post("/api/goods-warehouse/v1/protected/move_warehouse_supply",obj).then(res=>{
 				if(res.success==true){
 					this.$router.push({
 		    		path:'/success',

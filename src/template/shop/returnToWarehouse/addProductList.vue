@@ -83,12 +83,14 @@ export default {
       let goodsDetailDTOList = []
       this.data.forEach(function(arr) {
         arr.forEach(function(item) {
+        	console.log(item)
           goodsDetailDTOList.push({
             goodsBarCode: item.goodsBarCode,
             goodsCode: item.goodsCode,
             goodsName: item.goodsName,
             supplyNum: item.realityNum,
-            targetPlaceCode: item.warehouseCode
+            targetPlaceCode: item.warehouseCode,
+            targetPlaceId:item.warehouseId
           })
         })
       })
@@ -100,11 +102,13 @@ export default {
           text: '列表中有商品数量未填写或为零'
         })
       } else {
-        $request.post('/api/goods-warehouse/v1/protected/shopToOriginWarehouse', {
-          costCenterNum: this.commonInfo.costNumber,
-          goodsDetailDTOList: goodsDetailDTOList,
+      	console.log(goodsDetailDTOList)
+//      $request.post('/api/goods-warehouse/v1/protected/shopToOriginWarehouse', {
+//	 		costCenterNum: this.commonInfo.costNumber,
+//        toWarehouseGoodsDTOList: goodsDetailDTOList,
 
-        }).then(res => {
+//      }).then(res => {
+        $request.post('/api/goods-warehouse/v1/protected/shop_to_origin_warehouse',goodsDetailDTOList).then(res => {
           if(res.success) {
             // 提交成功清除还货清单
             this.$store.commit('clearReturn')

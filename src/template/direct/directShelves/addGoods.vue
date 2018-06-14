@@ -113,7 +113,7 @@ export default {
 		  			this.$router.push({path:'/fail',query:{text: res.message,title: '直送商品上架', path:'/scanEntry?key=directAddGoods'}})
 		  		}
 		  	},err=>{
-		  		this.$router.push({path:'/fail',query:{text: '接口调用错误,请联系管理员',title: '直送商品上架', path:'/scanEntry?key=directAddGoods'}})
+		  		this.$router.push({path:'/fail',query:{text: '系统繁忙，请稍后再试',title: '直送商品上架', path:'/scanEntry?key=directAddGoods'}})
 		  	})
 //	  	}
   	},
@@ -122,7 +122,6 @@ export default {
 		 * */
     gotoConfirm(){
 			this.$store.commit("setdirectConfirmList",this.initData.filter(i=>{return i.count>0}))
-			console.log(this.directConfirmList)
 			this.$router.push({path:'confirmGoods'})
     },
     /**
@@ -135,9 +134,6 @@ export default {
     			this.disableds=true
     		})
     	}else{
-    		console.log("add")
-    		this.scanGoods('2311189000001')
-//  		const arrs = [2303884000004,2308710000005,2304050000002,2311189000001];
     		this.scanGoods('2304050000002')
     		this.disableds=true
     	}

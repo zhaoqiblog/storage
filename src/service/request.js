@@ -18,10 +18,18 @@ Axios.interceptors.request.use((config) => {
   Vue.$vux.loading.show({
     text: '加载中'
   })
-//console.log(store.getters.getCommonInfo)
+
+if(window.cordova){
+//	alert("手机端")
   if(store.getters.getCommonInfo.id) {
     config.headers['userName'] = store.getters.getCommonInfo.id
     config.headers['costNumber'] = store.getters.getCommonInfo.costNumber
+  }else{
+//		Vue.$vux.toast.show({
+//    type: 'text',
+//    text: '获取用户信息失败，请查看网络后重试！'
+//  })
+  }
   }else{
   	config.headers['userName'] = CONFIG.userTest.uid
   	config.headers['costNumber'] = store.getters.getCommonInfo.costNumber
@@ -38,7 +46,7 @@ Axios.interceptors.response.use((res) => {
   } else if(res.data.success === null || res.data.success === undefined) {
     Vue.$vux.toast.show({
       type: 'text',
-      text: '接口调用错误'
+      text: '系统开小差啦，请稍后再试 '
     })
   } else {
     return Promise.resolve(res.data);

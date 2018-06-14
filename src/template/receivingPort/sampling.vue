@@ -65,7 +65,9 @@
     </div>
     <div class="cm-footer">
       <div class="btn-submit">
-        <button type="button" :disabled="parseInt(data.checkCompleteRatio) < parseInt(data.checkRequireRatio) || newDisabled" @click="newCheckResult()">完成</button>
+      	<!--大于0:有必抽商品，<0:没有必抽商品，按钮可以点击-->
+        <button v-if="proList.length>0" type="button" :disabled="parseInt(data.checkCompleteRatio) < parseInt(data.checkRequireRatio) || newDisabled" @click="newCheckResult()">完成</button>
+        <button v-if="proList.length<=0" type="button" @click="newCheckResult()">完成</button>
       </div>
     </div>
   </div>
@@ -124,6 +126,7 @@ export default {
   created() {
     this.palletCode = this.$route.query.scanResult
     this.getProlist()
+//  this.newDisabled
   },
   methods: {
     /**

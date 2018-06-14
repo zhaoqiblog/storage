@@ -65,7 +65,7 @@ export default {
   },
   created() {
   	this.data=this.myaddWroseList.concat([])
-  	var obj ={operateType:1,operatorNo:this.commonInfo.id?this.commonInfo.id:'80006096',pageNumber:this.pageObj.pageNumber,pageSize:this.pageObj.pageSize}
+  	var obj ={operateType:1,operatorNo:this.commonInfo.id,pageNumber:this.pageObj.pageNumber,pageSize:this.pageObj.pageSize}
   	$request.get("/api/warehouse-operate-main/v1/protected/query/warehouseOperatePage",obj).then(res=>{
   		if(res.success==true){
   			this.pageObj.pageNumber++;

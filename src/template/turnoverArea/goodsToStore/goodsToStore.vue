@@ -52,7 +52,6 @@ export default {
     	testdata:999,
     	disabled:true,
     		submitList:{
-				  costCenterNum: "0094281111",
 				  palletCode: "P0000087",
 				  receiveGoodsId: 0,
 				  warehousePlaceCode: "",
@@ -70,6 +69,7 @@ export default {
   },
   created(){
 		this.submitList={...this.$route.query}
+		delete this.submitList.costCenterNum
 		this.submitList.receiveGoodsId=this.receiveGoodsId
 		let list = []
 		this.confirmDatas.map(e=>{
@@ -93,6 +93,8 @@ export default {
      		 this.submitList.goodsWarehouseDetailDTOList.splice(index,1)
      	}
      })
+//   console.log(this.submitList)
+     
      $request.post("/api/goods-warehouse/v1/protected/pallet/palletMoveWarehouse",this.submitList).then(e=>{
      	if(e.success==true){
      		

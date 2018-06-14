@@ -95,8 +95,8 @@
               </grid>-->
             <!--</div>-->
           <!--</div>-->
-          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex === 3}">
-            <group-title @click.native="toggle(3)"><i class="i-line"></i>卖场<i class="i-arrow"></i></group-title>
+          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex === 1}">
+            <group-title @click.native="toggle(1)"><i class="i-line"></i>卖场<i class="i-arrow"></i></group-title>
             <div class="content">
               <grid :cols="2">
                 <grid-item :link="{name: 'scanEntry', query: {key: 'shopSupplying'}}">
@@ -259,6 +259,53 @@
             </grid> -->
             <!--</div>-->
           <!--</div>-->
+          
+          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex === 3}">
+            <group-title @click.native="toggle(3)"><i class="i-line"></i>前置仓<i class="i-arrow"></i></group-title>
+            <div class="content">
+              <grid :cols="2">
+                <grid-item :link="{name: 'pickList'}">
+                  <div class="text">
+                    <h2>前置仓拣货</h2>
+                    <p>接收线上订单，开始挑拣商品</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon17.png">
+                  </div>
+                </grid-item>
+                <grid-item :link="{name: 'supplyList'}">
+                  <div class="text">
+                    <h2>前置仓补货单</h2>
+                    <p>系统智能生成前置仓补货单</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon18.png">
+                  </div>
+                </grid-item>
+                
+              </grid>
+              <grid :cols="2">
+              	<grid-item :link="{name: 'scanEntry', query: {key: 'preSupply'}}">
+                  <div class="text">
+                    <h2>卖场补货</h2>
+                    <p>将卖场商品补货至前置仓</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon9.png">
+                  </div>
+                </grid-item>
+                <grid-item :link="{name: 'scanEntry', query: {key: 'wareHouseAdd'}}">
+                  <div class="text">
+                    <h2>后场补货</h2>
+                    <p>确认托盘及抽检状态，完成收货</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/pre/icon3.png">
+                  </div>
+                </grid-item>
+              </grid>
+            </div>
+          </div>
         </div>
       </div>
     </scroller>
@@ -313,7 +360,6 @@ export default {
           })
         })
       } else {
-
         store.push({
           name: this.currentStore,
           value: this.currentStore
@@ -466,9 +512,23 @@ export default {
       overflow: hidden;
     }
     &.show {
+    	/*transition: all 6s;
+    	max-height: 380px;*/
+    	.weui-cells__title{
+    		background-color: #999999;
+    		color: #FFFFFF;
+    		.i-line{
+    			background: #FFFFFF;
+    		}
+    		.i-arrow{
+    			border-color:#FFFFFF;
+    		}
+    	}
       .content {
         height: auto;
-        transition: all .4s;
+        max-height: 380px;
+        transition: max-height 2s;
+        -webkit-transition: max-height 1s;
       }
       .i-arrow {
         transform: rotate(135deg);

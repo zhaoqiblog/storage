@@ -168,7 +168,7 @@ export default {
               type: 'text',
               text: res.message || '获取商品信息失败',
             })
-//		  		this.$router.push({path:'/fail',query:{text: '接口调用错误,请联系管理员',title: '直送收货', path:'/scanEntry?key=directOrderInfo'}})
+//		  		this.$router.push({path:'/fail',query:{text: '系统繁忙，请稍后再试',title: '直送收货', path:'/scanEntry?key=directOrderInfo'}})
 		  	})
 	  	}
   	},

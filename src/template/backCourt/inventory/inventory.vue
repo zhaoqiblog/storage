@@ -122,7 +122,6 @@ export default {
 					"warehouseCode":e.warehouseCode
 				}
 			})
-			console.log(submitList)
 			$request.post("/api/goods-warehouse/v1/protected/warehouse/check",submitList).then(res=>{
 				if(res.success==true){
 					this.$router.push({path:"inventoryResult",query:{id:res.data}})
@@ -161,11 +160,8 @@ export default {
         		$request.get("/api/product-query/v1/protected/queryGoodsWarehouseInfo",{goodsBarCode:res.text,costCenterNum:this.commonInfo.costNumber}).then(res=>{
         			if(res.success==true){
 	        			this.showEmpty=false;
-	        			console.log(res.data)
 	        			let obj = {...res.data,id:res.data.goodsWarehouseId,type:'input',count:0,warehouseCode:this.$route.query.scanResult}
-	        			console.log(obj)
 	        			if(this.inventoryList.some(i=>{return i.goodsBarCode==res.data.goodsBarCode})){
-	        				console.log("已存在")
 	        				this.$vux.toast.show({
 									 	type:'text',
 									 	text:'列表中已存在该商品！',
@@ -210,7 +206,6 @@ export default {
 								 	time:2000,
 								})
         			}else{
-        				console.log(obj)
         				this.inventoryList.unshift(obj)
         			}
         			this.positionGoods(res.data.goodsBarCode,true)

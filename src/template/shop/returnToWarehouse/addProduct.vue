@@ -84,7 +84,8 @@ export default {
      * 根据商品条码获取库位信息
      */
     getProductPlace () {
-      $request.get('/api/goods-warehouse/v1/protected/queryPlaceByGoodsBarCode', {
+//    $request.get('/api/goods-warehouse/v1/protected/queryPlaceByGoodsBarCode', {
+      $request.get('/api/goods-warehouse/v1/protected/back_place_of_goods/market_to_origin', {
         goodsBarCode: this.$route.query.scanResult,
         costCenterNum: this.commonInfo.costNumber,
         isMarketToOrigin: 1,
@@ -115,7 +116,6 @@ export default {
         let list = this.data.filter(item => {
           return (item.realityNum != null && item.realityNum != 0)
         })
-        console.log(this.data)
         if(this.returnList.filter(item => {
           return this.data[0].goodsBarCode === item[0].goodsBarCode
         }).length > 0) {
@@ -128,6 +128,7 @@ export default {
             type: 'addReturn',
             data: list
           })
+          console.log(list)
         }
         this.$router.push({path: '/shop/shopReturnAddList'})
 //    } else {
@@ -160,7 +161,7 @@ export default {
             text: '该库位已经在列表中'
           })
         } else {
-          $request.get('/api/goods-warehouse/v1/protected/queryWarehouseGoods', {
+          $request.get('/api/sys-warehouse/v1/protected/query_warehouses', {
             warehousePlaceCode: code,
             costCenterNum: this.commonInfo.costNumber,
             warehouseType: 0
@@ -174,9 +175,9 @@ export default {
                 availableNum: 0,
                 unit: this.productInfo.unit,
                 perNum: this.productInfo.perNum,
-                warehouseId: code,
-                warehouseCode: code,
-                warehouseName: code,
+                warehouseId: res.data.warehousePlaceId,
+                warehouseCode: res.data.warehousePlaceCode,
+                warehouseName: res.data.warehousePlaceName,
                 intoWarehouseTime: '',
                 isOrigin: '0',
                 realityNum: 0

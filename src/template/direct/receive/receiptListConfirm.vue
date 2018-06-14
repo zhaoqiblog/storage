@@ -100,7 +100,7 @@ export default {
     			this.$router.push({path:'/fail',query:{text: res.message,title: '直送收货',info: '', path:'/scanEntry?key=directOrderInfo'}})
     		}
     	},err=>{
-    		this.$router.push({path:'/fail',query:{text: '接口调用错误，请联系管理员',title: '直送收货',info: '', path:'/scanEntry?key=directOrderInfo'}})
+    		this.$router.push({path:'/fail',query:{text: '系统繁忙，请稍后再试',title: '直送收货',info: '', path:'/scanEntry?key=directOrderInfo'}})
     	})
     },
     changeActual(val,index){

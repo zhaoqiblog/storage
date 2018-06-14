@@ -84,9 +84,17 @@ export default {
   	complete(){
   		let toCommitGoods=[]
   		this.selectDatas.map(e=>{
-  			toCommitGoods.push({goodsCode:e.goodsCode,goodsWarehouseId:e.id,supplyNum:e.count,warehouseId:e.warehouseId})
+  			toCommitGoods.push({
+  				goodsBarCode:e.goodsBarCode,
+  				goodsCode:e.goodsCode,
+  				goodsName:e.goodsName,
+  				goodsWarehouseId:e.id,
+  				supplyNum:e.count,
+  				warehousePlaceId:e.warehouseId,
+//				targetPlaceId:""
+  			})
   		})
-		$request.post("/api/goods-warehouse/v1/protected/warehouse/supply",toCommitGoods).then(res=>{
+		$request.post("/api/goods-warehouse/v1/protected/back_warehouse/supply",toCommitGoods).then(res=>{
 			if(res.success==true){
   				this.$router.push({path:'/success',query:{title:'提交成功',text:'补货成功',info:'补货成功，请将商品移至卖场',path:'/scanEntry?key=woreHouse',listPath:'/backCount/replenishmentList'}})
 			}else{

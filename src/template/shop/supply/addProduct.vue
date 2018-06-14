@@ -1,4 +1,5 @@
 <template>
+	<!--卖场补货-->
   <div class="shop-add-product">
     <x-header class="vux-1px-b">添加商品</x-header>
     <div class="scroll-content">
@@ -59,7 +60,8 @@ export default {
      * 根据商品条码获取库位信息
      */
     getProductPlace () {
-      $request.get('/api/goods-warehouse/v1/protected/queryPlaceByGoodsBarCode', {
+//    $request.get('/api/goods-warehouse/v1/protected/queryPlaceByGoodsBarCode', {
+      $request.get('/api/goods-warehouse/v1/protected/place_of_goods/to_market', {
         goodsBarCode: this.$route.query.scanResult,
         isMarketToOrigin: 0,
         costCenterNum: this.costCenterNum

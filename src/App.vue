@@ -58,36 +58,45 @@ export default {
       if(window.cordova) {
         if(Object.keys(this.commonInfo).length == 0) {
           factory.getUser().then(result => {
-            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.uid).then(res => {
-              if(res.success) {
-                let userInfo = Object.assign(res.data);
-                res.data.costCenterNum = res.data.costNumber
-                this.$store.dispatch("changeCommonInfo", res.data)
-                //获取用户所在小店
-                $request.get("/api/shop-goods/v1/protected/query/className",{className:res.data.costName,costCenterNum:res.data.costNumber})
-                	.then(response=>{
-                		let storeInfos= response.data==null ? {} : response.data 
-                		this.$store.dispatch("changetoreInfo",storeInfos)
-                })
-              } else {
-                this.$vux.toast.show({
-                  type: 'text',
-                  text: res.message || '获取用户信息失败',
-                  onHide: () => {
-                    factory.exit()
-                  }
-                })
-              }
-            }, error => {
-              this.$vux.toast.show({
-                type: 'text',
-                text: '获取用户信息失败',
-                onHide: () => {
-                  factory.exit()
-                }
-              })
-            })
-            
+          	if(result.uid){
+	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.uid).then(res => {
+	              if(res.success) {
+	                let userInfo = Object.assign(res.data);
+	                res.data.costCenterNum = res.data.costNumber
+	                this.$store.dispatch("changeCommonInfo", res.data)
+	                //获取用户所在小店
+	                $request.get("/api/shop-goods/v1/protected/query/className",{className:res.data.costName,costCenterNum:res.data.costNumber})
+	                	.then(response=>{
+	                		let storeInfos= response.data==null ? {} : response.data 
+	                		this.$store.dispatch("changetoreInfo",storeInfos)
+	                })
+	              } else {
+	                this.$vux.toast.show({
+	                  type: 'text',
+	                  text: res.message || '获取用户信息失败',
+	                  onHide: () => {
+	                    factory.exit()
+	                  }
+	                })
+	              }
+	            }, error => {
+	              this.$vux.toast.show({
+	                type: 'text',
+	                text: '获取用户信息失败',
+	                onHide: () => {
+	                  factory.exit()
+	                }
+	              })
+	            })
+            }else{
+            	this.$vux.toast.show({
+	                type: 'text',
+	                text: '获取用户信息失败',
+	                onHide: () => {
+	                  factory.exit()
+	                }
+	              })
+            }
           })
         }
       } else {

@@ -120,7 +120,7 @@ export default {
   		let getListObj={
   			warehousePlaceCode:this.$route.query.scanResult,
   			costCenterNum:this.commonInfo.costNumber,
-			warehouseType:0,
+				warehouseType:0,
   		}
   		$request.get("/api/goods-warehouse/v1/protected/queryWarehouseGoods",getListObj).then(res=>{
   			if(res.success==true){

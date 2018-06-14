@@ -6,6 +6,9 @@ import receivingPort from './receivingPort'
 import turnoverPort from './turnoverArea'
 import shop from './shop'
 import backStorage from './backStorage'
+import preWorehouse from './preWorehouse'
+
+
 import factory from '@/factory'
 import $request from '@/service/request.js'
 import $conf from 'configuration'
@@ -37,7 +40,8 @@ const router = new Router({
     ...receivingPort,
     ...turnoverPort,
     ...shop,
-    ...backStorage
+    ...backStorage,
+    ...preWorehouse
   ]
 })
 

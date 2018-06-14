@@ -1,19 +1,20 @@
 <template>
-  <div class="empty">
+  <div class="empty" @click="refreshs">
     <div class="img">
       <img src="../../assets/common/pic_null.png">
     </div>
-    <p class="text">暂无数据</p>
+    <p class="text">暂无数据{{refresh?"，点击图片刷新":""}}</p>
   </div>
 </template>
 
 <script>
 export default {
   name: 'm-empty',
-  props: {
-  },
+  props: {refresh:[Function]},
   computed: {
 
+  },
+  created(){
   },
   methods: {
     onClickBack() {
@@ -23,6 +24,13 @@ export default {
       } else {
         this.$router.back()
       }
+    },
+    refreshs(){
+    	if(this.refresh){
+    		this.refresh()
+    	}else{
+    		return;
+    	}
     }
   },
   data() {
@@ -38,6 +46,7 @@ export default {
   position: absolute;
   left: 50%;
   top: 50%;
+  margin-top: -80px;
   transform: translate3d(-50%, -50%, 0);
   text-align: center;
   .img {

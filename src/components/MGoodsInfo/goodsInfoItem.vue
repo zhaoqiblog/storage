@@ -47,6 +47,9 @@
     				<span v-if="altogether||typeof altogether != 'undefined'" class="l-list-total">
     					共计<em>{{altogether}}</em>{{unit}}
     				</span>
+    				<span class="item-picking" v-if="positions=='pre'" @click="toPicking">
+    					未拣
+    				</span>
     			</p>
     			<!--<slot name="textNumDom">
 	    			<div v-if="type=='text'" :class="['l-list-text',code||time?'':'l-list-textreset']">
@@ -147,6 +150,8 @@ export default{
 //	    productDate:[String],	//底部模块生产日期
 	    actualVal:[String, Number], //实际收货数量的绑定值
 	    giftsVal:[String, Number], //赠品数量
+	    positions:[String],	//判断是否从前置仓过来，是否有拣货按钮
+	    toPicking:[Function] ,  	//未拣货按钮的点击事件
 	    
 	},
 	created(){
@@ -232,7 +237,6 @@ export default{
 			typeof this.giftsValue != "number" && (this.giftsValue = parseInt(this.giftsValue));
 			this.$emit("input",this.giftsValue);
 			this.$emit("changeGift",this.giftsValue,this.$options._parentVnode.key);
-			console.log("oooooo")
 		},
 		changedates(){
 			this.$emit("changeDate",this.timeValue,this.$options._parentVnode.key);

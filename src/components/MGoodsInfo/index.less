@@ -127,6 +127,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;
+                white-space: nowrap;
                 -webkit-box-orient: horizontal;
                 -webkit-box-align: center;
 
@@ -264,6 +265,9 @@
                         }
                     }
                 }
+                .item-picking{
+//                  padding
+                }
                 .l-list-total {
                     float: right;
                     margin-right: -2px;
@@ -337,6 +341,50 @@
                 }
                 &.l-list-textreset{
                     top: 18px;
+                }
+            }
+            .l-list-button{
+                padding-top: 8px;
+                display: flex;
+                justify-content: flex-end;
+                button{
+                    border: none;
+                    background: #3DA5FE;;
+                    color: #FFFFFF;
+                    margin-left: 10px;
+//                  padding: 5px 10px;
+                    border-radius: 2px;
+                    width: 94px;height: 33px;
+                    &.no-pick{
+                        background: #FFFFFF;
+                        color: #333333;
+                        border: 1px solid #D0D0D0;
+                    }
+                    &.all-pick{
+                        background: #E8E8E8;
+                    }
+                    &.half-pick{
+//                      background: #8C8C8C;
+                        background: #FFFFFF;
+                        color: #333333;
+                        border: 1px solid #D0D0D0;
+                    }
+                    &.no-goods{
+                        background: #FFFFFF;
+                        color: black;
+                    }
+                    &.half-no-goods{
+                        background: #FFFFFF;
+                        color: #333333;
+                        border: 1px solid #D0D0D0;
+                        
+                    }
+                    &.all-no-goods{
+                         background: #FFFFFF;
+                        color: #999999;
+                        border:1px solid #D0D0D0;
+                        
+                    }
                 }
             }
         }
@@ -479,3 +527,7 @@ ul{
     li{font-size: 12px;color: #999999;line-height: 20px;}
 }}
 
+.pre-content{.list-info-cell .l-list-ct .l-list-content .l-list-name .l-list-text{
+    font-size: 16px;color: #333333;
+}
+}

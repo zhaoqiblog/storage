@@ -1,4 +1,5 @@
 <template>
+	
   <div class="shop-add-prolist">
     <x-header class="vux-1px-b">补货清单</x-header>
     <div class="scroll-content">
@@ -82,28 +83,43 @@ export default {
       let supplementInvoicesDetailsDTO = []
       this.data.forEach(function(arr) {
         arr.forEach(function(item) {
+//      	console.log(arr)
           supplementInvoicesDetailsDTO.push({
             goodsCode: item.goodsCode,
+            goodsBarCode:item.goodsBarCode,
             goodsName: item.goodsName,
-            goodsSupplementNum: item.realityNum,
-            warehousePlaceId: item.warehouseId
+            supplyNum: item.realityNum,
+            warehousePlaceId: item.warehouseId,
+//          targetPlaceId :,
+//          id:item.id,
           })
         })
       })
+//    console.log(supplementInvoicesDetailsDTO)
       if(supplementInvoicesDetailsDTO.filter(function(item) {
-        return (item.goodsSupplementNum == 0) || (isNaN(item.goodsSupplementNum))
+        return (item.supplyNum == 0) || (isNaN(item.supplyNum))
       }).length > 0) {
         this.$vux.toast.show({
           type: 'text',
           text: '列表中有商品数量未填写或为零'
         })
       } else {
-        $request.post('/api/supplement-invoices-main/v1/protected/create', {
-          id: '1', // 随便值
-          supplementInvoicesDetailsDTO: supplementInvoicesDetailsDTO
-        }).then(res => {
-          this.$store.dispatch('clearSupplement') // 提交成功清除补货清单
-          this.$router.push({path:'/success',query:{text: '补货成功',title: '提交成功',info: '请将商品移至卖场', path: {name: 'scanEntry', query: {key: 'shopSupplying'}}, listPath: {path: 'shop/supply'}}})
+      	const data ={
+					  "billNoCode": "MCBH",
+					  "supplementInvoicesDetailsDTO":supplementInvoicesDetailsDTO,
+					  "supplementType": "2"
+					}
+//    	console.log(data)
+        $request.post('/api/supplement-invoices/v1/protected/create', data).then(res => {
+        	console.log(res)
+        	if(res.success==true){
+	          this.$store.dispatch('clearSupplement') // 提交成功清除补货清单
+	          this.$router.push({path:'/success',query:{text: '补货成功',title: '提交成功',info: '请将商品移至卖场', path: {name: 'scanEntry', query: {key: 'shopSupplying'}}, listPath: {path: 'shop/supply'}}})
+        	}else{
+        		this.$router.push({path:'/fail',query:{text: res.message || '提交失败，请重试！',title: '卖场补货',info: '', path:'/scanEntry?key=shopSupplying'}})
+        	}
+        	}).catch(err=>{
+        		this.$router.push({path:'/fail',query:{text: '系统繁忙，请稍后再试',title: '卖场补货',info: '', path:'/scanEntry?key=shopSupplying'}})
         })
       }
     },

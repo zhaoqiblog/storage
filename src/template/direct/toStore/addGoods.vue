@@ -105,7 +105,7 @@ export default {
 		  	},err=>{
 		  		this.$vux.toast.show({
 	            type: 'text',
-	            text: '接口调用错误,请联系管理员',
+	            text: '系统繁忙，请稍后再试',
 	          })
 		  	})
   	},

@@ -54,8 +54,18 @@
 	    		giftsVal:[String, Number], //赠品数量
 			</div>
 
-			<p style="border: solid 1px red;text-align: center;" @click="consloeData">我是分割线我是分割线</p>
-			
+			<p style="border: solid 1px red;text-align: center;" @click="consloeData">>>>>>>>>>>>>>>>我是分割线我是分割线</p>
+			<pre-item-info v-for="(item,index) in datas"
+				:preCode="item.preCode"
+				:code="item.code"
+				:time="item.time"
+				:name="item.name"
+				:totalNum="item.totalNum"
+				:unit="item.unit"
+				:unitq="item.unitq"
+				:textNum="item.textNum"
+				:key="index"></pre-item-info>
+				<div>-----------------------------------</div>
 			<goods-info-item
 				v-for="(item,index) in datas"
 				:sideslip="item.sideslip"
@@ -81,6 +91,7 @@
 				@changeDate="changeDates"
 				:key="index">
 			</goods-info-item>
+			
 
 			<h2 class="title">goods-info-item slot的Demo</h2>
 			<goods-info-item
@@ -221,6 +232,7 @@ export default {
 			datas1:[
 				{
 					id: '00',
+					preCode:'2342534',
 					type:'bottomdate',
 					depotCode:'98213749187294387',
 					sideslip: true,

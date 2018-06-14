@@ -7,7 +7,7 @@
       <div class="list">
         <div class="item vux-1px-tb" v-for="item in data.content" :key="item.id" @click="toDetail(item.supplementBillNo)">
           <div class="tl vux-1px-b">
-            <div class="date">{{new Date(item.updateTime).format('yyyy-MM-dd hh:mm:ss')}}</div>
+            <div class="date">{{new Date(item.supplementDate).format('yyyy-MM-dd hh:mm:ss')}}</div>
             <div class="supplying">{{item.status == 0 ? '补货中' : '已完成'}}</div>
             <div class="arrow-right"></div>
           </div>
@@ -18,7 +18,7 @@
             </div>
             <div class="cell">
               <div class="name">补货数量：</div>
-              <div class="value">{{item.supplyNum}}</div>
+              <div class="value">{{item.goodsSupplementNum}}</div>
             </div>
             <div class="cell cell-proname">
               <div class="name">补货商品：</div>
@@ -51,11 +51,13 @@ export default {
     return {
       // 分页
       page: {
-        pageNo: 1,
+        pageNo: 0,
         pageSize: 10,
         totalPage: 1
       },
-      data: {},
+      data: {
+      	content:[],
+      },
       showEnd: false // 最后一页
     }
   },
@@ -68,21 +70,20 @@ export default {
      * @return {[type]} [description]
      */
     getSupplyList () {
-      $request.get('/api/supplement-invoices-main/v1/protected/queryPage', {
-        supplementInvoicesMainSearchDTO: {
-          'supplementType': '2',
-          'supplementerNo': ''
-        },
+    	this.page.pageNo++;
+      $request.get('/api/supplement-invoices/v1/protected/query_page', {
+        supplementType:"2",
+        userNo:this.commonInfo.userNo,
+//      status:1,//卖场补货不用传status
         pageable: {
           page: this.page.pageNo,
           size: this.page.pageSize
         }
       }).then(res => {
         if(res.success) {
-          if(this.page.totalPage === res.data.totalPages) {
-            this.showEnd = true
-          }
-          this.data = res.data
+          const datas ={...res.data};
+          
+          this.data.content =this.data.content.concat(res.data.content)
           this.data.content.forEach(function(item) {
             let supplyNum = 0, products = []
             item.supplementInvoicesDetails.forEach(function(detail) {
@@ -92,7 +93,7 @@ export default {
             item.supplyNum = supplyNum
             item.products = products.join(';')
           })
-          this.page.pageNo++
+          this.page.totalPage=res.data.totalPages
         } else {
           this.$vux.toast.show({
             type: 'text',
@@ -119,6 +120,7 @@ export default {
      */
     scrollListen () {
       const _this = this
+//    console.log(this.getSupplyList)
       let anchor = this.$refs.scrollWrap
       anchor.addEventListener('scroll', function() {
         var scrollTop = document.body.scrollTop;
@@ -127,8 +129,10 @@ export default {
             ch=anchor.clientHeight;
         if(sh==top+ch) {
           // 触发加载数据
+
           if(_this.page.pageNo < _this.page.totalPage) {
-            _this.getReturnList()
+          	console.log("加载第二页")
+            _this.getSupplyList()
           } else {
             _this.showEnd = true
           }
@@ -148,7 +152,7 @@ export default {
         pageSize: 10,
         totalPage: 1
       }
-      this.data = {}
+      this.data = {content:[]}
       this.showEnd = false
       this.getSupplyList()
     }

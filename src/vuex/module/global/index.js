@@ -1,7 +1,3 @@
-// import * as actions from './actions'
-// import * as getters from './getters'
-// import mutations from './mutations'
-
 const state = {
   loading: false,
   direction: 'forward',
@@ -29,9 +25,6 @@ const mutations = {
     state.user = user
   },
   updateCommonInfo (state, data) {
-//	console.log('更新updateCommonInfo',data);
-   // state.commonInfo = data;
-   
    state.commonInfo = {
    	...state.commonInfo,
    	...data,

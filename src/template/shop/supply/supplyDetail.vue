@@ -92,7 +92,7 @@ export default {
      */
     getSupplyDetail () {
       let orderId = this.$route.query.orderId
-      $request.get('/api/supplement-invoices-main/v1/protected/querySupInfo', {
+      $request.get('/api/supplement-invoices/v1/protected/querySupInfo', {
         supplementBillNo: orderId
       }).then(res => {
         if(res.success) {
@@ -114,7 +114,7 @@ export default {
      * @return {[type]} [description]
      */
     delOrder () {
-      $request.get('/api/supplement-invoices-main/delete/' + this.data.id).then(res => {
+      $request.get('/api/supplement-invoices/delete/' + this.data.id).then(res => {
         if(res.success) {
           this.$vux.toast.show({
             type: 'text',
@@ -137,29 +137,32 @@ export default {
      */
     complete () {
       let supplementInvoicesDetailsDTO = [], opWarehouseDetailDTOList = []
+      console.log(this.data.supplementInvoicesDetails)
       this.data && this.data.supplementInvoicesDetails && (this.data.supplementInvoicesDetails.length > 0) && this.data.supplementInvoicesDetails.forEach(function(item) {
         supplementInvoicesDetailsDTO.push({
           goodsCode: item.goodsCode,
+          goodsBarCode:item.goodsBarCode,
           goodsName: item.goodsName,
-          goodsSupplementNum: item.goodsSupplementNum,
+          supplyNum: item.goodsSupplementNum,
           id: item.id,
-          warehouseAreaId: item.sysWarehouse.warehouseAreaId,
           warehousePlaceId: item.sysWarehouse.warehousePlaceId
         })
         opWarehouseDetailDTOList.push({
           goodsCode: item.goodsCode,
+          goodsBarCode:item.goodsBarCode,
+          goodsName:item.goodsName,
           goodsWarehouseId: item.goodsWarehouse.id,
           supplyNum: item.goodsSupplementNum,
-          warehouseId: item.sysWarehouse.warehousePlaceId
+          warehousePlaceId: item.sysWarehouse.warehousePlaceId
         })
       })
-      $request.put('/api/supplement-invoices-main/v1/protected/update', {
+      $request.put('/api/supplement-invoices/v1/protected/update', {
         id: this.data.id,
         status: '1',
         supplementInvoicesDetailsDTO: supplementInvoicesDetailsDTO
       }).then(res => {
         if(res.success) {
-          $request.post('/api/goods-warehouse/v1/protected/orderWarehouseSupply', {
+          $request.post('/api/supplement-invoices/v1/protected/confirm_shop_supply', {
             supplementInvoicesMainId: this.data.id,
             opWarehouseDetailDTOList: opWarehouseDetailDTOList
           }).then(result => {

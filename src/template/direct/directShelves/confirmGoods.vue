@@ -85,7 +85,7 @@ export default {
 					this.$router.push({path:"/fail",query:{text:res.message,title:'商品上架',info:'上架失败',path:'/scanEntry?key=directAddGoods'}})
 				}
 			},err=>{
-				this.$router.push({path:"/fail",query:{text:'接口调用错误，请重试',title:'商品上架',info:'上架失败',path:'/scanEntry?key=directAddGoods'}})
+				this.$router.push({path:"/fail",query:{text:'系统繁忙，请稍后再试',title:'商品上架',info:'上架失败',path:'/scanEntry?key=directAddGoods'}})
 			})
  		}
   },

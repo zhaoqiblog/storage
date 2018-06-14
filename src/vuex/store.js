@@ -10,39 +10,18 @@ import backStorage from './module/backStorage.js'
 import turnoverArea from './module/turnoverArea.js'
 import backCount from './module/backCount.js'
 import direct from './module/direct.js'
+import prePick from './module/prePick.js'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-//state: {
-//  userInfo:{}//用户信息
-//},
-//mutations: {
-//},
-//actions: {
-//  /**
-//   * 获取用户信息
-//   * @param  {[Object]} options.state [state]
-//   */
-//  getUser(context){
-//    service.getUser().then((res)=>{
-//
-//      context.state.userInfo = res
-//      let type = context.state.userInfo.positionName
-//      if(type.match('合伙人')){
-//        context.state.userInfo.type = 2
-//      }else{
-//        context.state.userInfo.type = 1
-//      }
-//    })
-//  }
-//},
   modules: {
     global,
     shop,
     backStorage,
     turnoverArea,
     backCount,
-    direct
+    direct,
+    prePick
   },
 })

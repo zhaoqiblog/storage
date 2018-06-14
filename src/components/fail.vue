@@ -55,6 +55,10 @@ export default {
 }
 
 </script>
+<style type="text/css" lang="less" scoped>
+	.self-process{height: 100%;background: #FFFFFF;}
+</style>
 <style lang="less" scoped>
 	.texts{color: #FC4A4B;}
+	
 </style>
