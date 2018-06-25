@@ -1,7 +1,7 @@
 <template>
   <div class="shop-supply">
     <div class="vux-header vux-1px-b pre-picking-header clearfix">
-    	<span class="icons fl"  @click="back"></span>
+    	<span class="icons fl"  @click="showbackTip=true"></span>
     	<span class="txt">补货详情</span>
     </div>
     <div class="pre-content-title pre-detail-title">
@@ -17,24 +17,36 @@
     </div>
     <div class="scroll-content pre-supply-list" ref="scrollWrap">
     		<div v-for="e,index in preSupplyInfo.supplyItemDTOS" class="item-pre-supply">
+    			<p class="pre-supply-code">商品编码：{{e.goodsBarCode}}</p>
+    			<p class="pre-supply-name vux-1px-b">{{e.goodsName}}</p>
     			<div class="pre-supply-title vux-1px-b">
     				<span class="item-top-left">前置仓 {{e.frontWarehouseCode}}</span>
     				<div class="title-right">
     					<span class="now-num vux-1px-r">现有库存 {{e.frontWarehouseNum}}</span><span class="safe-num">安全库存 <span>{{e.safeNum}}</span></span>
     				</div>
     			</div>
-    			<p class="pre-supply-code">商品编码：{{e.goodsBarCode}}</p>
-    			<p class="pre-supply-name">{{e.goodsName}}</p>
-    			<div class="supply-input vux-1px-t">
+    			
+    			<div class="supply-input">
     				<span>补货至前置仓</span>
-    				<input type="number" v-model="e.supplyNum"  pattern="[0-9]*"/>
+    				<input type="number" v-model="e.supplyNum"  pattern="[0-9]*" @input="changeinput(e.supplyNum)"/>
     			</div>
     		</div>
     </div>
      <div class="cm-footer">
       <div class="btn-submit">  <!--:disabled=""-->
-        <router-link :to="{path:'confirmsupply',query:{id:$route.query.id}}"><button type="button" @click="submitSupply">提交补货信息</button></router-link>
+        <!--<router-link :to="{path:'confirmsupply',query:{id:$route.query.id}}">-->
+        	<button :disabled="disables" type="button" @click="submitSupply">提交补货信息</button>
+        <!--</router-link>-->
       </div>
+    </div>
+    <div v-transfer-dom class="pre-confirm">
+      <confirm v-model="showbackTip"
+      title="确定退出补货？"
+      @on-cancel="showbackTip==true"
+      @on-confirm="back"
+      confirm-text="退出补货">
+        <p style="text-align:center;">退出补货，商品补货数据将不保留</p>
+      </confirm>
     </div>
   </div>
 </template>
@@ -42,22 +54,30 @@
 <script>
 	import $request from '@/service/request.js'
 import { mapState,mapActions } from 'vuex';
-	
+	import {Confirm,TransferDomDirective as TransferDom} from 'vux'
 	export default {
-		components: {},
+		directives: {
+	    TransferDom
+	  },
+		components: {Confirm},
 		computed: mapState({
 		    commonInfo: state => state.global.commonInfo,
 		    preSupplyInfo:state=>state.prePick.preSupplyInfo
 		}),
 		data() {
 			return {
-				data:{}
+				data:{},
+				showbackTip:false,
+				disables:true,
 			}
 		},
 		created(){
 			if(!this.$route.query.back){
 				this.getDetail()
+			}else{
+				this.changeinput()
 			}
+			
 		},
 		methods:{
 			/**
@@ -73,8 +93,6 @@ import { mapState,mapActions } from 'vuex';
 						let data = res.data;
 						data.supplyItemDTOS =lists
 						this.$store.dispatch("setPreSupplyInfo",data)
-//						console.log(res.data)
-//						setTimeout(()=>{console.log(this.preSupplyInfo)},2000)
 					}else{
 						this.$vux.toast.show({
 	            type: 'text',
@@ -95,8 +113,19 @@ import { mapState,mapActions } from 'vuex';
 			 * 提交捕获信息
 			 */
 			submitSupply(){
-				
+//				this.preSupplyInfo.supplyItemDTOS
+				this.$router.push({path:'confirmsupply',query:{id:this.$route.query.id}});
 			},
+			changeinput(){
+				const isNull = this.preSupplyInfo.supplyItemDTOS.some((e)=>{
+					return e.supplyNum>0;
+				})			
+				if(isNull){
+					this.disables=false;
+				}else{
+					this.disables=true;
+				}
+			}
 		}
 	}
 </script>
@@ -119,7 +148,7 @@ import { mapState,mapActions } from 'vuex';
 		top: 160px;
 		margin-bottom: 60px;
 		.item-pre-supply{
-			padding: 0 10px 0px;
+			padding: 10px 10px 0px;
 			background: #FFFFFF;
 			margin-top: 10px;
 			border-radius: 3px;
@@ -152,12 +181,12 @@ import { mapState,mapActions } from 'vuex';
 				}
 			}
 			.pre-supply-name{
-				margin-bottom: 18px;font-size: 16px;color: #333333;
+				padding-bottom: 18px;font-size: 16px;color: #333333;
 				font-weight: 600;
 				margin-top: 5px;
 			}
 			.pre-supply-code{
-				margin-top: 18px;
+				margin-top: 10px;
 				font-size: 13px;
 				color: #999999;
 			}

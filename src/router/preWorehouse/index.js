@@ -32,28 +32,28 @@ import wareHouseAdd from '../../template/preWorehouse/backStorage/addGoods.vue' 
 import wareHouseConfirm from '../../template/preWorehouse/backStorage/confirmGoodsInfo.vue'  //确认商品信息
 
  export default [
- 	{path:'/preWorehouse',component:preWorehouse,name:'preWorehouse',
+ 	{path:'/preWorehouse',component:preWorehouse,name:'preWorehouse',meta:{index:2},
  		children:[
- 			 {path:'pickList',name:'pickList',component:pickList},
- 			 {path:'picking',name:'picking',component:picking},
+ 			 {path:'pickList',name:'pickList',component:pickList,meta:{index:2.1}},
+ 			 {path:'picking',name:'picking',component:picking,meta:{index:2.2}},
 // 			 {path:'pickDetail',name:'pickDetail',component:pickDetail},
- 			 {path:'historyPickList',name:'historyPickList',component:historyPickList},
- 			 {path:'historyDetail',name:'historyDetail',component:historyDetail},
+ 			 {path:'historyPickList',name:'historyPickList',component:historyPickList,meta:{index:2.1}},
+ 			 {path:'historyDetail',name:'historyDetail',component:historyDetail,meta:{index:2.1}},
  			 //前置仓补货
- 			 {path:'supplyList',name:'supplyList',component:supplyList},
- 			 {path:'supplying',name:'supplying',component:supplying},
- 			 {path:'confirmsupply',name:'confirmsupply',component:confirmsupply},
- 			 {path:'historySupplyList',name:'historySupplyList',component:historySupplyList},
- 			 {path:'supHistoryDetail',name:'supHistoryDetail',component:supHistoryDetail},
- 			 {path:'preSupSuccess',name:'preSupSuccess',component:preSupSuccess},
+ 			 {path:'supplyList',name:'supplyList',component:supplyList,meta:{index:2.1}},
+ 			 {path:'supplying',name:'supplying',component:supplying,meta:{index:2.1}},
+ 			 {path:'confirmsupply',name:'confirmsupply',component:confirmsupply,meta:{index:2.1}},
+ 			 {path:'historySupplyList',name:'historySupplyList',component:historySupplyList,meta:{index:2.1}},
+ 			 {path:'supHistoryDetail',name:'supHistoryDetail',component:supHistoryDetail,meta:{index:2.1}},
+ 			 {path:'preSupSuccess',name:'preSupSuccess',component:preSupSuccess,meta:{index:2.1}},
  			 //卖场补货
- 			 {path:'shopAdd',name:'shopAdd',component:shopAdd},
- 			 {path:'confirmShopAdd',name:'confirmShopAdd',component:confirmShopAdd},
- 			 {path:'shopHistoryList',name:'shopHistoryList',component:shopHistoryList}, 
- 			 {path:'preShopDetail',name:'preShopDetail',component:preShopDetail}, 
+ 			 {path:'shopAdd',name:'shopAdd',component:shopAdd,meta:{index:2.1}},
+ 			 {path:'confirmShopAdd',name:'confirmShopAdd',component:confirmShopAdd,meta:{index:2.1}},
+ 			 {path:'shopHistoryList',name:'shopHistoryList',component:shopHistoryList,meta:{index:2.1}}, 
+ 			 {path:'preShopDetail',name:'preShopDetail',component:preShopDetail,meta:{index:2.1}}, 
  			 //后场补货
- 			 {path:'wareHouseAdd',name:'wareHouseAdd',component:wareHouseAdd},
- 			 {path:'wareHouseConfirm',name:'wareHouseConfirm',component:wareHouseConfirm},
+ 			 {path:'wareHouseAdd',name:'wareHouseAdd',component:wareHouseAdd,meta:{index:2.1}},
+ 			 {path:'wareHouseConfirm',name:'wareHouseConfirm',component:wareHouseConfirm,meta:{index:2.1}},
  			 
  		]
  	},

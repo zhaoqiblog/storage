@@ -25,14 +25,15 @@
     </div>
     <div class="scroll-content pre-supply-list confirm-list" ref="scrollWrap">
     		<div v-if="preSupplyInfo&&preSupplyInfo.supplyItemDTOS" v-for="e,index in preSupplyInfo.supplyItemDTOS" class="item-pre-supply">
-    			<div class="pre-supply-title vux-1px-b">
+    			<p class="pre-supply-code">商品编码：{{e.goodsBarCode}}</p>
+    			<p class="pre-supply-name vux-1px-b">{{e.goodsName}}</p>
+    			<div class="pre-supply-title ">
     				<span class="item-top-left">前置仓 {{e.frontWarehouseCode}}</span>
     				<div class="title-right">
     					<span class="now-num vux-1px-r">现有库存 {{e.frontWarehouseNum}}</span><span class="safe-num">安全库存 {{e.safeNum}}</span>
     				</div>
     			</div>
-    			<p class="pre-supply-code">商品编码：{{e.goodsBarCode}}</p>
-    			<p class="pre-supply-name">{{e.goodsName}}</p>
+    			
     			<div class="supply-input vux-1px-t" >
     				<span>补货至前置仓</span>
     				<span>{{e.supplyNum}}</span>
@@ -92,10 +93,20 @@ import {XInput} from 'vux';
 					})
 				}
 			})
-			if(this.preSupplyInfo.supplyItemDTOS.length==1&&this.preSupplyInfo.supplyItemDTOS[0].supplyChannelDTOList[0].fromWarehouseId==-1){
+			let shopnum=0;
+			this.preSupplyInfo.supplyItemDTOS.forEach(e=>{
+				e.supplyChannelDTOList.forEach(a=>{
+					if(a.fromWarehouseId==-1){
+						shopnum++;
+					}
+				})
+				if(shopnum==this.preSupplyInfo.supplyItemDTOS.length){
 					this.disab=false;
-				
-			}
+				}
+			})
+//			if(this.preSupplyInfo.supplyItemDTOS.length==1&&this.preSupplyInfo.supplyItemDTOS[0].supplyChannelDTOList[0].fromWarehouseId==-1){
+//					this.disab=false;
+//			}
 		},
 		
 		methods:{
@@ -152,40 +163,46 @@ import {XInput} from 'vux';
 				  ],
 				  "totalNum": 0
 				}
-				let list1 = this.preSupplyInfo.supplyItemDTOS.map((e,index)=>{
+				let list1=[];
+				this.preSupplyInfo.supplyItemDTOS.forEach((e,index)=>{
 					obj.totalNum+=e.supplyNum;
-					let onlist ={
-							frontWarehouseCode:e.frontWarehouseCode,
-							frontWarehouseId:e.frontWarehouseId,
-							goodsBarCode:e.goodsBarCode,
-							goodsCode:e.goodsCode,
-							goodsName:e.goodsName,
-							supplyChannelRequestDTOS:[],
-							supplyNum:e.supplyNum,
+					
+					if(e.supplyNum!==0){
+						let onlist ={
+								frontWarehouseCode:e.frontWarehouseCode,
+								frontWarehouseId:e.frontWarehouseId,
+								goodsBarCode:e.goodsBarCode,
+								goodsCode:e.goodsCode,
+								goodsName:e.goodsName,
+								supplyChannelRequestDTOS:[],
+								supplyNum:e.supplyNum,
+						}
+						e.supplyChannelDTOList.map((n,ind)=>{
+							if(n.fromWarehouseId!=-1&&n.reaNum>0){
+								onlist.supplyChannelRequestDTOS.push({
+									fromWarehouseCode:n.fromWarehouseCode,
+									fromWarehouseId:n.fromWarehouseId,
+									goodsWarehouseId:n.goodsWarehouseId,
+									supplyNum:parseInt(n.reaNum)
+								})
+							}
+	
+						})
+						if(e.leftOver>0){
+								onlist.supplyChannelRequestDTOS.push({
+										fromWarehouseCode:null,
+										fromWarehouseId:-1,
+										goodsWarehouseId:-1,
+										supplyNum:e.leftOver
+								})
+						}					
+//						return onlist
+							list1.push(onlist)
 					}
-					e.supplyChannelDTOList.map((n,ind)=>{
-						if(n.fromWarehouseId!=-1&&n.reaNum>0){
-							onlist.supplyChannelRequestDTOS.push({
-								fromWarehouseCode:n.fromWarehouseCode,
-								fromWarehouseId:n.fromWarehouseId,
-								goodsWarehouseId:n.goodsWarehouseId,
-								supplyNum:parseInt(n.reaNum)
-							})
-						}
-
-					})
-					if(e.leftOver>0){
-							onlist.supplyChannelRequestDTOS.push({
-									fromWarehouseCode:null,
-									fromWarehouseId:-1,
-									goodsWarehouseId:-1,
-									supplyNum:e.leftOver
-							})
-						}
-						return onlist
 				})
+				
 				obj.supplyItemRequestDTOS=list1
-				console.log(obj)
+//				console.log(list1)
 				$request.post("/api/supplement-invoices/v1/protected/confirm_front_supply",obj).then(res=>{
 					if(res.success==true){
 						this.$router.push({path:"preSupSuccess",query:{
@@ -204,16 +221,6 @@ import {XInput} from 'vux';
 				}).catch(err=>{
         		this.$router.push({path:'/fail',query:{text: '系统繁忙，请稍后再试',title: '前置仓补货',info: '', path:'/'}})
 				})
-//					this.$router.push({path:"preSupSuccess",query:{
-//						title:'补货完成',
-//						text:'补货',
-//						info:'可以开始搬运货物',
-//						btn1link:'/preWorehouse/supHistoryDetail?id='+this.$route.query.id,
-//						btn1Text:'补货单详情',
-//						btn2Text:'补货历史',
-//						btn2link:'/preWorehouse/historySupplyList',
-//						backpath:'/'
-//					}})
 			},
 		}
 	}
@@ -222,7 +229,6 @@ import {XInput} from 'vux';
 <style lang="less">
 	.pre-supply-list{
 		.item-pre-supply{
-			padding: 0 10px;
 			.supply-other{
 				line-height: 50px;font-size: 13px;color: #999999;
 				display: flex;
@@ -257,7 +263,6 @@ import {XInput} from 'vux';
 			font-size: 10px;
 			color: red;
 			text-align: right;
-			/*background: #f4f4f4;*/
 		}
 	}
 	.confirm-list{top: 250px;}

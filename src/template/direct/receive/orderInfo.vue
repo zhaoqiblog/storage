@@ -29,18 +29,6 @@
 								:key="index"
 								:id="'a'+item.goodsBarCode">
 							</goods-info-item>
-							
-							<div class="goods-info-item list-info-cell" id="a6907992818894">
-								<div class="l-list-ct" style="position: relative !important;">
-										<div class="l-list-content">
-											<p class="l-list-code">
-												<em>6907992818894</em>
-											</p>
-											<div class="l-list-name l-list-nametext">伊利牧场红枣牛奶雪糕70g*6支 三方公司大概</div>
-										</div>
-								</div>
-							</div>
-							
 	    		</div>
 	    	</div>
     </div>

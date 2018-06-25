@@ -4,26 +4,75 @@
     	<span class="icons fl"  @click="back"></span>
     	<span class="txt">拣货单详情</span>
     </div>
-    <div class="pre-content-title pre-detail-title">
-    	<div class="picking-title">
-    		<div class="counting-time">
-    			<!--拣货倒计时 {{time}}-->
+    <div class="scroll-content pre-content pre-content-pic pre-difer" ref="scrollWrap">
+    	<div class="pic-item-info">
+    		<div class="success-top">
+    			<div class="vux-1px-b">
+	    			<div>
+	    				<h5>拣货已完成</h5>
+	    				<div class="order-form"> <span>{{data.ordersequenceno}}</span></div>
+	    			</div>
+	    			<div>
+	    				<img src="../../../assets/common/pic_success.png"/>
+	    			</div>
+    			</div>
     		</div>
-    		<!--<div class="none-info"></div>-->
-    		<div class="pick-code">
-    			<p>拣货单号：{{$route.query.id}} &nbsp;&nbsp;&nbsp;<span style="color: #6fc710;">{{data.ordersequenceno}}</span></p>
-    			<!--<p>创建时间：{{new Date(data.creatTime).format('yy-MM-dd hh:mm:ss')}}</p>--> 
-    			<p>拣货sku：{{data.finishSkuNum}}</p> 
-    			<p>缺货sku：{{data.unFinishSkuNum}}</p> 
-    			<p>拣货员：{{data.operatorName}}</p> 
-    			<p>拣货完成时间：{{new Date(data.finishTime).format('yy-MM-dd hh:mm:ss')}}</p> 
+    		<div>
+    			<dl class="vux-1px-b">
+    				<dt>订单信息</dt>
+    				<dd>
+    					<span>订单号</span>
+    					<span>{{data.id}}</span>
+    				</dd>
+    				<dd>
+    					<span>商品sku</span>
+    					<span>{{parseInt(data.finishSkuNum)+parseInt(data.unFinishSkuNum)}}</span>
+    				</dd>
+    				<dd>
+    					<span>已拣sku</span>
+    					<span>{{parseInt(data.finishSkuNum)}}</span>
+    				</dd>
+    				<dd>
+    					<span>缺货sku</span>
+    					<span>{{parseInt(data.unFinishSkuNum)}}</span>
+    				</dd>
+    				<dd>
+    					<span>拣货员</span>
+    					<span>{{data.status=='0'?'':commonInfo.name}}</span>
+    				</dd>
+    				<dd>
+    					<span>完成时间</span>
+    					<span>{{new Date(data.finishTime).format("yyyy-MM-dd hh:mm:ss")}}</span>
+    				</dd>
+    			</dl>
     		</div>
-    	</div>
-    </div>
-    <div class="scroll-content pre-content pre-content-pic-detail" ref="scrollWrap">
-    	
-    	<pre-item-info v-for="(item,index) in data.goodsInfoDTOS"
+    		<div style="padding-top: 0;">
+    			<!--v-if="data.expectdeliverydatetime"-->
+    			<dl  class="vux-1px-b">
+    				<dt>顾客信息</dt>
+    				<dd v-if="data.expectdeliverydatetime">
+    					<span >{{data.expectdeliverydatetime.slottype=='immediate'?'极速送达':'预约送达'}}</span>
+    					<span>{{new Date( parseInt(data.expectdeliverydatetime.date)).format('yyyy-MM-dd')}}&nbsp;&nbsp;{{data.expectdeliverydatetime.from}}-{{data.expectdeliverydatetime.to}}</span>
+    				</dd>
+    				<dd v-if="data.recvinfo">
+    					<span>顾客信息</span>
+    					<span>{{data.recvinfo.name}}&nbsp;&nbsp;<span>{{data.recvinfo.phone}}</span></span>
+    				</dd>
+    				<dd>
+    					<span>顾客备注</span>
+    					<span>{{data.comment}}</span>
+    				</dd>
+    			</dl>
+    		</div>
+				<div class="handel-btn">
+					<a v-if="data.recvinfo" :href="'tel:'+data.recvinfo.phone"><button>联系顾客</button></a>
+					<!--<button>打印小票</button>-->
+					<button v-if="data.status=='0'" class="startPick">开始拣货</button>
+				</div>
+			</div>
+    	<pre-item-pic v-for="(item,index) in data.goodsInfoDTOS"
     		:itemid="item.itemid"
+    		:imgurl="item.imgurl"
 				:preCode="item.warehouseCode"
 				:code="'商品编码 '+(item.goodsBarCode)"
 				:name="item.goodsName"
@@ -35,7 +84,7 @@
 				:halfPickNum="item.qty"
 				:status="1"
 				:key="index">
-    	</pre-item-info>
+    	</pre-item-pic>
     	<m-empty v-if="data.content && data.goodsInfoDTOS.length == 0"></m-empty>
     </div>
   </div>
@@ -44,10 +93,16 @@
 <script>
 	import { XHeader } from 'vux'
 	import $request from '@/service/request.js'
+import { mapState } from 'vuex';
+	
 	export default {
 		components: {
 			XHeader
 		},
+		name: 'pick-list',
+  computed: mapState({
+    commonInfo: state => state.global.commonInfo,
+  }),
 		data() {
 			return {
 //				data:[
@@ -120,9 +175,31 @@
 		}
 		
 	}
-	.pre-content-pic-detail{
-		    top: 200px;
-    		padding-bottom: 20px;
+	.pre-difer{
+		top: 56px;
 	}
-	/*.pre-content-title .picking-title .pick-code p*/
+	.pre-content-pic{
+	.pic-item-info{
+		.success-top{
+			padding: 0 10px;
+			
+			>div{
+				padding: 13px 10px;display: flex;
+				justify-content: space-between;
+				align-items: center;
+				h5{font-size: 18px;color: #303030;line-height: 1.8;}
+				.order-form{
+					>span{background: #F2FBFE;
+						border: 1px solid #AFE2EB;
+						border-radius: 1px;
+						margin-right: 10px;
+						opacity: 0.8;
+						padding: 0px 5px;font-size: 10px;
+					}
+					}
+				img{width: 36px;}
+			}
+		}
+	}
+	}
 </style>

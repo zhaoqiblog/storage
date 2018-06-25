@@ -9,7 +9,20 @@ const
   _MIDEA_ORG = "Organization"
 
 export default {
-
+/**
+ * 	截取字符串之前的0
+ * @param {Object} name
+ * @param {Object} method
+ * @param {Object} params
+ */
+	spistr(str){
+		var arr = str.split("");
+		if(arr[0]!=="0"){
+			return str
+		}else{
+			return this.spistr(arr.slice(1).join(""))
+		}
+	},
   callApi: function(name, method, params) {
     /**
      * 调用cordova的方法
@@ -18,6 +31,7 @@ export default {
      * @param params {Array} 参数
      * @return {promise}
      */
+//  const _this=this;
     var promise = new Promise((resolve, reject) => {
       if (window.cordova) {
         try {
@@ -148,6 +162,13 @@ export default {
    */
   scan: function() {
     return this.callApi(_MIDEA_BARCODE, 'scan', null)
+  },
+  scans:function(){
+  	return this.scans().then(function(res,errs){
+  		return  new Promise((resolve,reject)=>{ 			
+  			resolve(res)
+  		});
+  	})
   },
   /**
    * 启动扫码

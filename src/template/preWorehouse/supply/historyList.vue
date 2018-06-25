@@ -7,7 +7,8 @@
     	<!--<div class="cm-store vux-1px-b"><span>{{commonInfo.costName}}</span></div>-->
     	<!--<MpopInput :isShow="showPop"></MpopInput>-->
     	 <div class="container-list">
-	       <Group class="list-pre-item" v-for="e,index in data.content" :key="index">
+    	 	<router-link v-for="e,index in data.content" :key="index"  :to="{path:'supHistoryDetail',query:{id:e.id}}">
+	       <Group class="list-pre-item" >
 	       		<cell :title="e.status=='0'?'补货中':'补货完成'" :value="new Date(e.supplementDate).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>
 	       		<div class="pre-list-item-content">
 	       			<div>
@@ -19,10 +20,11 @@
 	       				</dl>
 	       			</div>
 	       			<div class="button-to-pick">
-	       					<router-link :to="{path:'supHistoryDetail',query:{id:e.id}}"><button @click="goTodetail(e.supplementBillNo)" class="toDetail">查看详情</button></router-link>
+	       					<router-link :to="{path:'supHistoryDetail',query:{id:e.id}}"><button class="toDetail">查看详情</button></router-link>
 	       			</div>
 	       		</div>
 	       </Group>
+	      </router-link>
 	    </div>
       <m-empty v-if="data.content && data.content.length == 0"></m-empty>
       <div v-if="showEnd" class="theEnd">已经到底啦</div>

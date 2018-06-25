@@ -11,7 +11,7 @@
     	<!--<div class="cm-store vux-1px-b"><span>{{commonInfo.costName}}</span></div>-->
     	<!--<MpopInput :isShow="showPop"></MpopInput>-->
     	 <div class="container-list">
-	       <Group class="list-pre-item" v-for="e,index in data.content" :key="index">
+	       <Group class="list-pre-item" v-for="e,index in data.content" :key="index" @click.native="goTosupplying(e.id)">
 	       		<cell :title="e.status=='0'?'待补货':'已完成'" :value="new Date(e.supplementDate).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>
 	       		<div class="pre-list-item-content">
 	       			<div>
@@ -19,7 +19,7 @@
 	       					<dt>
 	       						{{e.supplementBillNo}}
 	       					</dt>
-	       					<dd>SKU总数 {{e.goodsSupplementNum}}</dd>
+	       					<dd>SKU总数 {{e.skuNum}}</dd>
 	       				</dl>
 	       			</div>
 	       			<div class="button-to-pick">

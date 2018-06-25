@@ -16,6 +16,7 @@
 		</div>-->
 		<router-link :to="{name:'Demo'}"> dome页 </router-link>
 		<div class="">
+			
 			<h2>goods-top-info</h2>
 			<goods-top-info
 				:sideslip="goodstopinfo.sideslip"

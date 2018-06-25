@@ -27,14 +27,13 @@
     </div>
     <div class="scroll-content pre-supply-list historyDetail-list" ref="scrollWrap">
     		<div v-if="data&&data.supplyItemRequestDTOS" v-for="e,index in data.supplyItemRequestDTOS" class="item-pre-supply">
-    			<div class="pre-supply-title vux-1px-b">
-    				<span class="item-top-left">前置仓 {{e.frontWarehouseCode}}</span>
-    				<div class="title-right">
-    					<!--<span class="now-num vux-1px-r">现有库存 9</span><span class="safe-num">安全库存 10</span>-->
-    				</div>
-    			</div>
+    			
     			<p class="pre-supply-code">商品编码：{{e.goodsBarCode}}</p>
     			<p class="pre-supply-name">{{e.goodsName}}</p>
+    			<div class="pre-supply-title vux-1px-t">
+    				<span class="item-top-left">前置仓 {{e.frontWarehouseCode}}</span>
+    				<div class="title-right"></div>
+    			</div>
     			<div class="supply-other vux-1px-t" v-for="n,ind in e.supplyChannelRequestDTOS">
     				<span v-if="n.fromWarehouseId!=='-1'">库位{{n.fromWarehouseCode}}  补货至前置仓</span>
     				<span v-if="n.fromWarehouseId=='-1'">卖场  补货至前置仓</span>
@@ -80,7 +79,6 @@ import { mapState } from 'vuex';
 //				$request.get("protected/query_page"+this.$route.query.id,{supplementBillNo:this.$route.query.id}).then(res=>{
 					if(res.success==true){
 						this.data=res.data;
-						console.log(new Date(this.data.creatTime).format("yyyy-MM-dd"))
 					}else{}
 				})
 			},

@@ -3,17 +3,17 @@
     <x-header :left-options="{preventGoBack: true}" @on-click-back="back()" class="vux-1px-b">库位管理</x-header>
     <scroller class="scroll-view" lock-x height="-45px">
       <div>
-        <popup-picker 
+        <popup-picker v-if="storeList.length>0"
         	:popup-title="'请选择门店'" 
         	show-name 
         	:data="storeList" 
         	v-model="currentStore" 
         	:value-text-align="'center'" 
-        	@on-change="storeChange()" 
+        	@on-change="storeChange" 
         	class="store-picker vux-1px-b" 
         	ref="storepicker"></popup-picker>
         <div class="group">
-          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex === 0}">
+          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 0}">
             <group-title @click.native="toggle(0)"><i class="i-line"></i>收货口<i class="i-arrow"></i></group-title>
             <div class="content">
               <grid :cols="2">
@@ -95,7 +95,7 @@
               </grid>-->
             <!--</div>-->
           <!--</div>-->
-          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex === 1}">
+          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 1}">
             <group-title @click.native="toggle(1)"><i class="i-line"></i>卖场<i class="i-arrow"></i></group-title>
             <div class="content">
               <grid :cols="2">
@@ -140,7 +140,7 @@
               </grid>
             </div>
           </div>
-          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex === 2}">
+          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 2}">
             <group-title @click.native="toggle(2)"><i class="i-line"></i>后场<i class="i-arrow"></i></group-title>
             <div class="content">
             	<grid :cols="2">
@@ -260,7 +260,7 @@
             <!--</div>-->
           <!--</div>-->
           
-          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex === 3}">
+          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 3}">
             <group-title @click.native="toggle(3)"><i class="i-line"></i>前置仓<i class="i-arrow"></i></group-title>
             <div class="content">
               <grid :cols="2">
@@ -315,10 +315,11 @@
 
 <script>
 import MHeader from '@/components/MHeader/index'
-import { mapState } from 'vuex';
+import { mapState,mapActions, mapGetters } from 'vuex';
 import { TransferDom, Scroller, XHeader, PopupPicker, Grid, GridItem, GroupTitle } from 'vux'
 import factory from '@/factory'
-
+import $request from '@/service/request.js'
+import $conf from 'configuration'
 export default {
   directives: {
     TransferDom
@@ -333,14 +334,9 @@ export default {
   },
   name: 'home',
   computed: {
-    currentStore: {
+    /*currentStore: {
       get: function() {
         let store = []
-        /*if(this.commonInfo.stores && this.commonInfo.stores.length >= 1) {
-          store.push(this.commonInfo.stores[0].storeName)
-        } else {
-          store.push(this.commonInfo.costName)
-        }*/
         store.push(this.commonInfo.costNumber)
         return store
       },
@@ -349,7 +345,7 @@ export default {
 				this.selectstore=newVal
       	return newVal
       }
-    },
+    },*/
     storeList: function() {
       let store = [], stores = [];
       if(this.commonInfo.stores && this.commonInfo.stores.length >= 1) {
@@ -375,35 +371,139 @@ export default {
   data() {
     return {
     	curr:[],
-      showIndex: 0,
+      showIndex:localStorage.getItem("showIndex") ? localStorage.getItem("showIndex") : 0,
       selectstore:'',
-      // storeList: [[{name: '永辉-阳光天地店', value: '永辉-阳光天地店'}]]
+      currentStore:[],
+      aaa:this.commonInfo
     }
   },
-  created() {
+  watch:{
+  	
+  },
+  created(){
+  	this.init();
+  },
+  mounted() {
+		let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
+		this.currentStore.push(aaa)
   },
   methods: {
     storeChange (value) {
       const costName = this.$refs.storepicker.getNameValues();
       if(costName){
-	      const target = this.storeList[0].filter(item=>this.selectstore==item.value)[0];
-//	      console.log(target)
+	      const target = this.storeList[0].filter(item=>this.currentStore==item.value)[0];
+	      //切换小店时，成本中心要一起修改
 		    this.$store.dispatch("changeCommonInfo", {
 		    	costName:target.name,
 		    	costNumber:target.value,
-//		    	costCenterNum:target.value,
 		    });
-//		    this.currentStore.splice(0,1,target.name);
 		    this.curr=this.currentStore;
-		    console.log(this.commonInfo)
+		    //将状态保存到本地，下次进来还是当前的状态，选中的小店，上次操作的是卖场还是前置仓
+    		localStorage.setItem("currentStore",this.currentStore)
+		    
+      }
+    },
+        init () {
+      if(window.cordova) {
+        if(Object.keys(this.commonInfo).length == 0) {
+          factory.getUser().then(result => {
+          	if(result.uid){
+	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.uid).then(res => {
+	              if(res.success) {
+	                let userInfo = Object.assign(res.data);
+	                res.data.costCenterNum = res.data.costNumber
+	                this.$store.commit("updateCommonInfo", res.data);
+	               	let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
+	          			const target = this.commonInfo.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
+									//更新成本中心，成本中心要一起修改
+								    this.$store.dispatch("changeCommonInfo", {
+								    	costName:target.storeName,
+								    	costNumber:target.storeCode,
+								    });
+//								    console.log(target,this.commonInfo)
+	                //获取用户所在小店
+	                $request.get("/api/shop-goods/v1/protected/query/className",{className:res.data.costName,costCenterNum:res.data.costNumber})
+	                	.then(response=>{
+	                		let storeInfos= response.data==null ? {} : response.data 
+	                		this.$store.dispatch("changetoreInfo",storeInfos)
+	                })
+	              } else {
+	                this.$vux.toast.show({
+	                  type: 'text',
+	                  text: res.message || '获取用户信息失败',
+	                  onHide: () => {
+	                    factory.exit()
+	                  }
+	                })
+	              }
+	            }, error => {
+	              this.$vux.toast.show({
+	                type: 'text',
+	                text: '获取用户信息失败',
+	                onHide: () => {
+	                  factory.exit()
+	                }
+	              })
+	            })
+            }else{
+            	this.$vux.toast.show({
+	                type: 'text',
+	                text: '获取用户信息失败',
+	                onHide: () => {
+	                  factory.exit()
+	                }
+	              })
+            }
+          })
+        }
+      } else {
+        $request.get($conf.upmUrl + "/api/v1/public/user/" + $conf.userTest.uid).then(res => {
+          if(res.success) {
+            let userInfo = Object.assign(res.data);
+            res.data.costCenterNum = res.data.costNumber
+            this.$store.commit("updateCommonInfo",res.data)
+            let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
+	          const target = this.commonInfo.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
+//	          console.log(target)
+	          
+					//更新成本中心，成本中心要一起修改
+					    this.$store.dispatch("changeCommonInfo", {
+					    	costName:target.storeName,
+					    	costNumber:target.storeCode,
+					    });
+//					    console.log(target,this.commonInfo)
+            //获取用户所在小店 .//res.data.costNumber
+            $request.get("/api/shop-goods/v1/protected/query/className",{className:className,costCenterNum:'0094281202'})
+            	.then(response=>{
+            		let storeInfos= response.data==null ? {}: response.data
+            		this.$store.dispatch("changetoreInfo",storeInfos)
+            })
+          } else {
+            this.$vux.toast.show({
+              type: 'text',
+              text: res.message || '获取用户信息失败',
+              onHide: () => {
+                factory.exit()
+              }
+            })
+          }
+        }, error => {
+          this.$vux.toast.show({
+            type: 'text',
+            text: '获取用户信息失败',
+            onHide: () => {
+              factory.exit()
+            }
+          })
+        })
       }
     },
     back () {
       factory.exit()
     },
     toggle (index) {
-//    console.log(index)
-      this.showIndex = index
+      this.showIndex = index;
+      localStorage.setItem("showIndex",this.showIndex)
     }
   }
 }

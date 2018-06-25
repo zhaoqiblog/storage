@@ -1,65 +1,29 @@
 <template>
   <div class="shop-supply pick-supply">
-  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="showbackTip=true">拣货单详情</x-header>
-    <!--<div class="vux-header vux-1px-b pre-picking-header clearfix">
+    <div class="vux-header vux-1px-b pre-picking-header clearfix">
     	<span class="icons fl"  @click="back"></span>
     	<span class="txt">{{data.status==0 ?'拣货详情页':'拣货中'}}</span>
     	<span class="fr startPick" v-if="data.status==0" @click="handelPick"><span>开始拣货</span></span>
-    </div>-->
+    </div>
     <div class="pre-content-title">
     	<div class="picking-title">
-    		<div class="counting-time-pic">
+    		<div class="counting-time">
     			拣货倒计时 {{time}}
+    		</div>
+    		<!--<div class="none-info"></div>-->
+    		<div class="pick-code" :style="{height:data.status==0?'90px':'120px'}">
+    			<p>拣货单号：{{$route.query.id}} <span>{{data.ordersequenceno}}</span></p>
+    			<p>创建时间：{{new Date($route.query.creatTime).format("yyyy-MM-dd hh:mm:ss")}}</p> 
+    			<p v-if="data.status!=0">拣货员：{{commonInfo.name}}</p> 
     		</div>
     	</div>
     </div>
-    <div class="scroll-content pre-content pre-content-pic" ref="scrollWrap">
-    	<div class="pic-item-info">
-    		<div>
-    			<dl class="vux-1px-b">
-    				<dt>订单信息</dt>
-    				<dd>
-    					<span>订单号</span>
-    					<span>{{data.id}}</span>
-    				</dd>
-    				<dd>
-    					<span>商品sku</span>
-    					<span v-if="data.products">{{data.products.length}}</span>
-    				</dd>
-    				<dd>
-    					<span>拣货员</span>
-    					<span>{{data.status=='0'?'':commonInfo.name}}</span>
-    				</dd>
-    			</dl>
-    		</div>
-    		<div>
-    			<dl v-if="data.expectdeliverydatetime" class="vux-1px-b">
-    				<dt>顾客信息</dt>
-    				<dd>
-    					<span>{{data.expectdeliverydatetime.slottype=='immediate'?'极速送达':'预约送达'}}</span>
-    					<span>{{new Date( parseInt(data.expectdeliverydatetime.date)).format('yyyy-MM-dd')}}&nbsp;&nbsp;{{data.expectdeliverydatetime.from}}-{{data.expectdeliverydatetime.to}}</span>
-    				</dd>
-    				<dd v-if="data.recvinfo">
-    					<span>顾客信息</span>
-    					<span>{{data.recvinfo.name}}&nbsp;&nbsp;<span>{{data.recvinfo.phone}}</span></span>
-    				</dd>
-    				<dd>
-    					<span>顾客备注</span>
-    					<span>{{data.comment}}</span>
-    				</dd>
-    			</dl>
-    		</div>
-				<div class="handel-btn">
-					<a v-if="data.recvinfo" :href="'tel:'+data.recvinfo.phone"><button>联系顾客</button></a>
-					<!--<button>打印小票</button>-->
-					<button v-if="data.status==0" @click="handelPick" class="startPick">开始拣货</button>
-				</div>
-			</div>
-    	<pre-item-pic v-for="(item,index) in data.products"
+    <div class="scroll-content pre-content pre-content-pic" ref="scrollWrap" :style="{top:data.status==0?'175px':'210px'}">
+    	<pre-item-info v-for="(item,index) in data.products"
     		:itemid="item.itemid"
 				:preCode="item.stockout==2?'门店无此商品':item.warehouseCode"
 				:nowNum="item.nowNum"
-				:imgurl="item.imgurl"
+				:safeNum="item.safeNum"
 				:code="'商品编码  '+(item.barcode)"
 				:name="item.subtitle"
 				:totalNum="item.num"
@@ -73,7 +37,7 @@
 				:disbale="true"
 				:status="0"
 				:key="index">
-    	</pre-item-pic>
+    	</pre-item-info>
       <!--<m-empty v-if="data.content && data.content.length == 0"></m-empty>-->
       <MpopInput :isShow="showPop" :cancel="cancel" :confirm="confirm" :popItem="popItem" v-if="showPop"/>
     </div>
@@ -115,7 +79,7 @@ export default {
   computed: mapState({
     commonInfo: state => state.global.commonInfo,
 		time:function(){  //现实的倒计时
-			return this.formate(this.$route.query.toTime-this.now-30*60*1000);
+			return this.formate(this.$route.query.toTime-this.now);
 		}
   }),
   data() {
@@ -133,7 +97,6 @@ export default {
     }
   },
   created() {
-  	console.log(this.commonInfo)
   	this.getPickingInfo(this.$route.query.id)
     let self = this;
 		this.timeIntever = setInterval(function(){
@@ -212,7 +175,7 @@ export default {
   		if(this.data.status==0){
   			this.$vux.toast.show({
 		            type: 'text',
-		            text: '点击「 开始拣货 」',
+		            text: '点击右上角「 开始拣货 」',
 		            width:'60%',
 		          })
 			
@@ -232,7 +195,7 @@ export default {
   		if(this.data.status==0){
   			this.$vux.toast.show({
 		            type: 'text',
-		            text: '点击「 开始拣货 」',
+		            text: '点击右上角「 开始拣货 」',
 		            width:'60%',
 		          })
 			
@@ -304,7 +267,6 @@ export default {
 			      "stockout": e.num-e.halfPickNum>0 ? 1:0,			//是否缺货
 			      "warehouseId": e.warehouseId,
 			      "warehouseCode":e.warehouseCode,
-			      "imgurl":e.imgurl,
 		    	}
 		    	obj.goodsInfoDTOS.push(objs)
 		    })
@@ -319,6 +281,9 @@ export default {
 						listpage:"/preWorehouse/pickList",
 						path:"/"
 				}}
+//		    console.log(obje)
+//		    this.$router.push(obje)
+		    
 			    $request.post("/api/online-order/v1/protected/finishpick",obj).then(res=>{
 			    	if(res.success&&res.success==true){
 			    		this.$router.push(obje)
@@ -395,6 +360,16 @@ export default {
 			width: 20px;height: 18px;
 			background: url(../../../assets/white-arrow.png) center center no-repeat;
 		}
+		.startPick{
+			z-index: 2;
+			position: absolute;
+			right: 15px;font-size: 13px;
+			>span{
+				background: orange;
+				padding: 3px 8px;
+				border-radius: 15px;
+			}
+		}
 		.txt{
 			/*margin-left: -46px;*/
 			font-size: 18px;
@@ -410,48 +385,7 @@ export default {
 		}
 	}
 	.pre-content-pic{
-		top: 98px;padding-bottom: 60px;
-		.pic-item-info{
-			width: 94%;margin: 0 auto;
-			background: #FFFFFF;
-			box-sizing: content-box;
-			.handel-btn{
-				text-align: right;
-				padding-bottom: 10px;
-				button{
-					background: #FFFFFF;
-					border: 1px solid #D0D0D0;
-					border-radius: 4px;
-					font-size: 13px;
-					color: #333333;
-					padding: 6px 10px;
-					margin-left: 10px;
-					&.startPick{
-						background: orange;color: #FFFFFF;border-color: orange;
-					}
-				}
-			}
-			>div{
-				padding: 10px;
-				font-size: 12px;
-				padding-bottom: 0;
-				dl{padding: 10px;}
-				dt{color: #303030;}
-				dd{color: #999999;
-				
-					/*display: flex;*/
-					/*justify-content: flex-start;*/
-					>span:nth-child(1){
-						display: inline-block;
-						width: 60px;
-					}
-				}
-			}
-			>div:nth-child(2){
-				padding-top: 0;
-				padding-bottom: 0;
-			}
-		}
+		top: 210px;padding-bottom: 60px;
 	}
 	.pre-content-title{
 		/*top: 44px;*/
@@ -461,14 +395,6 @@ export default {
 			.counting-time{
 				height: 77px;
 				background: #3DA5FE;text-align: center;color: #FFFFFF;font-size: 18px;font-weight: 500;line-height: 25px;
-			}
-			.counting-time-pic{
-				background: #FEEEE9;
-				border: 0 solid #EBBDAF;
-				font-size: 13px;
-				color: #D0021B;
-				line-height: 40px;padding-left: 5%;
-
 			}
 			.none-info{}
 			.pick-code{

@@ -5,17 +5,18 @@
     	<a slot="right"><router-link to="historyPickList">我的拣货单</router-link></a>
     </x-header>
     <tab v-model="index" active-color="#3DA5FE">
-	      <tab-item v-for="(i,ins) in ['待拣货','拣货中']" @on-item-click="clickItem">{{i}}</tab-item>
+	      <tab-item v-for="(i,ins) in ['待拣货','拣货中']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
 	    </tab>
     <div class="scroll-content pre-pick-list" ref="scrollWrap">
         <div v-if="index==0">
           	<div class="container-list" >
-			        <Group class="list-pre-item" v-for="e,index in data.noPick" :key="index">
+			        <Group class="list-pre-item" v-for="e,index in data.noPick" :key="index" @click.native="goToPick(e.id,e.toTime,e.creatTime)">
 			       		<div class="item-top vux-1px-b">
 			       			<span class="good-code">{{e.id}}</span>
 			       			<span class="good-time-type">
-			       				<span class="order-type">预约送达6.18</span>
-			       				<span class="order-time">{{new Date(e.creatTime).format('hh:mm')}}-{{new Date(e.creatTime).format('hh:mm')}}</span>
+			       				<!--<span class="order-type">预约送达6.18</span>-->
+			       				<span class="order-type">{{new Date(e.creatTime).format('yyyy-MM-dd hh:mm:ss')}}</span>
+			       				<!--<span class="order-time">{{new Date(e.creatTime).format('hh:mm')}}-{{new Date(e.creatTime).format('hh:mm')}}</span>-->
 			       			</span>
 			       		</div>
 			       		<div class="pre-list-item-content">
@@ -26,7 +27,7 @@
 			       						剩余 
 			       						<span>{{e.OverText}}</span> 分钟
 			       					</dt>
-			       					<dd>共{{e.skuNum}}件商品<span class="order-form">{{e.ordersequenceno}}</span></dd>
+			       					<dd>商品SKU&nbsp;{{e.skuNum}}<span class="order-form">{{e.orderSequenceNo}}</span></dd>
 			       				</dl>
 			       			</div>
 			       			<div class="button-to-pick">
@@ -35,17 +36,19 @@
 			       		</div>
 			        </Group>
 			    </div>
+			    <m-empty v-if="data.noPick && data.noPick.length == 0"></m-empty>
 			    <div v-if="page.isEnd" class="theEnd">已经到底啦</div>
         </div>
         <div v-if="index==1">
           	<div class="container-list" >
-			        <Group class="list-pre-item" v-for="e,index in data.picking" :key="index">
+			        <Group class="list-pre-item" v-for="e,index in data.picking" :key="index" @click.native="goToPick(e.id,e.toTime,e.creatTime)">
 			       		<!--<cell :title="'拣货单号：'+e.id" :value="new Date(e.creatTime).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>-->
 			       		<div class="item-top vux-1px-b">
 			       			<span class="good-code">{{e.id}}</span>
 			       			<span class="good-time-type">
-			       				<span class="order-type">预约送达6.18</span>
-			       				<span class="order-time">{{new Date(e.creatTime).format('hh:mm')}}-{{new Date(e.creatTime).format('hh:mm')}}</span>
+			       				<!--<span class="order-type">预约送达6.18</span>-->
+			       				<span class="order-type">{{new Date(e.creatTime).format('yyyy-MM-dd hh:mm:ss')}}</span>
+			       				<!--<span class="order-time">{{new Date(e.creatTime).format('hh:mm')}}-{{new Date(e.creatTime).format('hh:mm')}}</span>-->
 			       			</span>
 			       		</div>
 			       		<div class="pre-list-item-content">
@@ -56,7 +59,7 @@
 			       						剩余 
 			       						<span>{{e.OverText}}</span> 分钟
 			       					</dt>
-			       					<dd>共{{e.skuNum}}件商品</dd>
+			       					<dd>商品SKU&nbsp;{{e.skuNum}}<span class="order-form">{{e.orderSequenceNo}}</span></dd>
 			       				</dl>
 			       			</div>
 			       			<div class="button-to-pick">
@@ -66,8 +69,9 @@
 			        </Group>
 			    </div>
 			    <div v-if="page1.isEnd" class="theEnd">已经到底啦</div>
+			    <m-empty v-if="data.picking && data.picking.length == 0"></m-empty>
         </div>
-      <m-empty v-if="data.content && data.content.length == 0"></m-empty>
+      
       
     </div>
   </div>
@@ -106,11 +110,16 @@
 						span{color: #3DA5FE;}
 					}
 					dd{font-size: 12px;color: #999999;line-height: 2;
-						.order-form{color: #197FA9;background: #F2FBFE;border: 0 solid #AFE2EB;border-radius: 1px;font-size: 10px;padding: 3px 5px;margin-left: 5px;}
+					>span{
+						padding: 3px 8px;
+					}
+						.order-form{
+							color: #197FA9;background: #F2FBFE;border: 0 solid #AFE2EB;border-radius: 1px;font-size: 10px;margin-left: 5px;
+							}
 					}
 					.button-to-pick{
 						button{border-radius: 3px;background: #3DA5FE;border: none;font-size: 13px;padding: 4px 8px;color: #FFFFFF;
-							&.picking-btn{opacity: 0.8;}
+							&.picking-btn{opacity: 0.6;}
 						}
 					}
 				}
@@ -153,13 +162,13 @@ name: 'pick-list',
       // 分页 page:未拣货，page1：拣货中
       page: {
         pageNo: 0,
-        pageSize: 5,
+        pageSize: 10,
         totalPage: 1,
         isEnd:false,
       },
       page1:{
       	pageNo: 0,
-        pageSize: 5,
+        pageSize: 10,
         totalPage: 1,
         isEnd:false,
       },
@@ -190,6 +199,7 @@ name: 'pick-list',
 //		const datas = this.data.content.filter(e=>{
 //			return e.id==id
 //		})[0]
+console.log("ppp")
   		this.$router.push({path:'picking',query:{'id':id,toTime:toTime,creatTime:creatTime}})
   	},
   	/**
@@ -237,10 +247,12 @@ name: 'pick-list',
         		 this.data.noPick =this.data.noPick.concat(res.data.content)
 	          this.data.noPick.forEach(function(item) {
 	            let supplyNum = 0, products = []
-	            let a =item.toTime-new Date().getTime()
+	            let a  =parseInt(item.toTime-new Date().getTime()-30*60*1000)
 	            if(a>0){
 	            	item.isOver=false;
-	            	item.OverText=parseInt((item.toTime-new Date().getTime())/(1000*60));
+//	            	console.log(a,new Date(item.toTime).format("yyyy-MM-dd hh:mm:ss"))
+	            	item.OverText=parseInt(a/(1000*60));
+	            	
 	            }else{
 	            	item.isOver=true;
 	            }

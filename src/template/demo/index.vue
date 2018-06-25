@@ -1,6 +1,31 @@
 <template>
 	<div class="page-demo">
 		<div class="">
+			<!--:preCode="item.preCode"
+				:code="item.code"
+				:time="item.time"
+				:name="item.name"
+				:totalNum="item.totalNum"
+				:unit="item.unit"
+				:unitq="item.unitq"
+				:textNum="item.textNum"-->
+			<pre-item-pic v-for="(item,index) in datas"
+    			:itemid="item.id"
+				:preCode="item.stockout==2?'门店无此商品':item.warehouseCode"
+				:nowNum="item.nowNum"
+				:safeNum="item.safeNum"
+				:code="'商品编码  '+(item.barcode)"
+				:name="item.subtitle"
+				:totalNum="item.num"
+				:unit="item.unitq"
+				:unitq="item.unit"
+				:init="item.init"
+				:allpick="item.allpick"
+				:halfPickNum="item.halfPickNum"
+				:disbale="true"
+				:status="0"
+				:key="index">
+    	</pre-item-pic>
 			<h2 class="title">goods-top-info</h2>
 			<section>
 				sideslip:侧滑开关<br />

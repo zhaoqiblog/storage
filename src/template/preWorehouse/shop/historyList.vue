@@ -7,8 +7,9 @@
     	<!--<div class="cm-store vux-1px-b"><span>{{commonInfo.costName}}</span></div>-->
     	<!--<MpopInput :isShow="showPop"></MpopInput>-->
     	 <div class="container-list">
-	       <Group class="list-pre-item" v-for="e,index in data.content" :key="index">
-	       		<cell title="卖场补货至前置仓" :value="new Date(e.supplementDate).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>
+    	 	<router-link :to="{path:'preShopDetail',query:{id:e.id}}" v-for="e,index in data.content" :key="index">
+	       <Group class="list-pre-item" >
+	       		<cell title="补货至前置仓" :value="new Date(e.supplementDate).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>
 	       		<div class="pre-list-item-content">
 	       			<div>
 	       				<dl>
@@ -23,6 +24,7 @@
 	       			</div>
 	       		</div>
 	       </Group>
+	       </router-link>
 	    </div>
       <m-empty v-if="data.content && data.content.length == 0"></m-empty>
       <div v-if="showEnd" class="theEnd">已经到底啦</div>
@@ -77,7 +79,6 @@ name: 'supply-list-history',
   },
   created() {
     this.getSupplyList();
-    console.log("poiopi")
   },
   methods: {
     /**

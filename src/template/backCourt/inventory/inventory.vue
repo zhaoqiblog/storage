@@ -78,6 +78,17 @@ export default {
 			})
   },
   created() {
+  	/**
+  	 * 解决android输入框键盘弹起时挡住界面的问题
+  	 */
+  	window.addEventListener('resize', () => { 
+		 if (document.activeElement.tagName == 'INPUT') {  
+		  //延迟出现是因为有些 Android 手机键盘出现的比较慢   
+		  window.setTimeout(() => {
+		   document.activeElement.scrollIntoViewIfNeeded();  
+		 }, 100); 
+		} });
+  	
 		const obj={
 			warehousePlaceCode:this.$route.query.scanResult,
 			costCenterNum:this.commonInfo.costNumber,
@@ -160,7 +171,7 @@ export default {
         		$request.get("/api/product-query/v1/protected/queryGoodsWarehouseInfo",{goodsBarCode:res.text,costCenterNum:this.commonInfo.costNumber}).then(res=>{
         			if(res.success==true){
 	        			this.showEmpty=false;
-	        			let obj = {...res.data,id:res.data.goodsWarehouseId,type:'input',count:0,warehouseCode:this.$route.query.scanResult}
+	        			let obj = {...res.data,id:res.data.goodsWarehouseId,type:'input',count:"",warehouseCode:this.$route.query.scanResult}
 	        			if(this.inventoryList.some(i=>{return i.goodsBarCode==res.data.goodsBarCode})){
 	        				this.$vux.toast.show({
 									 	type:'text',

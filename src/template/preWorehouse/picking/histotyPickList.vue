@@ -3,9 +3,9 @@
 		<x-header class="vux-1px-b">我的拣货单</x-header>
 		<div class="scroll-content pre-content history-list-content" ref="scrollWrap">
 			<div class="container-list" v-for="e,index in data.content">
-				<!--<router-link :to="{path:'historyDetail',query:{id:e.code}}">-->
-		       <Group class="list-pre-item">
-		       		<cell title="已完成" :value="new Date(e.creatTime).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>
+				<router-link :to="{path:'historyDetail',query:{id:e.id}}">
+			       <Group class="list-pre-item">
+		       		<cell title="已完成" :value="new Date(e.finishTime).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>
 		       		<div class="pre-list-item-content">
 		       			<div>
 		       				<dl>
@@ -16,7 +16,7 @@
 		       			<div class="button-to-pick"><router-link :to="{path:'historyDetail',query:{id:e.id}}"><button class="toDetail">查看详情</button></router-link></div>
 		       		</div>
 		       </Group>
-		       <!--</router-link>-->
+		       </router-link>
 		    </div>
 		<!--</div>-->
       		<div v-if="showEnd" class="theEnd">已经到底啦</div>

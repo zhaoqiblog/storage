@@ -31,7 +31,7 @@
     </div>
      <div v-transfer-dom class="pre-confirm">
       <confirm v-model="showbackTip"
-      title="确定退出拣货？"
+      title="确定退出补货？"
       @on-cancel="showbackTip==true"
       @on-confirm="onConfirm"
       confirm-text="确认退出">

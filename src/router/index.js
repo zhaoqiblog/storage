@@ -25,6 +25,7 @@ const router = new Router({
   routes: [{
       path: '/',
       component: index,
+      meta:{index:0}
     },
     /*{
       path: '/test',
@@ -36,6 +37,7 @@ const router = new Router({
       path: '/index',
       name: 'index',
       component: index,
+      meta:{index:0}
     },
     ...receivingPort,
     ...turnoverPort,

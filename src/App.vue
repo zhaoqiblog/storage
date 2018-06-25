@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <!-- <transition :name="'pop-' + (direction === 'forward' ? 'in' : 'out')"> -->
+     <!--<transition :name="'pop-' + (direction === 'forward' ? 'in' : 'out')">--> 
       <keep-alive include="home" v-if="alive">
         <router-view class="router-view">
         </router-view>
       </keep-alive>
       <router-view class="router-view" v-else>
       </router-view>
-    <!-- </transition> -->
+     <!--</transition>--> 
   </div>
 </template>
 <script>
@@ -31,8 +31,13 @@ export default {
 			storeInfo:state=>state.global.storeInfo,
 		})
   },
+  watch:{
+  	$route(to,from){
+//		console.log(to.meta.index,from.path,from.meta.index)
+  	}
+  },
   created() {
-    this.init()
+//  this.init()
   },
   mounted() {
     factory.changeColor([255, 255, 255]);
@@ -60,10 +65,14 @@ export default {
           factory.getUser().then(result => {
           	if(result.uid){
 	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.uid).then(res => {
+//	            	console.log(res.success)
 	              if(res.success) {
+//	              	 console.log("pop999999o")
 	                let userInfo = Object.assign(res.data);
 	                res.data.costCenterNum = res.data.costNumber
-	                this.$store.dispatch("changeCommonInfo", res.data)
+	                this.$store.commit("updateCommonInfo", res.data);
+	                localStorage.setItem("userinfo",res.data)
+	                console.log(this.commonInfo)
 	                //获取用户所在小店
 	                $request.get("/api/shop-goods/v1/protected/query/className",{className:res.data.costName,costCenterNum:res.data.costNumber})
 	                	.then(response=>{
@@ -104,9 +113,9 @@ export default {
           if(res.success) {
             let userInfo = Object.assign(res.data);
             res.data.costCenterNum = res.data.costNumber
-//          this.$store.dispatch("changeCommonInfo", res.data)
             this.$store.commit("updateCommonInfo",res.data)
             let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
+	                console.log(this.commonInfo)
             //获取用户所在小店 .//res.data.costNumber
             $request.get("/api/shop-goods/v1/protected/query/className",{className:className,costCenterNum:'0094281202'})
             	.then(response=>{
@@ -180,6 +189,7 @@ export default {
 
 .pop-in-enter-active {
   animation-name: popInRight;
+  /*transition: all 4s ease-in;*/
 }
 
 .pop-in-leave-active {
