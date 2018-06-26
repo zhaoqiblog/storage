@@ -374,7 +374,8 @@ export default {
       showIndex:localStorage.getItem("showIndex") ? localStorage.getItem("showIndex") : 0,
       selectstore:'',
       currentStore:[],
-      aaa:this.commonInfo
+      aaa:this.commonInfo,
+      data:{},
     }
   },
   watch:{
@@ -384,10 +385,17 @@ export default {
   	this.init();
   },
   mounted() {
-		let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
-		this.currentStore.push(aaa)
+  	setTimeout(()=>{})
+//	let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
+//		this.currentStore.push(aaa)
+//		console.log("1",aaa,this.currentStore)
+		
   },
   methods: {
+  	
+  	
+  	
+  	
     storeChange (value) {
       const costName = this.$refs.storepicker.getNameValues();
       if(costName){
@@ -403,7 +411,7 @@ export default {
 		    
       }
     },
-        init () {
+    init () {
       if(window.cordova) {
         if(Object.keys(this.commonInfo).length == 0) {
           factory.getUser().then(result => {
@@ -414,6 +422,8 @@ export default {
 	                res.data.costCenterNum = res.data.costNumber
 	                this.$store.commit("updateCommonInfo", res.data);
 	               	let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
+	               	let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
+									this.currentStore.push(aaa)
 	          			const target = this.commonInfo.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
 									//更新成本中心，成本中心要一起修改
 								    this.$store.dispatch("changeCommonInfo", {
@@ -461,10 +471,11 @@ export default {
           if(res.success) {
             let userInfo = Object.assign(res.data);
             res.data.costCenterNum = res.data.costNumber
-            this.$store.commit("updateCommonInfo",res.data)
+		        this.$store.commit("updateCommonInfo", res.data);
             let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
-	          const target = this.commonInfo.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
-//	          console.log(target)
+            let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
+						this.currentStore.push(aaa)
+	          const target = res.data.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
 	          
 					//更新成本中心，成本中心要一起修改
 					    this.$store.dispatch("changeCommonInfo", {
