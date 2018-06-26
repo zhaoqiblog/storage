@@ -75,7 +75,7 @@
 			getPreList () {
 		    	this.page.pageNo++;
 //		    	const  pageable= {page: this.page.pageNo,size: this.page.pageSize}
-		    	const obj={shopId:this.commonInfo.costNumber,status:1,page: this.page.pageNo,size: this.page.pageSize,userName:this.commonInfo.userNo}
+		    	const obj={shopId:this.commonInfo.costNumber,status:1,page: this.page.pageNo,size: this.page.pageSize,operatorNo:this.commonInfo.userNo}
 		      $request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
 		        if(res.success) {
 		          this.data.content =this.data.content.concat(res.data.content)

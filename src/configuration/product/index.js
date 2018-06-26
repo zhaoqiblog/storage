@@ -11,10 +11,10 @@ let config = {
     costNumber: "0010004605"
   },
 //// 生产
-//upmUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/upm',
-//baseUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/store-inventory'
-   upmUrl: 'https://hr.yh-test.com/mas-api/restful/inventory/upm', // 测试环境
-     baseUrl: 'https://hr.yh-test.com/mas-api/restful/inventory/store-inventory', // 测试环境
+upmUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/upm',
+baseUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/store-inventory'
+// upmUrl: 'https://hr.yh-test.com/mas-api/restful/inventory/upm', // 测试环境
+//   baseUrl: 'https://hr.yh-test.com/mas-api/restful/inventory/store-inventory', // 测试环境
 }
 
 export default config
