@@ -2,7 +2,8 @@
 	<div class="goods-info-item list-info-cell goods-info-item-pre">
     <div ref="listCt" class="l-list-ct" style="position: relative!important;">
     	<div v-if="preCode||typeof preCode != 'undefined'" class="l-list-title clearfix"> 
-    		<span>前置仓 {{preCode}}</span>
+    		<span v-if="preCode">{{preCode.slice(0,2)+"-"+preCode.slice(2,4)+"-"+preCode.slice(4)}}</span>
+    		<span v-if="!preCode">卖场</span>
     		<div class="title-right fr" v-if="status!=1">
     			<span class="safe-num">库存 <span>{{nowNum}}</span></span>
     		</div>
@@ -80,6 +81,7 @@ export default{
 	    
 	},
 	created(){
+		console.log(this.preCode)
 		typeof this.totalNum == "string" && (this.totalNum = parseInt(this.totalNum));
 	},
 	
@@ -130,7 +132,7 @@ export default{
 		}
 		.l-list-info{
 			.totalnums{
-				font-size: 16px;color: #333333;padding: 4px 0;
+				font-size: 20px;color: #000000;padding: 4px 0;font-weight: 600;
 			}	
 		}
 	}

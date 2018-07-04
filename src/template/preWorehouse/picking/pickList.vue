@@ -1,6 +1,6 @@
 <template>
   <div class="pre-picking">
-    <x-header class="vux-1px-b">
+    <x-header class="vux-1px-b" :left-options="{preventGoBack:true}" @on-click-back="back">
     	前置仓拣货
     	<a slot="right"><router-link to="historyPickList">我的拣货单</router-link></a>
     </x-header>
@@ -8,6 +8,7 @@
 	      <tab-item v-for="(i,ins) in ['待拣货','拣货中']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
 	    </tab>
     <div class="scroll-content pre-pick-list" ref="scrollWrap">
+    	<!--<scroller lock-x>-->
         <div v-if="index==0">
           	<div class="container-list" >
 			        <Group class="list-pre-item" v-for="e,index in data.noPick" :key="index" @click.native="goToPick(e.id,e.toTime,e.creatTime)">
@@ -27,7 +28,13 @@
 			       						剩余 
 			       						<span>{{e.OverText}}</span> 分钟
 			       					</dt>
-			       					<dd>商品SKU&nbsp;{{e.skuNum}}<span class="order-form">{{e.orderSequenceNo}}</span></dd>
+			       					<dd>
+			       						商品SKU&nbsp;{{e.skuNum}}
+			       						<span class="order-form order-jkd" v-if="e.outerOrderType==2">{{e.orderSequenceNo}}</span>
+			       						<span class="order-form" v-if="e.outerOrderType==0">{{e.orderSequenceNo}}</span>
+			       						<span class="order-form">{{e.deliverType=='0'?'自提':'配送'}}</span>
+			       						<span class="order-form-immedirte" v-if="e.deliverType!=='0'&&e.slotType!=='expectTime'">{{e.slotType=='expectTime'?'':'极速达'}}</span>
+			       					</dd>
 			       				</dl>
 			       			</div>
 			       			<div class="button-to-pick">
@@ -59,7 +66,12 @@
 			       						剩余 
 			       						<span>{{e.OverText}}</span> 分钟
 			       					</dt>
-			       					<dd>商品SKU&nbsp;{{e.skuNum}}<span class="order-form">{{e.orderSequenceNo}}</span></dd>
+			       					<dd>商品SKU&nbsp;{{e.skuNum}}
+			       						<span class="order-form order-jkd" v-if="e.outerOrderType==2">{{e.orderSequenceNo}}</span>
+			       						<span class="order-form" v-if="e.outerOrderType==0">{{e.orderSequenceNo}}</span>
+			       						<span class="order-form">{{e.deliverType=='0'?'自提':'配送'}}</span>
+			       						<span class="order-form-immedirte" v-if="e.deliverType!=='0'&&e.slotType!=='expectTime'">{{e.slotType=='expectTime'?'':'极速达'}}</span>
+			       					</dd>
 			       				</dl>
 			       			</div>
 			       			<div class="button-to-pick">
@@ -71,7 +83,7 @@
 			    <div v-if="page1.isEnd" class="theEnd">已经到底啦</div>
 			    <m-empty v-if="data.picking && data.picking.length == 0"></m-empty>
         </div>
-      
+      <!--</scroller>-->
       
     </div>
   </div>
@@ -111,10 +123,14 @@
 					}
 					dd{font-size: 12px;color: #999999;line-height: 2;
 					>span{
-						padding: 3px 8px;
+						padding: 2px 5px;margin-right: 5px;
 					}
 						.order-form{
-							color: #197FA9;background: #F2FBFE;border: 0 solid #AFE2EB;border-radius: 1px;font-size: 10px;margin-left: 5px;
+							color: #197FA9;background: #F2FBFE;border: 1px solid #AFE2EB;border-radius: 1px;font-size: 10px;margin-left: 5px;
+							&.order-jkd{color: #6DA919;background: #F1FEE9;border: 1px solid #C4EBAF;border-radius: 0px;}
+							}
+							.order-form-immedirte{
+								background: #FEEEE9;border: 1px solid #EBBDAF;border-radius: 1px;color: #D0021B;
 							}
 					}
 					.button-to-pick{
@@ -141,7 +157,7 @@
 <script>
 	import MEmpty from '@/components/MEmpty/index'
 import MpopInput from '@/components/MpopInput/index'
-import { XHeader,Group,Tab, TabItem,Cell,Swiper, SwiperItem } from 'vux'
+import { XHeader,Group,Tab, TabItem,Cell,Swiper, SwiperItem,Scroller } from 'vux'
 import { mapState } from 'vuex';
 import factory from '@/factory.js'
 import $request from '@/service/request.js'
@@ -149,7 +165,7 @@ import func from '../../../func.js'
 export default {
   components: {
     XHeader,Cell,Tab, TabItem,Group,Swiper, SwiperItem,
-    MEmpty,MpopInput
+    MEmpty,MpopInput,Scroller
   },
 name: 'pick-list',
 //name:'pre',
@@ -176,13 +192,53 @@ name: 'pick-list',
       	'noPick':[],
       	'picking':[],
       },
-      showEnd: false // 最后一页
+      showEnd: false, // 最后一页
+      timer:null,
     }
+  },
+    mounted() {
+    this.$nextTick(function () {
+	    func.scrollListen(this,this.$refs.scrollWrap,()=>{
+	    	if(this.index==0){
+	    		let e=this.page;
+	    			if(e.pageNo<e.totalPage){
+//		    		console.log("加载下一页")
+		    		this.getSupplyList(0)
+		    	}else{
+		    		this.page.isEnd=true;
+		    	}
+	    	}else{
+	    		let e=this.page1;
+	    			if(e.pageNo<e.totalPage){
+//		    		console.log("加载下一页333")
+		    		this.getSupplyList(2)
+		    	}else{
+		    		this.page1.isEnd=true;
+		    	}
+	    	}
+	    })
+	    this.timer = setInterval(()=>{
+			this.page.pageNo=1;
+			this.$refs.scrollWrap.scrollTop=0
+    	this.getSupplyList(0,this.page.pageNo)  
+    },30000)
+    })
+   	
   },
   created() {
     this.getSupplyList(0)
+     
+   /* this.timer = setInterval(()=>{
+			this.page.pageNo=1;
+    	this.getSupplyList(0,this.page.pageNo)    	
+    },60000)*/
+//		setTime
   },
   methods: {
+  	back(){
+  		clearInterval(this.timer)
+  		this.$router.back();
+  	},
   	clickItem(index){
   		if(index==0){  //待拣货
   			this.data.noPick=[];
@@ -196,10 +252,6 @@ name: 'pick-list',
   	 *去拣货  status,
   	 */
   	goToPick(id,toTime,creatTime){
-//		const datas = this.data.content.filter(e=>{
-//			return e.id==id
-//		})[0]
-console.log("ppp")
   		this.$router.push({path:'picking',query:{'id':id,toTime:toTime,creatTime:creatTime}})
   	},
   	/**
@@ -234,6 +286,7 @@ console.log("ppp")
     		}
     	}
     	let obj;
+//  	let obj={shopId:this.commonInfo.costNumber,status:status,page:pageNow,size: this.page.pageSize}
     	if(status==0){
     		obj={shopId:this.commonInfo.costNumber,status:status,page:pageNow,size: this.page.pageSize}
     	}else{
@@ -243,20 +296,23 @@ console.log("ppp")
         if(res.success) {
         	let listName = '';
         	if(status==0){
-        		listName='noPick'  //未拣货
-        		 this.data.noPick =this.data.noPick.concat(res.data.content)
-	          this.data.noPick.forEach(function(item) {
-	            let supplyNum = 0, products = []
-	            let a  =parseInt(item.toTime-new Date().getTime()-30*60*1000)
-	            if(a>0){
-	            	item.isOver=false;
-//	            	console.log(a,new Date(item.toTime).format("yyyy-MM-dd hh:mm:ss"))
-	            	item.OverText=parseInt(a/(1000*60));
-	            	
-	            }else{
-	            	item.isOver=true;
-	            }
-          })
+        		listName='noPick' 
+	          if(pageNow==1){
+	         		this.data.noPick=[];
+	         	}
+	         this.data.noPick =this.data.noPick.concat(res.data.content)
+		          this.data.noPick.forEach(function(item) {
+		            let supplyNum = 0, products = []
+		            let a = parseInt(item.toTime-new Date().getTime())
+		            if(a>0){
+		            	item.isOver=false;
+		            	item.OverText=parseInt(a/(1000*60));
+		            	
+		            }else{
+		            	item.isOver=true;
+		            }
+	          })
+		         
         		this.page.totalPage=res.data.totalPages
         	}else{
         		listName='picking' //拣货中
@@ -283,30 +339,9 @@ console.log("ppp")
       })
     },
   },
-  mounted() {
-    this.$nextTick(function () {
-	    func.scrollListen(this,this.$refs.scrollWrap,()=>{
-	    	if(this.index==0){
-	    		let e=this.page;
-	    			if(e.pageNo<e.totalPage){
-		    		console.log("加载下一页")
-		    		this.getSupplyList(0)
-		    	}else{
-		    		this.page.isEnd=true;
-		    	}
-	    	}else{
-	    		let e=this.page1;
-	    			if(e.pageNo<e.totalPage){
-		    		console.log("加载下一页333")
-		    		this.getSupplyList(2)
-		    	}else{
-		    		this.page1.isEnd=true;
-		    	}
-	    	}
-	    })
-    })
-  },
+
   activated () {
+  	console.log("ppp")
     if(this.$route.query.refresh && 1 == this.$route.query.refresh) {
       this.page = {
         pageNo: 1,

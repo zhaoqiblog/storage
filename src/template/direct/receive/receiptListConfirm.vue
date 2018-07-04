@@ -10,6 +10,7 @@
 		      	<goods-info-item
 					v-for="(item,index) in initData" 
 					:type="item.type"
+					:showInde='true'
 					:code="item.goodsBarCode"
 					:name="item.goodsName"
 					:totalNum="item.sysNum"

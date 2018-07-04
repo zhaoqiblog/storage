@@ -18,7 +18,7 @@ Axios.interceptors.request.use((config) => {
   Vue.$vux.loading.show({
     text: '加载中'
   })
-	timeouts = setTimeout(()=>{Vue.$vux.loading.hide()},500)
+	timeouts = setTimeout(()=>{Vue.$vux.loading.hide()},8000)
 if(window.cordova){
 //	alert("手机端")
   if(store.getters.getCommonInfo.id) {

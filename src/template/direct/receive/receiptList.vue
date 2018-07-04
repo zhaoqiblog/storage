@@ -106,6 +106,7 @@ export default {
 			passText:'',		//提示文字信息
 			delIndex: 0,	//提示删除的index
 			notScanGoods:[],
+			beforeData:[],
   	}
   },
   computed: {
@@ -124,6 +125,7 @@ export default {
   		this.disableds=false;
   	}else{
   		this.scanGoods(this.$route.query.goodsBarCode)
+  		
   	}
   },
    mounted(){
@@ -137,17 +139,18 @@ export default {
 					return n.goodsBarCode == goodBarCode
 				})
 			if(isExit){
+				this.disableds=false;
 				this.$vux.toast.show({
             type: 'text',
-            text: '该商品已经在列表中',
+            text: goodBarCode+' 商品已经在列表中',
           })
 			}else{
 	  		let obj ={goodsBarCode:goodBarCode,costCenterNum:this.commonInfo.costNumber,orderNo:this.$route.query.orderCode}
-		  	$request.get("/api/product-query/v1/protected/queryNoRceiveProductInfo",obj).then(res=>{
-		  		
+		  	$request.get("/api/product-query/v1/protected/queryNoRceiveProductInfo",obj).then(res=>{		  		
 		  		if(res.success==true){
 		  			if(res.data){
-		  				this.initData.unshift({
+		  				this.disableds=true;
+		  				this.beforeData.unshift({
 		  					...res.data,
 		  					type:'bottomdate',
 								timeSel:'',
@@ -155,6 +158,10 @@ export default {
 								giftsVal:0,
 								textNum:res.data.orderItem,  //右侧序列号
 		  				})
+		  				this.beforeData.sort((a,b)=>{
+		  					return a.orderItem - b.orderItem
+		  				})
+		  				this.initData=this.beforeData
 		  			}
 		  		}else{
 		  			 this.$vux.toast.show({
@@ -179,16 +186,12 @@ export default {
     	if(window.cordova){
     		factory.scan().then(i=>{
     			this.scanGoods(i.text)
-    			this.disableds=true;
     		})
     	}else{
-//  		const arrs = [6907992818894,6907992823027,6907992822907,6907992822808,6907992822853];
-    		const arrs = [6907992818894,6907992823027];
-//  		const arrs = [2304013000001,2311189000001,2308710000005,2304050000002,2311189000001];
+    		const arrs = [6914782207721,6914782109599,6914782114371,6914782209947,6914782114395,6914782208117];
     		arrs.forEach(es=>{
     			this.scanGoods(es)
     		})
-    		this.disableds=true;
     	}
     },
 	/*

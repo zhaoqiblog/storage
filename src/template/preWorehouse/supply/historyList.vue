@@ -16,7 +16,8 @@
 	       					<dt>
 	       						{{e.supplementBillNo}}
 	       					</dt>
-	       					<dd>SKU总数 {{e.goodsSupplementNum}}</dd>
+	       					<!--<dd>SKU总数 {{e.goodsSupplementNum}}</dd>-->
+	       					<dd>SKU总数 {{e.goodsSupplementNum}}  | 通道号 <span class="channel">{{e.supplementBillNo.slice(-2)}}</span></dd>
 	       				</dl>
 	       			</div>
 	       			<div class="button-to-pick">
@@ -93,7 +94,7 @@ name: 'supply-list-history',
      */
     getSupplyList () {
     	this.page.pageNo++;
-    	const obj={status:1,userNo:this.commonInfo.userNo,supplementType:4,page: this.page.pageNo,size: this.page.pageSize}
+    	const obj={status:1,supplementType:4,page: this.page.pageNo,size: this.page.pageSize,userNo:this.commonInfo.userNo}
       $request.get('/api/supplement-invoices/v1/protected/query_page', obj).then(res => {
         if(res.success) {
           this.data.content =this.data.content.concat(res.data.content)

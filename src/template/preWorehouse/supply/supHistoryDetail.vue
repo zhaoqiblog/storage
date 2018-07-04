@@ -19,7 +19,8 @@
     			<p>补货单号：<span>{{data.supplementBillNo}}</span></p>
     			<p>创建日期：<span>{{new Date(data.creatTime).format("yyyy-MM-dd hh:mm:ss")}}</span></p> 
     			<p>补货SKU总数：<span>{{data.skuNum}}</span></p>     			
-    			<p>补货总件数：<span>{{data.totalNum}}</span></p>     			
+    			<p>补货总件数：<span>{{data.totalNum}}</span></p>  
+    			<p>通道号：<span>{{data.supplementBillNo.slice(-2)}}</span></p>     			
     			<p>补货员：<span>{{data.supplementerName}}</span></p>     			
     			<p>补货完成时间：<span>{{new Date(data.updateTime).format("yyyy-MM-dd hh:mm:ss")}}</span></p>     			
     		</div>
@@ -31,7 +32,7 @@
     			<p class="pre-supply-code">商品编码：{{e.goodsBarCode}}</p>
     			<p class="pre-supply-name">{{e.goodsName}}</p>
     			<div class="pre-supply-title vux-1px-t">
-    				<span class="item-top-left">前置仓 {{e.frontWarehouseCode}}</span>
+    				<span class="item-top-left">前置仓 {{e.frontWarehouseCode.slice(0,2)+'-'+e.frontWarehouseCode.slice(2,4)+'-'+e.frontWarehouseCode.slice(4)}}</span>
     				<div class="title-right"></div>
     			</div>
     			<div class="supply-other vux-1px-t" v-for="n,ind in e.supplyChannelRequestDTOS">
@@ -99,7 +100,7 @@ import { mapState } from 'vuex';
 </script>
 
 <style lang="less">
-.historyDetail-list{top: 295px;margin-bottom: 0px;}
+.historyDetail-list{top: 320px;margin-bottom: 0px;}
 .shop-supply .scroll-content.pre-content .list-pre-item .pre-list-item-content .button-to-pick button.toDetail{
 	font-size:12px;
 }

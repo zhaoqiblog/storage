@@ -53,10 +53,52 @@ export default {
         let top=anchor.scrollTop,
             sh=anchor.scrollHeight,
             ch=anchor.clientHeight;
+//          console.log(sh,top,top+ch)
         if(sh==top+ch) {
           // 触发加载数据
 					callback()
         }
       })
-    }
+   },
+	/**
+   * 转byte数组
+   * @param {Object} param
+   *  var param = {text: "我们都是好孩子09365"};
+   */
+	string2Byte:function(param){
+//		return this.callApi(_MIDEA_BLUE,"string2Byte",[param])
+//		var param = {
+//          text: "我们都是好孩子09365"
+//      };
+console.log(param)
+		let info;
+        cordova.exec(function(result) {
+//          alert(result);
+            info =result
+        },
+        function(error) {
+            alert("Error: " + error);
+            info=false;
+        },
+        "BlueToothPlugin", "string2Byte", [param])
+        console.log(info)
+        return info;
+	},
+	/**
+	 * 判断是否为ios或者android
+	 */
+	isOs(){
+		var u = navigator.userAgent, app = navigator.appVersion; 
+		var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器 
+		var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端 
+		var isAndroid=false;
+		/*alert('是否是Android：'+isAndroid); 
+		alert('是否是iOS：'+isiOS);*/
+		if(isAndroid){
+			isAndroid=true;
+		}else{
+			isAndroid=false;
+		}
+		return isAndroid
+	}
 }

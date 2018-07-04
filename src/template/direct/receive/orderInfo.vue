@@ -97,7 +97,7 @@ export default {
 					this.$router.push({path:'receiptList',query:{orderCode:this.orderDetails.purchaseOrderNo,goodsBarCode:res.text,orderDate:this.orderDetails.orderDate}})
 				})
 			}else{
-				this.$router.push({path:'receiptList',query:{orderCode:this.orderDetails.purchaseOrderNo,goodsBarCode:'6907992822723',orderDate:this.orderDetails.orderDate}})
+				this.$router.push({path:'receiptList',query:{orderCode:this.orderDetails.purchaseOrderNo,goodsBarCode:'6907992818894',orderDate:this.orderDetails.orderDate}})
 			}
 			
 		},

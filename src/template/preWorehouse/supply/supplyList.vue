@@ -19,7 +19,7 @@
 	       					<dt>
 	       						{{e.supplementBillNo}}
 	       					</dt>
-	       					<dd>SKU总数 {{e.skuNum}}</dd>
+	       					<dd>SKU总数 {{e.skuNum}}  | 通道号 <span class="channel">{{e.supplementBillNo.slice(-2)}}</span></dd>
 	       				</dl>
 	       			</div>
 	       			<div class="button-to-pick">
@@ -95,7 +95,7 @@ name: 'supply-list',
      */
     getSupplyList () {
     	this.page.pageNo++;
-    	const obj={status:0,userNo:this.commonInfo.userNo,supplementType:4,page: this.page.pageNo,size: this.page.pageSize}
+    	const obj={status:0,supplementType:4,page: this.page.pageNo,size: this.page.pageSize}
       $request.get('/api/supplement-invoices/v1/protected/query_page', obj).then(res => {
         if(res.success) {
           this.data.content =this.data.content.concat(res.data.content)
@@ -210,7 +210,11 @@ name: 'supply-list',
 						&.overTime{color: #FF5800;}
 						span{color: #3DA5FE;}
 					}
-					dd{font-size: 12px;color: #999999;}
+					dd{font-size: 12px;color: #999999;
+						.channel{
+							color: #000000;font-weight: 700;
+						}
+					}
 					.button-to-pick{
 						button{border-radius: 2px;background: #3DA5FE;border: none;font-size: 15px;padding: 5px 10px;color: #FFFFFF;}
 					}

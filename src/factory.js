@@ -6,8 +6,8 @@ const
   _MIDEA_ANNTO = 'MideaAnnto',
   _MIDEA_SALE = 'MideaSale',
   _MIDEA_PDF = "MideaPdf",
-  _MIDEA_ORG = "Organization"
-
+  _MIDEA_ORG = "Organization",
+  _MIDEA_BLUE = "BlueToothPlugin"
 export default {
 /**
  * 	截取字符串之前的0
@@ -38,7 +38,7 @@ export default {
           cordova.exec(function(msg) {
             resolve(msg)
           }, function(msg) {
-            reject(msg)
+            reject("ERROR:"+msg)
           }, name, method, params || [])
         } catch (e) {
           console.log('_error', 'widget error:', e)
@@ -52,6 +52,66 @@ export default {
 
     return promise
   },
+  
+  /**
+   * 开启蓝牙
+   */
+  openBluetooth: function(){
+		return this.callApi(_MIDEA_BLUE,"openBlueTooth");
+  },
+  /**
+   * 获取蓝牙配对列表
+   */
+  getBlueList:function(){
+  	return this.callApi(_MIDEA_BLUE,"getBondedDevices")
+  },
+  /**
+   * 连接蓝牙设备
+   * @param {Object} param
+   * var param = { btAddress: "蓝牙地址" //这里传入用户点击的目标蓝牙设备地址};
+   */
+  connectBlue:function(param){
+	return this.callApi(_MIDEA_BLUE,"connectDevice",[param])
+  	
+  },
+  
+  /**
+   * 打印文字
+   * @param {Object} param
+   * var param = {text: "小票：270500027719 收银员：010121212122121\n=======\n\n"};
+   *  text是需要打印的小票内容，格式适配纸张的宽度，请结合业务需要使用\n换行符来换行调整
+   *   小票之间的间隔也使用\n来打印空白行
+   */
+  printText:function(param){
+		return this.callApi(_MIDEA_BLUE,"printText",[param])
+  },
+  /**
+   * byte方式打印
+   * @param {Object} param
+   *  var param = {text: "27 33 -12 要打印的byte[] 数组"};
+   */
+  printBytes:function(param){
+		return this.callApi(_MIDEA_BLUE,"printByte",[param])
+  },
+  /**
+   * 打印二维码/条码
+   * @param {Object} param
+   * var param = {text: "我们都是好孩子09365",size: 10};
+   * 
+   */
+  printQRCode:function(param){
+		return this.callApi(_MIDEA_BLUE,"printQRCode",[param])
+  	
+  },
+  /**
+   * 转byte数组
+   * @param {Object} param
+   *  var param = {text: "我们都是好孩子09365"};
+   */
+	string2Byte:function(param){
+		return this.callApi(_MIDEA_BLUE,"string2Byte",[param])
+	},
+  
   /**
    * 验证密码，主要用于hr自助认证
    * @return {promise}

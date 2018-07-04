@@ -7,7 +7,7 @@
     			<p class="l-list-code">
     				<em v-if="code">{{code}}</em>
     				<span :class="[typeof code == 'undefined'?'list-code-right':'']" v-if="time">{{time}}</span>
-    				<span class="indexNum" v-if="type=='bottomdate'">序号：{{textNum}}</span>
+    				<span class="indexNum" v-if="type=='bottomdate'||showInde">序号：{{textNum}}</span>
     			</p>
     			<div :class="['l-list-name',type=='text'||type=='none'?'l-list-nametext':'']">
     				{{name}} 
@@ -152,6 +152,7 @@ export default{
 	    giftsVal:[String, Number], //赠品数量
 	    positions:[String],	//判断是否从前置仓过来，是否有拣货按钮
 	    toPicking:[Function] ,  	//未拣货按钮的点击事件
+	    showInde:[Boolean],
 	    
 	},
 	created(){

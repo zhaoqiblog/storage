@@ -20,7 +20,7 @@
     				<dt>订单信息</dt>
     				<dd>
     					<span>订单号</span>
-    					<span>{{data.id}}</span>
+    					<span>{{data.id}} <span style="color: #6fc710;">{{data.ordersequenceno}}</span></span>
     				</dd>
     				<dd>
     					<span>商品sku</span>
@@ -28,7 +28,7 @@
     				</dd>
     				<dd>
     					<span>拣货员</span>
-    					<span>{{data.status=='0'?'':commonInfo.name}}</span>
+    					<span>{{data.status=='0'?'':(data.status=='2'?(data.operatorName ? data.operatorName:commonInfo.name):'')}}</span>
     				</dd>
     			</dl>
     		</div>
@@ -50,14 +50,14 @@
     			</dl>
     		</div>
 				<div class="handel-btn">
-					<a v-if="data.recvinfo" :href="'tel:'+data.recvinfo.phone"><button>联系顾客</button></a>
-					<!--<button>打印小票</button>-->
+					<a v-if="data.recvinfo&&data.recvinfo.phone" :href="'tel:'+data.recvinfo.phone"><button>联系顾客</button></a>
+					<button @click="printOrder" v-if="commonInfo.isAndroid">打印小票</button>
 					<button v-if="data.status==0" @click="handelPick" class="startPick">开始拣货</button>
 				</div>
 			</div>
     	<pre-item-pic v-for="(item,index) in data.products"
     		:itemid="item.itemid"
-				:preCode="item.stockout==2?'门店无此商品':item.warehouseCode"
+				:preCode="item.warehouseCode"
 				:nowNum="item.nowNum"
 				:imgurl="item.imgurl"
 				:code="'商品编码  '+(item.barcode)"
@@ -82,7 +82,7 @@
        		待拣货共 <i>{{data.products.length}}</i> 件,已拣货 <i>{{alreadyPick}}</i> 件
       </div>
       <div class="btn-submit">  <!--:disabled=""-->
-        <button type="button" @click="completeOrder">完成</button>
+        <button type="button" @click="completeOrder" :disabled="data.status==-1">完成</button>
       </div>
     </div>
     <div v-transfer-dom class="pre-confirm">
@@ -94,28 +94,39 @@
         <p style="text-align:center;">退出拣货页后，此订单商品的已拣货数据将不保留。建议完成此单拣货任务后，再提交离开。</p>
       </confirm>
     </div>
+    
+    <popup-picker 
+    	v-if="commonInfo.blueList" 
+    	:show-cell="false" class="showposdiffer"  
+    	:data="commonInfo.blueList" 
+    	:show="showSelectBlue" 
+    	v-model="slectBlue" 
+    	@on-change="changeBlue" 
+    	show-name @on-hide="showSelectBlue=false">
+    </popup-picker>
   </div>
 </template>
 
 <script>
 import MEmpty from '@/components/MEmpty/index'
 import MpopInput from '@/components/MpopInput/index'
-import { XHeader,Confirm,TransferDomDirective as TransferDom} from 'vux'
+import { XHeader,Confirm,TransferDomDirective as TransferDom,PopupPicker } from 'vux'
 import { mapState } from 'vuex';
-//import factory from '@/factory.js'
+import factory from '@/factory.js'
 import $request from '@/service/request.js'
+import func from "@/func.js"
 export default {
 	 directives: {
     TransferDom
   },
   components: {
-    XHeader, MEmpty,MpopInput,Confirm
+    XHeader, MEmpty,MpopInput,Confirm,PopupPicker 
   },
   name: 'pick-list',
   computed: mapState({
     commonInfo: state => state.global.commonInfo,
 		time:function(){  //现实的倒计时
-			return this.formate(this.$route.query.toTime-this.now-30*60*1000);
+			return this.formate(this.$route.query.toTime-this.now);
 		}
   }),
   data() {
@@ -127,13 +138,16 @@ export default {
     	alreadyPick:0,		//已拣货数量
     	timeIntever:null,  //倒计时定时器
     	showbackTip:false,  //退出弹框提示
+    	showSelectBlue:false, //选择蓝牙
+    	slectBlue:[], //选中的蓝牙设备号
+    	isConnectDevice:false,
       data: {
       	content:[],
       },
     }
   },
   created() {
-  	console.log(this.commonInfo)
+//	alert(this.commonInfo.isAndroid)
   	this.getPickingInfo(this.$route.query.id)
     let self = this;
 		this.timeIntever = setInterval(function(){
@@ -142,14 +156,24 @@ export default {
 				clearInterval(self.timeIntever)
 			}
 		}, 1000);
+		//判断之前是否连结果蓝牙，如果连接过蓝牙，有列表的话，直接连接
+		if(localStorage.getItem("bluedata")&&this.commonInfo.isAndroid){
+			var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
+				//连接打印机
+				if(window.cordova){factory.connectBlue(param1).then(res=>{
+//					alert("连接打印机")
+					this.isConnectDevice=true;
+				},(err)=>{alert("error:"+(err||'连接蓝牙设备失败'))})
+			}
+		}
   },
   destroyed(){
 			clearInterval(this.timeIntever)
 		},
   methods: {
-//	/**
-//	 * 获取拣货单信息
-//	 */
+	/**
+	 * 获取拣货单信息
+	 */
 	getPickingInfo(id){
 		$request.get("/api/online-order/v1/protected/orderdetail/"+id).then(res=>{
 			if(res.success==true){
@@ -161,6 +185,247 @@ export default {
 				
 			}
 		})
+	},
+	/**
+	 * 修改蓝牙连接设备
+	 */
+	changeBlue(){
+		localStorage.setItem("bluedata",this.slectBlue[0]);
+//		console.log("pop")
+//		连接打印机
+		if(window.cordova){
+			var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
+			factory.connectBlue(param1).then(res=>{
+//						alert("连接打印机")
+//						alert(JSON.stringify(res))
+						this.isConnectDevice=true;
+					},(err)=>{alert("连接打印机失败："+err)}).then(()=>{
+						this.printOrder()
+					})
+			}
+	},
+	/**
+	 * 打印小票
+	 */
+	printOrder(){	
+		//开启蓝牙
+  		const _this =this;
+//		factory.openBluetooth().then(res=>{console.log(JSON.stringify(res))},(err)=>{alert("Error:"+err)})
+//			.then(()=>{
+  			//获取蓝牙连接列表，判断是否之前连接过蓝牙
+  			if(localStorage.getItem("bluedata")){
+  				let test='',byteText="27 97 1 27 33 0 ";
+					/*test='欢迎光临'+this.data.shop.shopname+'\n'+'----------------------------------\n'+
+								this.data.ordersequenceno+'-配送\n'+
+								'------------------------------\n'+
+								'订单号：'+this.data.id+'\n'+
+								'下单时间：'+ new Date(parseInt(this.data.generatetime)).format("yyyy-MM-dd hh:mm:ss")+'\n'+
+								'收货人：'+this.data.recvinfo.name+'\n'+
+								'联系电话：'+this.data.recvinfo.phone+'\n'+
+								'收货地址：'+this.data.recvinfo.address.city+'-'+this.data.recvinfo.address.city+'-'+this.data.recvinfo.address.detail+'\n'+
+								'备注：'+this.data.comment+'\n'+'------------------------------\n'+
+								'购买商品\n'
+					this.data.products.forEach((e,index)=>{
+						test+= (index+1)+'.'+e.title+
+									'\n'+'X'+e.num+'\n'+
+									e.barcode+'\n'+
+									'单价￥'+e.price.value+'            '+'金额￥'+e.price.total+'\n'+
+									'------------------------------\n'
+					})*/
+					factory.string2Byte({text:'\n\n欢迎光临'+(this.data.shop.shopname?this.data.shop.shopname:'')+'\n'+'--------------------------------\n'}).then(res=>{
+						byteText +=res
+					}).then(()=>{
+						factory.string2Byte({text:(this.data.ordersequenceno?this.data.ordersequenceno:'')+'-配送\n'}).then(res=>{
+							byteText +=' 27 97 0 27 33 51 '+res
+						}).then(()=>{
+							factory.string2Byte({text:'--------------------------------\n订 单 号：'+
+								this.data.id+'\n下单时间：'+ new Date(parseInt(this.data.generatetime)).format("yyyy-MM-dd hh:mm")+'\n'+
+								'预约送达: '+new Date(parseInt(this.data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+this.data.expectdeliverydatetime.from+'-'+this.data.expectdeliverydatetime.to+'\n'+
+								'收 货 人：'+this.data.recvinfo.name+'\n'+
+								'联系电话：'+this.data.recvinfo.phone+'\n'+
+								'收货地址：'+this.data.recvinfo.address.city+'-'+this.data.recvinfo.address.city+'-'+this.data.recvinfo.address.detail+'\n'
+								}).then(res=>{
+								byteText +=' 27 33 00 '+res
+							}).then(()=>{
+								factory.string2Byte({text:'备注：'+this.data.comment+'\n'}).then(res=>{
+									byteText +=' 27 33 31 '+res
+								}).then(()=>{
+									factory.string2Byte({text:'--------------------------------\n购买商品\n'}).then(res=>{
+										byteText +=' 27 33 00 '+res
+									}).then(()=>{
+										var queen = new test(byteText);
+										this.data.products.forEach((a,index)=>{
+											let e = a;
+											let indexn = index;
+											queen.push(indexn,e);
+											if(index==this.data.products.length-1){
+												queen.start((lasttext)=>{
+//													alert("lasttext---"+lasttext);
+													factory.string2Byte({text:'\商品金额：'+this.data.amount.goodsamount/100}).then(res=>{
+														lasttext +=' 27 97 0 27 33 00 '+res
+													}).then(()=>{
+														factory.string2Byte({text:'\n订单运费：'}).then(res=>{
+															lasttext +=' 27 97 0 27 33 00 '+res
+														}).then(()=>{
+															factory.string2Byte({text:this.data.amount.freightamount/100}).then(res=>{
+																lasttext +=' 27 97 2 27 33 00 '+res
+															}).then(()=>{
+																factory.string2Byte({text:'\n商品优惠：'}).then(res=>{
+																	lasttext +=' 27 97 0 27 33 00 '+res
+																}).then(()=>{
+																	factory.string2Byte({text:(this.data.amount.coupondiscountamount+this.data.amount.promotiondiscountamount)/100}).then(res=>{
+																		lasttext +=' 27 97 2 27 33 00 '+res
+																	}).then(()=>{
+																		factory.string2Byte({text:'\n运费优惠：'+this.data.amount.freightpromotionamount/100+'\n'}).then(res=>{
+																			lasttext +=' 27 97 0 27 33 00 '+res
+																		}).then(()=>{
+																			factory.string2Byte({text:'--------------------------------\n'}).then(res=>{
+																				lasttext +=' 27 97 0 27 33 00 '+res
+																			}).then(()=>{
+																				factory.string2Byte({text:'订单件数：'+this.data.amount.productcount/100}).then(res=>{
+																					lasttext +=' 27 97 0 27 33 42 '+res
+																				}).then(()=>{
+																					factory.string2Byte({text:'\n应收金额：'+this.data.amount.totalamount/100+'\n--------------------------------\n'}).then(res=>{
+																						lasttext +=' 27 97 0 27 33 0 '+res
+																					}).then(()=>{
+																						factory.string2Byte({text:'谢谢惠顾，欢迎再次光临 \n'+this.data.shop.address+'\n'+'配送时间:09:00 - 20:00\n联系客服：400-800-5050\n\n签名栏：\n\n\n提货码:'+this.data.outerorderid}).then(res=>{
+																							lasttext +=' 27 97 1 27 33 0 '+res
+																						}).then(()=>{
+//																							alert(lasttext)
+																							if(this.isConnectDevice){  //如果为true，代表打印机连接成功
+//																								alert("开始打印:"+lasttext);
+																								let param = {text:lasttext};
+																								factory.printBytes(param).then(res=>{
+//																									alert(JSON.stringify(res))
+																								},(err)=>{alert("错误提示:"+(err||'打印失败'))}).then(()=>{
+																									let param1 = {text:this.data.outerorderid,size: 10};
+																									factory.printQRCode(param1).then(()=>{
+																										factory.printText({text: "\n\n\n"})
+																									}).then(()=>{
+																										this.$vux.toast.show({
+																			                type: 'text',
+																			                text: '打印成功',
+																			              })
+																									})
+																								})
+																							}else{
+																								alert("还未连接打印机,请先连接打印机")
+																							}
+																						})
+																					})
+																				})
+																			})
+																		})
+																	})
+																})
+															})
+														})
+													})
+												})
+											}
+										})
+										
+										
+										function test(byteText){
+											var funarry = [];
+											var Ind = 0;
+											var byteText = byteText;
+											function func(byteText,callback){
+												let index = funarry[Ind][0];
+												let e = funarry[Ind][1];
+												factory.string2Byte({text:(index+1)+'.'+e.title+'\n'}).then(res=>{
+													byteText +=' 27 33 00 '+res
+												}).then(()=>{
+													factory.string2Byte({text:'X'+e.num+'\n'}).then(res=>{
+														byteText +=' 27 97 2 27 33 52 '+res
+													}).then(()=>{
+														factory.string2Byte({text:e.barcode}).then(res=>{
+															byteText +=' 27 97 0 27 33 00 '+res
+														}).then(()=>{
+															factory.string2Byte({text:'\n单价￥'+e.price.value+'    金额￥'+e.price.total+'\n--------------------------------\n'}).then(res=>{
+																byteText +=' 27 97 0 27 33 00 '+res
+															}).then(()=>{
+																callback(byteText);
+																
+															})
+														})
+													})
+												})
+											}
+											return {
+												push:function(indexn,e){
+													funarry.push([indexn,e]);
+												},
+												start:function(end){
+												//	alert(JSON.stringify(funarry));
+														var callback = function(byteText){
+															Ind++;
+															if(Ind>=funarry.length){
+																return end(byteText);
+															}
+															func(byteText,callback);
+														}
+														func(byteText,callback)
+												}
+											}
+											
+											
+												
+										}
+										
+										
+										setTimeout((e)=>{
+											
+										},3000)
+										/*for(let i=0;i<this.data.products.length;i++){
+											
+										}*/
+									})
+								})
+							})
+						})
+					})
+  			}else{
+  				//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
+					factory.getBlueList().then((res)=>{
+						let arrays = res.map((e)=>{
+							return {name:e.split("=>")[0],value:e.split("=>")[1]}
+						})
+						this.$store.commit("updateCommonInfo", {
+				    	blueList:[arrays],
+				    });
+				    this.showSelectBlue=true;
+				    console.log(this.commonInfo,this.showSelectBlue)
+					})
+					
+			
+  			}
+//		})
+  		
+		//判断蓝牙是否之前连过打印机
+/*		if(localStorage.getItem("bluedata")){
+				
+			}else{
+				//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
+				factory.getBlueList().then((res)=>{
+					let arrays = res.map((e)=>{
+						return {name:e.split("=>")[0],value:e.split("=>")[1]}
+					})
+					this.$store.commit("updateCommonInfo", {
+			    	blueList:[arrays],
+			    });
+			    this.showSelectBlue=true;
+			    console.log(this.commonInfo,this.showSelectBlue)
+				})
+//				let arrays=[]
+//				let arrays =[{name:'测试设备1',value:"b0:f0:gg：h：er"},{name:'测试设备2',value:"b0:f0:33：hd：68"}]
+//				this.$store.commit("updateCommonInfo", {
+//			    	blueList:[arrays],
+//			    });
+//				this.showSelectBlue=true;
+//				console.log(this.showSelectBlue)
+			}*/
+
 	},
   	/**倒计时
   	 * 
@@ -260,7 +525,7 @@ export default {
     handelPick(){   	
     	$request.get("/api/online-order/v1/protected/startpick/"+this.$route.query.id).then(res=>{
 	  			if(res.success==true){
-	  				this.data.status=2;
+	  				this.data.status=res.data;
 	  				this.$vux.toast.show({
 	            type: 'text',
 	            text: '拣货任务开始'
@@ -348,6 +613,13 @@ export default {
 				/*line-height: 30px;*/
 			}
 		}
+		.showposdiffer:before{
+			border-top: none;
+		}
+		.weui-cell_access{
+		.weui-cell__ft:after{
+			border: none;}
+			}
 	}
 	.pre-content{
 		.list-info-cell .l-list-ct .l-list-content .l-list-code em{
@@ -521,6 +793,9 @@ export default {
 		    /*padding: 0 13.6%;*/
 		    background-color: #3DA5FE;
 		    }
+		    button:disabled{
+		    	background-color: #c7c7c7;
+		    }
 	    }
 	}
 	.pre-content{
@@ -528,4 +803,5 @@ export default {
 			
 		}
 	}
+	
 </style>

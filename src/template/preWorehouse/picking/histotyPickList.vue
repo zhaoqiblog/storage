@@ -10,7 +10,13 @@
 		       			<div>
 		       				<dl>
 		       					<dt>{{e.code}}</dt>
-		       					<dd>共{{e.skuNum}}件商品，已拣{{e.finishSkuNum}}件 <span>{{e.ordersequenceno}}</span></dd>
+		       					<dd>
+		       						<!--共{{e.skuNum}}件商品，已拣{{e.finishSkuNum}}件 <span>{{e.ordersequenceno}}</span>-->
+		       						<span class="order-form order-jkd" v-if="e.outerOrderType==2">{{e.orderSequenceNo}}</span>
+		       						<span class="order-form" v-if="e.outerOrderType==0">{{e.orderSequenceNo}}</span>
+		       						<span class="order-form">{{e.deliverType=='0'?'自提':'配送'}}</span>
+		       						<span class="order-form-immedirte" v-if="e.deliverType!=='0'&&e.slotType!=='expectTime'">{{e.slotType=='expectTime'?'':'极速达'}}</span>
+		       					</dd>
 		       				</dl>
 		       			</div>
 		       			<div class="button-to-pick"><router-link :to="{path:'historyDetail',query:{id:e.id}}"><button class="toDetail">查看详情</button></router-link></div>
@@ -114,6 +120,20 @@
 font-size: 15px;
 color: #333333;
 background: #FFFFFF;
+		}
+	}
+	.pre-list-item-content{
+		dd{
+					>span{
+						padding: 2px 5px;margin-right: 5px;
+					}
+						.order-form{
+							color: #197FA9;background: #F2FBFE;border: 1px solid #AFE2EB;border-radius: 1px;font-size: 10px;margin-left: 5px;
+							&.order-jkd{color: #6DA919;background: #F1FEE9;border: 1px solid #C4EBAF;border-radius: 0px;}
+							}
+							.order-form-immedirte{
+								background: #FEF6E9;border: 1px solid #EBD3AF;border-radius: 1px;color: #A95519;
+							}
 		}
 	}
 </style>

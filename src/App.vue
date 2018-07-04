@@ -14,6 +14,7 @@
 import { mapGetters, mapActions, mapState } from 'vuex'
 import factory from './factory'
 import $request from '@/service/request.js'
+import func from '@/func.js'
 import $conf from 'configuration'
 export default {
   data() {
@@ -38,6 +39,18 @@ export default {
   },
   created() {
 //  this.init()
+		localStorage.setItem("isAndroid",func.isOs())
+//		setTimeout(()=>{console.log(this.commonInfo.isAndroid)},3000)
+		/**
+  	 * 解决android输入框键盘弹起时挡住界面的问题
+  	 */
+  	window.addEventListener('resize', () => { 
+		 if (document.activeElement.tagName == 'INPUT') {  
+		  //延迟出现是因为有些 Android 手机键盘出现的比较慢   
+		  window.setTimeout(() => {
+		   document.activeElement.scrollIntoViewIfNeeded();  
+		 }, 100); 
+		} });
   },
   mounted() {
     factory.changeColor([255, 255, 255]);
@@ -59,6 +72,7 @@ export default {
       }
   },
   methods: {
+  	
     init () {
       if(window.cordova) {
         if(Object.keys(this.commonInfo).length == 0) {
@@ -161,7 +175,9 @@ export default {
   width: 100%;
   height: 100%;
 }
-
+input{
+	-webkit-user-select:auto;
+}
 .router-view {
   width: 100%;
   animation-duration: 0.5s;

@@ -87,7 +87,7 @@ name: 'supply-list-history',
      */
     getSupplyList () {
     	this.page.pageNo++;
-    	const obj={status:1,userNo:this.commonInfo.userNo,supplementType:3,page: this.page.pageNo,size: this.page.pageSize}
+    	const obj={status:1,supplementType:3,page: this.page.pageNo,size: this.page.pageSize,userNo:this.commonInfo.userNo}
       $request.get('/api/supplement-invoices/v1/protected/query_page', obj).then(res => {
         if(res.success) {
           this.data.content =this.data.content.concat(res.data.content)

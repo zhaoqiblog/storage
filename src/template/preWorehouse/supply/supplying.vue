@@ -5,13 +5,14 @@
     	<span class="txt">补货详情</span>
     </div>
     <div class="pre-content-title pre-detail-title">
-    	<div class="picking-title">
+    	<div class="picking-title picking-t">
     		<div class="counting-time">
     		</div>
     		<div class="pick-code pick-info-wrap">
     			<p>补货单号：<span>{{preSupplyInfo.supplementBillNo}}</span></p>
     			<p>创建日期：<span>{{new Date(preSupplyInfo.creatTime).format("yyyy-MM-dd hh:mm:ss")}}</span></p> 
     			<p>补货SKU总数：<span>{{preSupplyInfo.skuNum}}</span></p>     			
+    			<p>通道号：<span v-if="preSupplyInfo.supplementBillNo">{{preSupplyInfo.supplementBillNo.slice(-2)}}</span></p>     			
     		</div>
     	</div>
     </div>
@@ -25,10 +26,9 @@
     					<span class="now-num vux-1px-r">现有库存 {{e.frontWarehouseNum}}</span><span class="safe-num">安全库存 <span>{{e.safeNum}}</span></span>
     				</div>
     			</div>
-    			
-    			<div class="supply-input">
+    			<div class="supply-input" >
     				<span>补货至前置仓</span>
-    				<input type="number" v-model="e.supplyNum"  pattern="[0-9]*" @input="changeinput(e.supplyNum)"/>
+    				<input type="number" v-model="e.supplyNum" :id='"input-la"+index'  pattern="[0-9]*" @input="changeinput(e.supplyNum)"/>
     			</div>
     		</div>
     </div>
@@ -139,13 +139,23 @@ import { mapState,mapActions } from 'vuex';
 		}
 		&.pick-info-wrap{
 			height: 99px;
+			/*height: auto;*/
+			/*padding-bottom: 15px;*/
+		}
+	}
+	.pre-content-title.pre-detail-title .picking-t .pick-code{
+		
+		&.pick-info-wrap{
+			/*height: 99px;*/
+			height: auto;
+			padding-bottom: 15px;
 		}
 	}
 	.pre-supply-list{
 		width: 95%;
 		margin: 0 auto;
 		position: absolute;
-		top: 160px;
+		top: 175px;
 		margin-bottom: 60px;
 		.item-pre-supply{
 			padding: 10px 10px 0px;
@@ -174,10 +184,13 @@ import { mapState,mapActions } from 'vuex';
 				align-items: center;
 				padding: 10px 0;
 				>span{font-size: 13px;color: #999999;font-weight: 600;}
-				>input{
+					
+					>input{
+						width: 37%;height: 33px;
 					border: 1px solid #DDDDDD;
-					border-radius: 4px;width: 37%;height: 33px;
+					border-radius: 4px;
 					text-align: center;
+					-webkit-user-select:auto;
 				}
 			}
 			.pre-supply-name{
