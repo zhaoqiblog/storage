@@ -18,7 +18,7 @@
 	    			</p>
 	    			<!--<div class="l-list-name l-list-nametext">{{name}}</div>-->
 	    			<div class="pre-pic">
-	    				{{name}}
+	    				{{name}} &nbsp;<span v-if="unit">{{unit}}</span>
 	    			</div>
 	    			<p class="l-list-info clearfix">
 	    				<slot name="listInfo" >

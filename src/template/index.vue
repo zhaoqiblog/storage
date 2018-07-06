@@ -297,7 +297,7 @@
                 <grid-item :link="{name: 'scanEntry', query: {key: 'wareHouseAdd'}}">
                   <div class="text">
                     <h2>后场补货</h2>
-                    <p>确认托盘及抽检状态，完成收货</p>
+                    <p>从后场库位将商品补货至前置仓</p>
                   </div>
                   <div class="img">
                     <img src="../assets/pre/icon3.png">

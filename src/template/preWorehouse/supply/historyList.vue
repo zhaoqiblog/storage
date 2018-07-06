@@ -17,11 +17,17 @@
 	       						{{e.supplementBillNo}}
 	       					</dt>
 	       					<!--<dd>SKU总数 {{e.goodsSupplementNum}}</dd>-->
-	       					<dd>SKU总数 {{e.goodsSupplementNum}}  | 通道号 <span class="channel">{{e.supplementBillNo.slice(-2)}}</span></dd>
+	       					<dd class="list-contents">
+	       						<span>
+	       							SKU总数 {{e.goodsSupplementNum}}  | 通道号 <span class="channel">{{e.supplementBillNo.slice(-2)}}</span>
+	       						</span>
+	       						<router-link :to="{path:'supHistoryDetail',query:{id:e.id}}"><button class="toDetail">查看详情</button></router-link>
+	       						
+	       					</dd>
 	       				</dl>
 	       			</div>
 	       			<div class="button-to-pick">
-	       					<router-link :to="{path:'supHistoryDetail',query:{id:e.id}}"><button class="toDetail">查看详情</button></router-link>
+	       					<!--<router-link :to="{path:'supHistoryDetail',query:{id:e.id}}"><button class="toDetail">查看详情</button></router-link>-->
 	       			</div>
 	       		</div>
 	       </Group>
@@ -197,15 +203,26 @@ name: 'supply-list-history',
 				.pre-list-item-content{
 					padding: 7px 0 15px 0;
 					margin: 0 2.7%;
-					display: flex;justify-content: space-between;align-items: flex-end;
 					dt{
 						font-size: 18px;font-weight: 600;color: #333333;line-height: 2;
 						&.overTime{color: #FF5800;}
 						span{color: #3DA5FE;}
 					}
-					dd{font-size: 12px;color: #999999;}
+					dd{
+						/*font-size: 12px;color: #999999;*/
+					
+						button{
+							&.toDetail{
+								border: 1px solid #D0D0D0;
+								/*border-radius: 2px;*/
+								font-size: 15px;
+								color: #333333;
+								background: #FFFFFF;
+							}
+						}
+					}
 					.button-to-pick{
-						button{border-radius: 2px;background: #3DA5FE;border: none;font-size: 15px;padding: 5px 10px;color: #FFFFFF;}
+						/*button{border-radius: 2px;background: #3DA5FE;border: none;font-size: 15px;padding: 5px 10px;color: #FFFFFF;}*/
 					}
 				}
 			}

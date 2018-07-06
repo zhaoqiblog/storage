@@ -6,10 +6,10 @@
 				<router-link :to="{path:'historyDetail',query:{id:e.id}}">
 			       <Group class="list-pre-item">
 		       		<cell title="已完成" :value="new Date(e.finishTime).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>
-		       		<div class="pre-list-item-content">
+		       		<div class="pre-list-item-content pre-list-wrap">
 		       			<div>
 		       				<dl>
-		       					<dt>{{e.code}}</dt>
+		       					<dt>{{e.id}}</dt>
 		       					<dd>
 		       						<!--共{{e.skuNum}}件商品，已拣{{e.finishSkuNum}}件 <span>{{e.ordersequenceno}}</span>-->
 		       						<span class="order-form order-jkd" v-if="e.outerOrderType==2">{{e.orderSequenceNo}}</span>
@@ -116,24 +116,27 @@
 	.shop-supply .scroll-content.pre-content .list-pre-item .pre-list-item-content .button-to-pick button{
 		&.toDetail{
 			border: 1px solid #D0D0D0;
-/*border-radius: 2px;*/
-font-size: 15px;
-color: #333333;
-background: #FFFFFF;
+			/*border-radius: 2px;*/
+			font-size: 15px;
+			color: #333333;
+			background: #FFFFFF;
 		}
 	}
 	.pre-list-item-content{
+		&.pre-list-wrap{
+			display: flex;justify-content: space-between;align-items: flex-end;
+		}
 		dd{
-					>span{
-						padding: 2px 5px;margin-right: 5px;
-					}
-						.order-form{
-							color: #197FA9;background: #F2FBFE;border: 1px solid #AFE2EB;border-radius: 1px;font-size: 10px;margin-left: 5px;
-							&.order-jkd{color: #6DA919;background: #F1FEE9;border: 1px solid #C4EBAF;border-radius: 0px;}
-							}
-							.order-form-immedirte{
-								background: #FEF6E9;border: 1px solid #EBD3AF;border-radius: 1px;color: #A95519;
-							}
+			>span{
+				padding: 2px 5px;margin-right: 5px;
+			}
+			.order-form{
+				color: #197FA9;background: #F2FBFE;border: 1px solid #AFE2EB;border-radius: 1px;font-size: 10px;margin-left: 5px;
+				&.order-jkd{color: #6DA919;background: #F1FEE9;border: 1px solid #C4EBAF;border-radius: 0px;}
+			}
+			.order-form-immedirte{
+				background: #FEF6E9;border: 1px solid #EBD3AF;border-radius: 1px;color: #A95519;
+			}
 		}
 	}
 </style>

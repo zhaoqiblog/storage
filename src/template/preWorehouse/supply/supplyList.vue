@@ -19,12 +19,18 @@
 	       					<dt>
 	       						{{e.supplementBillNo}}
 	       					</dt>
-	       					<dd>SKU总数 {{e.skuNum}}  | 通道号 <span class="channel">{{e.supplementBillNo.slice(-2)}}</span></dd>
+	       					<dd class="list-contents">
+	       						<span>
+	       							SKU总数 {{e.skuNum}}  | 通道号 
+	       							<span class="channel">{{e.supplementBillNo.slice(-2)}}</span>
+	       						</span>
+	       						<button @click="goTosupplying(e.id)">{{e.status=='0'?"去补货":"查看详情"}}</button>
+	       					</dd>
 	       				</dl>
 	       			</div>
-	       			<div class="button-to-pick">
+	       			<!--<div class="button-to-pick">
 	       					<button @click="goTosupplying(e.id)">{{e.status=='0'?"去补货":"查看详情"}}</button>
-	       			</div>
+	       			</div>-->
 	       		</div>
 	       </Group>
 	    </div>
@@ -119,8 +125,7 @@ name: 'supply-list',
       })
     },
     back(){
-    	console.log("poioi")
-	this.$router.push("/")
+		this.$router.push("/")
   }
   },
   mounted() {
@@ -204,16 +209,22 @@ name: 'supply-list',
 				.pre-list-item-content{
 					padding: 7px 0 15px 0;
 					margin: 0 2.7%;
-					display: flex;justify-content: space-between;align-items: flex-end;
+					/*display: flex;justify-content: space-between;align-items: flex-end;*/
 					dt{
 						font-size: 18px;font-weight: 600;color: #333333;line-height: 2;
 						&.overTime{color: #FF5800;}
 						span{color: #3DA5FE;}
 					}
-					dd{font-size: 12px;color: #999999;
+					dd{
+						font-size: 12px;color: #999999;
+						&.list-contents{
+							display: flex;
+							justify-content: space-between;align-items: flex-end;
+						}
 						.channel{
 							color: #000000;font-weight: 700;
 						}
+						button{border-radius: 2px;background: #3DA5FE;border: none;font-size: 15px;padding: 3px 10px;color: #FFFFFF;}
 					}
 					.button-to-pick{
 						button{border-radius: 2px;background: #3DA5FE;border: none;font-size: 15px;padding: 5px 10px;color: #FFFFFF;}

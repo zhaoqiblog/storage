@@ -227,12 +227,9 @@ name: 'pick-list',
   },
   created() {
     this.getSupplyList(0)
-     
-   /* this.timer = setInterval(()=>{
-			this.page.pageNo=1;
-    	this.getSupplyList(0,this.page.pageNo)    	
-    },60000)*/
-//		setTime
+  },
+  destroyed(){
+  	clearInterval(this.timer)
   },
   methods: {
   	back(){

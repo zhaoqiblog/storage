@@ -16,12 +16,14 @@
 	       					<dt>
 	       						{{e.supplementBillNo}}
 	       					</dt>
-	       					<dd>补货SKU总数 {{e.skuNum}} | 补货总数量 {{e.goodsSupplementNum}}</dd>
+	       					<dd class="list-contents">补货SKU总数 {{e.skuNum}} | 补货总数量 {{e.goodsSupplementNum}}
+	       						<router-link :to="{path:'preShopDetail',query:{id:e.id}}"><button class="toDetail">查看详情</button></router-link>
+	       					</dd>
 	       				</dl>
 	       			</div>
-	       			<div class="button-to-pick">
+	       			<!--<div class="button-to-pick">
 	       					<router-link :to="{path:'preShopDetail',query:{id:e.id}}"><button class="toDetail">查看详情</button></router-link>
-	       			</div>
+	       			</div>-->
 	       		</div>
 	       </Group>
 	       </router-link>

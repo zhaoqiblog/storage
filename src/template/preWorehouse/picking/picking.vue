@@ -52,7 +52,7 @@
 				<div class="handel-btn">
 					<a v-if="data.recvinfo&&data.recvinfo.phone" :href="'tel:'+data.recvinfo.phone"><button>联系顾客</button></a>
 					<button @click="printOrder" v-if="commonInfo.isAndroid">打印小票</button>
-					<button v-if="data.status==0" @click="handelPick" class="startPick">开始拣货</button>
+					<button v-if="data.status!=2" @click="handelPick" class="startPick" :disabled="data.status=='-1'">{{data.status=='-1'?'已退货':'开始拣货'}}</button>
 				</div>
 			</div>
     	<pre-item-pic v-for="(item,index) in data.products"
@@ -215,23 +215,6 @@ export default {
   			//获取蓝牙连接列表，判断是否之前连接过蓝牙
   			if(localStorage.getItem("bluedata")){
   				let test='',byteText="27 97 1 27 33 0 ";
-					/*test='欢迎光临'+this.data.shop.shopname+'\n'+'----------------------------------\n'+
-								this.data.ordersequenceno+'-配送\n'+
-								'------------------------------\n'+
-								'订单号：'+this.data.id+'\n'+
-								'下单时间：'+ new Date(parseInt(this.data.generatetime)).format("yyyy-MM-dd hh:mm:ss")+'\n'+
-								'收货人：'+this.data.recvinfo.name+'\n'+
-								'联系电话：'+this.data.recvinfo.phone+'\n'+
-								'收货地址：'+this.data.recvinfo.address.city+'-'+this.data.recvinfo.address.city+'-'+this.data.recvinfo.address.detail+'\n'+
-								'备注：'+this.data.comment+'\n'+'------------------------------\n'+
-								'购买商品\n'
-					this.data.products.forEach((e,index)=>{
-						test+= (index+1)+'.'+e.title+
-									'\n'+'X'+e.num+'\n'+
-									e.barcode+'\n'+
-									'单价￥'+e.price.value+'            '+'金额￥'+e.price.total+'\n'+
-									'------------------------------\n'
-					})*/
 					factory.string2Byte({text:'\n\n欢迎光临'+(this.data.shop.shopname?this.data.shop.shopname:'')+'\n'+'--------------------------------\n'}).then(res=>{
 						byteText +=res
 					}).then(()=>{
@@ -372,14 +355,6 @@ export default {
 											
 												
 										}
-										
-										
-										setTimeout((e)=>{
-											
-										},3000)
-										/*for(let i=0;i<this.data.products.length;i++){
-											
-										}*/
 									})
 								})
 							})
@@ -402,30 +377,6 @@ export default {
   			}
 //		})
   		
-		//判断蓝牙是否之前连过打印机
-/*		if(localStorage.getItem("bluedata")){
-				
-			}else{
-				//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-				factory.getBlueList().then((res)=>{
-					let arrays = res.map((e)=>{
-						return {name:e.split("=>")[0],value:e.split("=>")[1]}
-					})
-					this.$store.commit("updateCommonInfo", {
-			    	blueList:[arrays],
-			    });
-			    this.showSelectBlue=true;
-			    console.log(this.commonInfo,this.showSelectBlue)
-				})
-//				let arrays=[]
-//				let arrays =[{name:'测试设备1',value:"b0:f0:gg：h：er"},{name:'测试设备2',value:"b0:f0:33：hd：68"}]
-//				this.$store.commit("updateCommonInfo", {
-//			    	blueList:[arrays],
-//			    });
-//				this.showSelectBlue=true;
-//				console.log(this.showSelectBlue)
-			}*/
-
 	},
   	/**倒计时
   	 * 
@@ -537,6 +488,7 @@ export default {
 	          })
 	  			}
 	  		})
+//  	this.data.status='-1'
     },
     /**
      * 完成拣货
@@ -802,6 +754,10 @@ export default {
 		.list-info-cell .l-list-ct .l-list-title{
 			
 		}
+	}
+	.pre-content-pic .pic-item-info .handel-btn button.startPick:disabled{
+		background-color:#c7c7c7;
+		border:none;
 	}
 	
 </style>
