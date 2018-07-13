@@ -22,7 +22,7 @@
     			<div v-if="type=='text'" class="l-list-text">{{textNum}}</div>
     			<div v-if="type=='input'" class="l-list-ctl">
     				<div @touchstart.stop.prevent="minus"  class="l-list-minus"></div>
-    				<input @input="inputVal" v-model="copyValue" type="number" />
+    				<input @input="inputVal" v-model="copyValue" type="number" pattern="[0-9]*"/>
     				<div @touchstart.stop.prevent="add"  class="l-list-add"></div>
     			</div>
     		</div>

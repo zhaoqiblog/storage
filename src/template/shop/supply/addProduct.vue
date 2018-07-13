@@ -63,8 +63,8 @@ export default {
 //    $request.get('/api/goods-warehouse/v1/protected/queryPlaceByGoodsBarCode', {
       $request.get('/api/goods-warehouse/v1/protected/place_of_goods/to_market', {
         goodsBarCode: this.$route.query.scanResult,
-        isMarketToOrigin: 0,
-        costCenterNum: this.costCenterNum
+//      isMarketToOrigin: 0,
+//      costCenterNum: this.costCenterNum
       }).then(res => {
         if(res.success) {
           res.data.forEach(function(item) {

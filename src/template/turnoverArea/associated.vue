@@ -38,7 +38,7 @@
 	      title="输入库位码"
 	      confirm-text="确认"
 	      @on-confirm="confirmInput">
-	      <div class="vux-prompt"><input placeholder="请输入" type="number" v-model.trim="warehousecode" class="vux-prompt-msgbox"></div>
+	      <div class="vux-prompt"><input placeholder="请输入" type="number" pattern="[0-9]*" v-model.trim="warehousecode" class="vux-prompt-msgbox"></div>
       </confirm>
     </div>
      <toast v-model="tipsobj.showPositionValue" type="text" :time="800" is-show-mask :text="tipsobj.errmsg" position="middle"></toast>

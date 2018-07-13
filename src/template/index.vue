@@ -306,18 +306,6 @@
               </grid>
             </div>
           </div>
-          <!--<div>
-          	<div><button @click="openBlueth">开启蓝牙</button></div>
-          	<div><button @click="getblueList">获取蓝牙配对列表</button></div>
-          	<div><button @click="connectblue">连接设备</button></div>
-          	<input type="text" v-model="inputss"/>
-          	<div><button @click="printtext">打印文字</button></div>
-          	<div><button @click="printtexte">打印打印</button></div>
-          	<div><button @click="printtexte2">打印打印</button></div>
-          	<div><button @click="printtexte3">打印条码</button></div>
-          	
-          	<div><button @click="pri"></button></div>
-          </div>-->
         </div>
       </div>
     </scroller>
@@ -398,220 +386,10 @@ export default {
   },
   created(){
   	this.init();
-  	
   },
   mounted() {
-  	setTimeout(()=>{})
-//	let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
-//		this.currentStore.push(aaa)
-//		console.log("1",aaa,this.currentStore)
-		
   },
-  methods: { 	
-  	openBlueth(){
-  		alert("开启蓝牙")
-  		factory.openBluetooth()
-  		.then(res=>{
-  			console.log(res)
-  			alert(JSON.stringify(res))
-  		})   
-  	},
-  	getblueList(){
-  		factory.getBlueList().then(res=>{
-  			console.log(res)
-  			this.blueList[0]=res[0]
-  			alert(this.blueList)
-//			this.$store.dispatch("update")
-  			this.$store.dispatch("changeCommonInfo", {
-		    	blueList:this.blueList,
-		    });
-  		})
-  	},
-  	connectblue(){
-		var param = { btAddress:this.blueList[0].split("=>")[1] };//这里传入用户点击的目标蓝牙设备地址
-		alert(JSON.stringify(param))
-		factory.connectBlue(param).then(res=>{
-			alert(JSON.stringify(res))
-		}).catch(err=>{
-			alert("Errores:"+err);
-		})
-  	},
-  	
-  	printtext(){
-  		alert("打印文字")
-  		let texts = factory.encodeUtf8(this.inputss).join(" ");
-  		let param = {text: "27 33 -12 "+texts };
-  		let texts1 = factory.stringToByte1(this.inputss).join(" ");
-  		let param1 = {text: "27 33 12 "+texts1 };
-  		console.log(param)
-  		console.log(param1)
-  		factory.printBytes(param).then(res=>{
-  			console.log(res)
-			alert(JSON.stringify(res))
-  		})
-  	},
-  	printtexte2(){
-//		let a = factory.string2Byte({text:this.inputss});
-			factory.printText({text:"\0\0\0\0\0\0"}).then(()=>{
-				let param1 = {text: "        我们都是好孩子09365",size: 5};
-				factory.printQRCode(param1).then(()=>{
-					let param1 = {text: "        我们都是好孩子09365",size: 10};
-					factory.printQRCode(param1).then(()=>{
-						let param1 = {text: "        我们都是好孩子09365",size: 15};
-						factory.printQRCode(param1).then(()=>{
-							let param1 = {text: "        我们都是好孩子09365",size: 20};
-							factory.printQRCode(param1).then(()=>{
-								let param1 = {text: "        我们都是好孩子09365",size: 51};
-								factory.printQRCode(param1).then(()=>{
-									let param1 = {text: "        我们都是好孩子09365",size: 43};
-									factory.printQRCode(param1).then(()=>{
-										
-									})
-								})
-							})
-						})
-					})
-				})
-			})
-			
-  		
-  	},
-  	pri(){
-  		let param1 = {text: "27 97 2 27 33 0 "};
-  		factory.string2Byte( {text:this.inputss}).then((res)=>{
-  			param1.text +=res;
-  		}).then(()=>{
-	  		factory.printBytes(param1).then(res=>{
-	  			console.log(res)
-	  		})
-  		})
-  		
-  		let param2 = {text: "27 97 2 27 33 12 "};
-  		factory.string2Byte( {text:this.inputss}).then((res)=>{
-  			param2.text +=res;
-  		}).then(()=>{
-	  		factory.printBytes(param2).then(res=>{
-	  			console.log(res)
-	  		})
-  		})
-  		
-  		let param3 = {text: "27 97 2 27 33 21 "};
-  		factory.string2Byte( {text:this.inputss}).then((res)=>{
-  			param3.text +=res;
-  		}).then(()=>{
-	  		factory.printBytes(param3).then(res=>{
-	  			console.log(res)
-	  		})
-  		})
-  		
-  		let param4 = {text: "27 97 2 27 33 13 "};
-  		factory.string2Byte( {text:this.inputss}).then((res)=>{
-  			param4.text +=res;
-  		}).then(()=>{
-	  		factory.printBytes(param4).then(res=>{
-	  			console.log(res)
-	  		})
-  		})
-  		
-  		let param5 = {text: "27 97 2 27 33 31 "};
-  		factory.string2Byte( {text:this.inputss}).then((res)=>{
-  			param5.text +=res;
-  		}).then(()=>{
-	  		factory.printBytes(param5).then(res=>{
-	  			console.log(res)
-	  		})
-  		})
-  		
-  		let param6 = {text: "27 97 2 27 33 35 "};
-  		factory.string2Byte( {text:this.inputss}).then((res)=>{
-  			param6.text +=res;
-  		}).then(()=>{
-	  		factory.printBytes(param6).then(res=>{
-	  			console.log(res)
-	  		})
-  		})
-
-  		let param7 = {text: "27 97 2 27 33 53 "};
-  		factory.string2Byte( {text:this.inputss}).then((res)=>{
-  			param7.text +=res;
-  		}).then(()=>{
-	  		factory.printBytes(param7).then(res=>{
-	  			console.log(res)
-	  		})
-  		})
-  	},
-  	printtexte3(){
-  		let a;
-  		/*let param = {text: "GS k 73 10 123 66 78 111 46 123 67 12 34 56 "};
-  		factory.printBytes(param).then(res2=>{
-  			console.log(res2)
-				alert(JSON.stringify(res2))
-  		})*/
-//		let param1 = {text: "29 72 1 29 107 73 10 123 66 78 111 46 123 67 12 34 56 "};
-			factory.string2Byte({text:this.inputss}).then(res=>{
-				alert(res)
-				a = res;
-			}).then(()=>{
-				let param2 = {text: "29 107 "+a};
-						factory.printQRCode(param2)
-				})
-//			})
-			
-			
-			 /*let param1 = {text: "29 72 1 29 107 73 10 123 66 78 111 46 123 67 12 34 56 "};
-  		factory.printBytes(param1).then(res2=>{
-  			console.log(res2)
-				alert(JSON.stringify(res2))
-  		})*/
-  		
-  		/*let param = {text: "GS k 73 10 123 66 78 111 46 123 67 12 34 56 "};
-  		factory.printBytes(param).then(res2=>{
-  			console.log(res2)
-				alert(JSON.stringify(res2))
-  		})
-  		let param = {text: "GS k 73 10 123 66 78 111 46 123 67 12 34 56 "};
-  		factory.printBytes(param).then(res2=>{
-  			console.log(res2)
-				alert(JSON.stringify(res2))
-  		})*/
-  	},
-  	printtexte(){
-  		//开启蓝牙
-  		const _this =this;
-  		factory.openBluetooth().then(res=>{
-  			alert(JSON.stringify(res))
-  		},(err)=>{alert("Error:"+err)}).then(()=>{
-  			//获取蓝牙连接列表，判断是否之前连接过蓝牙
-  			factory.getBlueList().then(res=>{
-	  			_this.blueList[0]=res[0]
-		  			_this.$store.dispatch("changeCommonInfo", {
-				    	blueList:_this.blueList,
-				    });
-	  		}).then(()=>{
-				  var param = { btAddress:this.blueList[0].split("=>")[1] };//这里传入用户点击的目标蓝牙设备地址
-					factory.connectBlue(param).then(res=>{
-						alert(JSON.stringify(res))
-					}).then(()=>{
-						alert("转byte数组")
-						alert(this.inputss);
-						let a;
-  						factory.string2Byte({text:this.inputss}).then(res=>{
-  							alert(res)
-  							a = res;
-//							return 
-  						}).then(res1=>{
-  							let param = {text: "27 33 12 "+a };
-  							alert(JSON.stringify(param))
-					  		factory.printBytes(param).then(res2=>{
-					  			console.log(res2)
-								alert(JSON.stringify(res2))
-					  		})
-  						})
-					})
-	  		})
-  		})
-  		
-  	},
+  methods: {
     storeChange (value) {
       const costName = this.$refs.storepicker.getNameValues();
       if(costName){
@@ -645,7 +423,7 @@ export default {
 								    this.$store.dispatch("changeCommonInfo", {
 								    	costName:target.storeName,
 								    	costNumber:target.storeCode,
-								    	isAndroid:func.isOs
+//								    	isAndroid:func.isOs
 								    });
 //								    console.log(target,this.commonInfo)
 	                //获取用户所在小店
@@ -699,7 +477,7 @@ export default {
 					    this.$store.dispatch("changeCommonInfo", {
 					    	costName:target.storeName,
 					    	costNumber:target.storeCode,
-					    	isAndroid:func.isOs()
+//					    	isAndroid:func.isOs()
 					    });
 //					    console.log(target,this.commonInfo)
             //获取用户所在小店 .//res.data.costNumber
@@ -845,7 +623,7 @@ export default {
     	/*transition: all 6s;
     	max-height: 380px;*/
     	.weui-cells__title{
-    		background-color: #999999;
+    		background-color: #3891E7;
     		color: #FFFFFF;
     		.i-line{
     			background: #FFFFFF;

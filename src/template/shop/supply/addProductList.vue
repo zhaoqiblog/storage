@@ -105,13 +105,11 @@ export default {
         })
       } else {
       	const data ={
-					  "billNoCode": "MCBH",
-					  "supplementInvoicesDetailsDTO":supplementInvoicesDetailsDTO,
-					  "supplementType": "2"
-					}
-//    	console.log(data)
+		  "billNoCode": "MCBH",
+		  "supplementInvoicesDetailsDTO":supplementInvoicesDetailsDTO,
+		  "supplementType": "2"
+		}
         $request.post('/api/supplement-invoices/v1/protected/create', data).then(res => {
-        	console.log(res)
         	if(res.success==true){
 	          this.$store.dispatch('clearSupplement') // 提交成功清除补货清单
 	          this.$router.push({path:'/success',query:{text: '补货成功',title: '提交成功',info: '请将商品移至卖场', path: {name: 'scanEntry', query: {key: 'shopSupplying'}}, listPath: {path: 'shop/supply'}}})

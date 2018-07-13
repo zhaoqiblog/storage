@@ -19,7 +19,7 @@
 	    			</slot>
 	    			<div v-if="type=='input'" class="l-list-ctl">
 	    				<div @touchstart.stop.prevent="minus"  class="l-list-minus"></div>
-	    				<input @input="inputVal" v-model="copyValue" type="number" />
+	    				<input @input="inputVal" v-model="copyValue" type="number"  pattern="[0-9]*"/>
 	    				<div @touchstart.stop.prevent="add"  class="l-list-add"></div>
 	    			</div>
     			</div>
@@ -79,7 +79,7 @@
 	      	<label for="">实际收货数量</label>
 	      	<div class="l-list-ctl">
 				<div @touchstart.stop.prevent="minusActual"  class="l-list-minus"></div>
-				<input v-model="actualValue" type="number" @input='inputActaul'/>
+				<input v-model="actualValue" type="number" @input='inputActaul' pattern="[0-9]*"/>
 				<div @touchstart.stop.prevent="addActual"  class="l-list-add"></div>
 			</div>
 	      </div>
@@ -87,7 +87,7 @@
 	      	<label for="">赠品数量</label>
 	      	<div class="l-list-ctl">
 				<div @touchstart.stop.prevent="minusGifts"  class="l-list-minus"></div>
-				<input @input="inputGifts" v-model="giftsValue" type="number" />
+				<input @input="inputGifts" v-model="giftsValue" type="number" pattern="[0-9]*"/>
 				<div @touchstart.stop.prevent="addGifts"  class="l-list-add"></div>
 			</div>
 	      </div>

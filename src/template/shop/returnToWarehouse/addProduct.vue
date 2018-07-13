@@ -41,7 +41,7 @@
       cancel-text=" "
       @on-confirm="confirmInput"
       @on-show="code = ''">
-        <div class="vux-prompt"><input placeholder="请输入" v-model.trim="code" class="vux-prompt-msgbox" type="number"></div>
+        <div class="vux-prompt"><input placeholder="请输入" v-model.trim="code" class="vux-prompt-msgbox" type="number" pattern="[0-9]*"></div>
       </confirm>
     </div>
     <div class="cm-footer">

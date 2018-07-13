@@ -38,9 +38,11 @@ export default {
   	}
   },
   created() {
-//  this.init()
 		localStorage.setItem("isAndroid",func.isOs())
-//		setTimeout(()=>{console.log(this.commonInfo.isAndroid)},3000)
+		factory.getDeviceInfo().then((res)=>{
+  		let plats = res.platform ? true : func.isOs()
+  		localStorage.setItem("isAndroid",plats)
+  	})
 		/**
   	 * 解决android输入框键盘弹起时挡住界面的问题
   	 */

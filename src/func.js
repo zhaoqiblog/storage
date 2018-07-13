@@ -99,6 +99,7 @@ console.log(param)
 		}else{
 			isAndroid=false;
 		}
+		console.log("ppp")
 		return isAndroid
 	}
 }

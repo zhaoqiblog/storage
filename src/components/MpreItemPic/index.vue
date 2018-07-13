@@ -81,7 +81,7 @@ export default{
 	    
 	},
 	created(){
-		console.log(this.preCode)
+//		console.log(this.preCode)
 		typeof this.totalNum == "string" && (this.totalNum = parseInt(this.totalNum));
 	},
 	
@@ -125,10 +125,11 @@ export default{
 	}
 	.list-pic-goods{
 		display: flex;
-		justify-content: space-between;
+		justify-content:flex-start;
 		align-items: center;
 		>img{
 			width: 80px;
+			margin-right: 15px;
 		}
 		.l-list-info{
 			.totalnums{

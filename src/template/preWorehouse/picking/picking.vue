@@ -1,11 +1,6 @@
 <template>
   <div class="shop-supply pick-supply">
-  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="showbackTip=true">拣货单详情</x-header>
-    <!--<div class="vux-header vux-1px-b pre-picking-header clearfix">
-    	<span class="icons fl"  @click="back"></span>
-    	<span class="txt">{{data.status==0 ?'拣货详情页':'拣货中'}}</span>
-    	<span class="fr startPick" v-if="data.status==0" @click="handelPick"><span>开始拣货</span></span>
-    </div>-->
+  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="showBackTipinfo">拣货单详情</x-header>
     <div class="pre-content-title">
     	<div class="picking-title">
     		<div class="counting-time-pic">
@@ -51,8 +46,8 @@
     		</div>
 				<div class="handel-btn">
 					<a v-if="data.recvinfo&&data.recvinfo.phone" :href="'tel:'+data.recvinfo.phone"><button>联系顾客</button></a>
-					<button @click="printOrder" v-if="commonInfo.isAndroid">打印小票</button>
-					<button v-if="data.status!=2" @click="handelPick" class="startPick" :disabled="data.status=='-1'">{{data.status=='-1'?'已退货':'开始拣货'}}</button>
+					<!--<button @click="printOrder" v-if="isAndroid=='true'">打印小票</button>-->
+					<button v-if="data.status&&data.status!=2" @click="handelPick" class="startPick" :disabled="data.status=='-1'">{{data.status=='-1'?'已退货':'开始拣货'}}</button>
 				</div>
 			</div>
     	<pre-item-pic v-for="(item,index) in data.products"
@@ -141,12 +136,14 @@ export default {
     	showSelectBlue:false, //选择蓝牙
     	slectBlue:[], //选中的蓝牙设备号
     	isConnectDevice:false,
+    	isAndroid:false,
       data: {
       	content:[],
       },
     }
   },
   created() {
+  	this.isAndroid =localStorage.getItem("isAndroid");
 //	alert(this.commonInfo.isAndroid)
   	this.getPickingInfo(this.$route.query.id)
     let self = this;
@@ -156,16 +153,17 @@ export default {
 				clearInterval(self.timeIntever)
 			}
 		}, 1000);
+		
 		//判断之前是否连结果蓝牙，如果连接过蓝牙，有列表的话，直接连接
-		if(localStorage.getItem("bluedata")&&this.commonInfo.isAndroid){
+		/*if(localStorage.getItem("bluedata")&&this.isAndroid){
 			var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 				//连接打印机
 				if(window.cordova){factory.connectBlue(param1).then(res=>{
-//					alert("连接打印机")
 					this.isConnectDevice=true;
+//					alert("蓝牙设备连接成功")
 				},(err)=>{alert("error:"+(err||'连接蓝牙设备失败'))})
 			}
-		}
+		}*/
   },
   destroyed(){
 			clearInterval(this.timeIntever)
@@ -207,11 +205,9 @@ export default {
 	/**
 	 * 打印小票
 	 */
-	printOrder(){	
+	printOrder(){
 		//开启蓝牙
   		const _this =this;
-//		factory.openBluetooth().then(res=>{console.log(JSON.stringify(res))},(err)=>{alert("Error:"+err)})
-//			.then(()=>{
   			//获取蓝牙连接列表，判断是否之前连接过蓝牙
   			if(localStorage.getItem("bluedata")){
   				let test='',byteText="27 97 1 27 33 0 ";
@@ -351,9 +347,6 @@ export default {
 														func(byteText,callback)
 												}
 											}
-											
-											
-												
 										}
 									})
 								})
@@ -370,13 +363,9 @@ export default {
 				    	blueList:[arrays],
 				    });
 				    this.showSelectBlue=true;
-				    console.log(this.commonInfo,this.showSelectBlue)
+//				    console.log(this.commonInfo,this.showSelectBlue)
 					})
-					
-			
   			}
-//		})
-  		
 	},
   	/**倒计时
   	 * 
@@ -397,6 +386,14 @@ export default {
   	back(){
   		this.showbackTip=true;
 //		this.$router.back()
+  	},
+  	showBackTipinfo(){
+  		if(this.data.status=='2'){
+  			this.showbackTip=true
+  		}else{
+  			this.$router.back()
+  		}
+  		
   	},
   	onConfirm(){
   		this.$router.back()

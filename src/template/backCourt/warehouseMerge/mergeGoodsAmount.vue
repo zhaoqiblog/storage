@@ -1,6 +1,6 @@
 <template>
   <div class="self-process">
-    <x-header :left-options="{backText: '',preventGoBack:true}" @on-click-back="back"><span>输入合并数量写</span></x-header>
+    <x-header :left-options="{backText: '',preventGoBack:true}" @on-click-back="back"><span>输入合并数量</span></x-header>
      <!--<scroller class="scroll-view" lock-x height="-45px">-->
      	<div class="scroll-content content-wrap">
 	    <div class="contentWrap">
@@ -47,22 +47,9 @@
 	      placeholder='请输入'
 	      @on-confirm="confirmInput">
       <!--<div><input type="text" v-model.trim="warehousecode"/></div>-->
-      <div class="vux-prompt"><input placeholder="请输入" v-model.trim="warehousecode" class="vux-prompt-msgbox"  type="number"></div>
+      <div class="vux-prompt"><input placeholder="请输入" v-model.trim="warehousecode" class="vux-prompt-msgbox"  type="number" pattern="[0-9]*"></div>
       </confirm>
     </div>
-    <!--<div class="alert-wrap" v-if="showInput1"></div>-->
-    <!--<div class="weui-dialog new-dialoag" style="" v-if="showInput1">
-    	<div class="weui-dialog__hd">
-    		<strong class="weui-dialog__title">输入库位码</strong>
-    	</div>
-    	<div class="vux-prompt">
-    		<input placeholder="请输入" class="vux-prompt-msgbox" v-model="warehousecode">
-    	</div> 
-    	<div class="weui-dialog__ft" @click="confirmInput1">
-    		<a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
-    	</div>
-    </div>-->
-     	<!--<div class="footer-bottom" @click="toShowPlace" :disabled="isDisabled"><i></i>&nbsp;&nbsp;下一步，请扫描目标库位码</div>-->
   </div>
 </template>
 <style lang="less">
