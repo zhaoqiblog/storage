@@ -176,7 +176,7 @@ name: 'supply-list',
 		line-height: 2;
 	}
 	.weui-cells .weui-cell{
-		padding: 13px 0px;
+		padding: 10px 0px;
 	}
 	.scroll-content{
 		&.pre-content{

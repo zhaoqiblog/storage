@@ -1,6 +1,6 @@
 <template>
   <div class="self-process">
-    <x-header >库位盘点</x-header>
+    <x-header >库位盘点详情</x-header>
     <!--<scroller class="scroll-view" lock-x height="-45px">-->
 <div class="scroll-content content-wrap">
     <div class="contentWrap">

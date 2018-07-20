@@ -37,13 +37,20 @@
 	    			</p>
 	    			</div>
     			</div>
-    			<div class="l-list-button  vux-1px-t">
-    				<button @click="tolessPick(itemid)" v-if="init" class="no-pick">缺货</button>
-    				<button v-if="init" @click="toPickAll(itemid)">全部拣货</button>
-    				<button class="all-pick" v-if="halfPickNum==totalNum">全部已拣</button>
-    				<button class="half-pick" v-if="halfPickNum>0&&halfPickNum!=0&&halfPickNum!=totalNum">已拣X{{halfPickNum}}</button>
-    				<button class="half-no-goods" v-if="halfPickNum>0&&halfPickNum!==0&&totalNum-halfPickNum>0">缺货X{{totalNum-halfPickNum}}</button>
-    				<button class="all-no-goods" v-if="halfPickNum==0">全部缺货</button>
+    			<div class="l-list-button  vux-1px-t clearfix">
+    				<a :href="'tel:'" v-if="type&&type=='concat'">
+	    				<div v-if="type&&type=='concat'" style="line-height: 33px;font-size: 11px;color: #999999;" class="fl">
+	    					辉21 &nbsp;&nbsp;联系顾客
+	    				</div>
+    				</a>
+    				<div class="fr">
+	    				<button @click="tolessPick(itemid)" v-if="init" class="no-pick">缺货</button>
+	    				<button v-if="init" @click="toPickAll(itemid)">全部拣货</button>
+	    				<button class="all-pick" v-if="halfPickNum==totalNum">全部已拣</button>
+	    				<button class="half-pick" v-if="halfPickNum>0&&halfPickNum!=0&&halfPickNum!=totalNum">已拣X{{halfPickNum}}</button>
+	    				<button class="half-no-goods" v-if="halfPickNum>0&&halfPickNum!==0&&totalNum-halfPickNum>0">缺货X{{totalNum-halfPickNum}}</button>
+	    				<button class="all-no-goods" v-if="halfPickNum==0">全部缺货</button>
+    				</div>
     			</div>
     		</div>
     	</div>
@@ -78,6 +85,7 @@ export default{
 	    toallpick:[Function],		//全部拣货按钮点击事件
 //	    disbale:[Boolean],  		//是否已经开始拣货，未开始，按钮不可点
 		status:[String,Number],  //是否的是历史单据1：是：不显示现有库存和安全库存，0：否，显示现有库存和安全库存
+		type:[String],  //concat 是否是合单界面
 	    
 	},
 	created(){

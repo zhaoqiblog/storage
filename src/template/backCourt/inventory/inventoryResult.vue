@@ -19,8 +19,9 @@
 					<dd>差异SKU数</dd>
 				</dl>
     	</div>
+    	<img class="succes-icon" src="../../../assets/common/icon_yiwancheng.png"/>
     	<keep-alive>
-	    	<div class="goodsList" style="padding-bottom: 0;">
+	    	<div class="goodsList list-differ">
 	    		<p class="listTitle"><span>商品信息</span><span><span style="margin-right: 17px;">系统数量</span><span>盘点数量</span></span></p>
 	    		<div class="listWrap">
 	    			<goods-info-item
@@ -43,6 +44,14 @@
     </div>
     <!--</scroller>-->
    </div>
+   <div class="cm-footer">
+      <div class="btn-add btn-left">
+       <router-link to="/scanEntry?key=inventory"><span>继续盘点</span></router-link>
+      </div>
+      <div class="btn-submit">
+        <router-link to="/"><button type="button">返回主页</button></router-link>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -114,6 +123,12 @@ export default {
 		margin-right: 5px;
 		span{display:inline-block;width: 60px;text-align: right;}
 		span:nth-child(2){margin-left: 17px;}
+	}
+	.contentWrap{
+		.succes-icon{width: 70px;position: absolute;z-index: 20;top: 30px;right:20%;margin: 0;}
+	}
+	.list-differ{
+		padding-bottom:48px;
 	}
 .differ .list-info-cell .l-list-ct .l-list-content .l-list-name.l-list-nametext{padding-right:36%}
 </style>

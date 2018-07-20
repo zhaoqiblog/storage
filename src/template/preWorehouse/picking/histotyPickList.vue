@@ -1,15 +1,19 @@
 <template>
 	<div class="shop-supply">
-		<x-header class="vux-1px-b">我的拣货单</x-header>
+		<x-header class="vux-1px-b">历史拣货单</x-header>
 		<div class="scroll-content pre-content history-list-content" ref="scrollWrap">
 			<div class="container-list" v-for="e,index in data.content">
 				<router-link :to="{path:'historyDetail',query:{id:e.id}}">
 			       <Group class="list-pre-item">
-		       		<cell title="已完成" :value="new Date(e.finishTime).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>
+		       		<cell  :value="new Date(e.finishTime).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre">
+		       			<!--:title="'已完成(拣货员：'+e.operatorName+')'"-->
+		       			<span slot="title" style="font-size: 12px;">{{e.operatorName}}  已完成 </span>
+		       		</cell>
+		       		<!--<cell :title="'已完成(拣货员：'+e.operatorName+')'" :value="new Date(e.finishTime).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>-->
 		       		<div class="pre-list-item-content pre-list-wrap">
 		       			<div>
 		       				<dl>
-		       					<dt>{{e.id}}</dt>
+		       					<dt>{{e.id}} <span></span></dt>
 		       					<dd>
 		       						<!--共{{e.skuNum}}件商品，已拣{{e.finishSkuNum}}件 <span>{{e.ordersequenceno}}</span>-->
 		       						<span class="order-form order-jkd" v-if="e.outerOrderType==2">{{e.orderSequenceNo}}</span>
@@ -81,7 +85,8 @@
 			getPreList () {
 		    	this.page.pageNo++;
 //		    	const  pageable= {page: this.page.pageNo,size: this.page.pageSize}
-		    	const obj={shopId:this.commonInfo.costNumber,status:1,page: this.page.pageNo,size: this.page.pageSize,operatorNo:this.commonInfo.userNo}
+//		    	const obj={shopId:this.commonInfo.costNumber,status:1,page: this.page.pageNo,size: this.page.pageSize,operatorNo:this.commonInfo.userNo}
+		    	const obj={shopId:this.commonInfo.costNumber,status:1,page: this.page.pageNo,size: this.page.pageSize}
 		      $request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
 		        if(res.success) {
 		          this.data.content =this.data.content.concat(res.data.content)

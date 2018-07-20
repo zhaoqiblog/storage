@@ -38,7 +38,7 @@
     				</dd>
     				<dd>
     					<span>拣货员</span>
-    					<span>{{data.status=='0'?'':commonInfo.name}}</span>
+    					<span>{{data.operatorName}}</span>
     				</dd>
     				<dd>
     					<span>完成时间</span>
@@ -52,7 +52,7 @@
     				<dt>顾客信息</dt>
     				<dd v-if="data.expectdeliverydatetime">
     					<span >{{data.expectdeliverydatetime.slottype=='immediate'?'极速送达':'预约送达'}}</span>
-    					<span>{{new Date( parseInt(data.expectdeliverydatetime.date)).format('yyyy-MM-dd')}}&nbsp;&nbsp;{{data.expectdeliverydatetime.from}}-{{data.expectdeliverydatetime.to}}</span>
+    					<span>{{new Date(parseInt(data.expectdeliverydatetime.date)).format('yyyy-MM-dd')}}&nbsp;&nbsp;{{data.expectdeliverydatetime.from}}-{{data.expectdeliverydatetime.to}}</span>
     				</dd>
     				<dd v-if="data.recvinfo">
     					<span>顾客信息</span>
@@ -291,7 +291,7 @@ import { mapState } from 'vuex';
 											function func(byteText,callback){
 												let index = funarry[Ind][0];
 												let e = funarry[Ind][1];
-												factory.string2Byte({text:(index+1)+'.'+e.goodsName+'\n'}).then(res=>{
+												factory.string2Byte({text:(index+1)+'.'+e.goodsName+'   '+e.desc+'\n'}).then(res=>{
 													byteText +=' 27 33 00 '+res
 												}).then(()=>{
 													factory.string2Byte({text:'X'+e.qty+'\n'}).then(res=>{

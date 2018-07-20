@@ -13,7 +13,7 @@
   }
   .btn-add {
     background-color: #fff;
-    color: #3DA5FE;
+    color: #3DA5FE !important;
     box-shadow: 0 -3px 8px 0 rgba(12,12,12,0.08);
     line-height: 50px;
     font-size: 16px;
@@ -28,6 +28,14 @@
         opacity: .5;
       }
     }
+    &.btn-left{
+        span{
+            background: none;
+            text-align: center;padding: 0;
+            color: #3DA5FE;letter-spacing: 1px;
+        }
+    }
+    
   }
   .btnblue-del {
     flex: 1;
@@ -80,4 +88,63 @@
       }
     }
   }
+}
+.pre-footer{
+    input[type='checkbox']{width: 0;right: 80px;}
+    label:before{
+      margin-top: -2px;
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      /*margin-right: 6px;*/
+      border-radius: 100%;
+      vertical-align: middle;
+      border: 1px solid #D0D0D0;
+      background: #FFFFFF;
+    }
+    input[type='checkbox']:checked+label:before{
+        background:url("../assets/pre/iconOk.png") center center no-repeat;
+        background-size: cover;
+        border: none;
+        width: 18px;
+        height: 18px;
+    }
+    label{
+        display: inline-block;
+        height: 100%;
+    }
+    .btn-submit{
+      &.concat-pre{
+        button{
+//      background: #FE833D;
+        &:disabled{
+//          background-color: #c7c7c7;
+        }
+        }
+        
+      }
+    }
+    .btn-add{
+        &.btn-tips-concat{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1;
+            >span:nth-child(1){
+//              flex: 1;
+            } 
+            .total-pre{
+            font-size: 14px;
+            color: #151515;
+            letter-spacing: 0;
+            line-height: 22px;
+            }
+            .concat-t-detail{
+                font-size: 10px;
+                color: #999999;
+            }
+        }
+    }
 }

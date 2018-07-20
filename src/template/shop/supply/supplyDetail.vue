@@ -7,7 +7,7 @@
         <div class="text">
           <div>补货单号：{{data.supplementBillNo}}</div>
           <div>补货数量：{{data.supplyNum}}</div>
-          <div>补货时间：{{(new Date(data.updateTime)).format('yyyy-MM-dd hh:mm:ss')}}</div>
+          <div>补货时间：{{(new Date(data.creatTime)).format('yyyy-MM-dd hh:mm:ss')}}</div>
         </div>
         <div class="sign sign-supplying" v-if="data.status == 0"></div>
         <div class="sign sign-completed" v-if="data.status == 1"></div>

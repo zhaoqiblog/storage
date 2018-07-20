@@ -169,9 +169,9 @@ name: 'supply-list-history',
 		font-weight: 800;
 		line-height: 2;
 	}
-	.weui-cells .weui-cell{
+	/*.weui-cells .weui-cell{
 		padding: 13px 0px;
-	}
+	}*/
 	.scroll-content{
 		&.pre-content{
 			.list-info-cell{

@@ -8,6 +8,12 @@ import historyPickList from '../../template/preWorehouse/picking/histotyPickList
 import historyDetail from '../../template/preWorehouse/picking/historyDetail.vue'  //历史拣货单详情
 
 /**
+ * 合并拣货
+ */
+import concatPickList from '../../template/preWorehouse/concatPicking/concatList.vue'  //前置仓拣货列表
+import concatPicking from '../../template/preWorehouse/concatPicking/concatPicking.vue'  //前置仓拣货列表
+
+/**
  * 前置仓补货
  */
 import supplyList from '../../template/preWorehouse/supply/supplyList.vue'		//补货列表
@@ -54,7 +60,9 @@ import wareHouseConfirm from '../../template/preWorehouse/backStorage/confirmGoo
  			 //后场补货
  			 {path:'wareHouseAdd',name:'wareHouseAdd',component:wareHouseAdd,meta:{index:2.1}},
  			 {path:'wareHouseConfirm',name:'wareHouseConfirm',component:wareHouseConfirm,meta:{index:2.1}},
- 			 
+ 			 //合并拣货
+ 			 {path:'concatPickList',name:'concatPickList',component:concatPickList,meta:{index:2.1}},
+ 			 {path:'concatPicking',name:'concatPicking',component:concatPicking,meta:{index:2.1}},
  		]
  	},
  	{path:"/preSuccess",component:preSuccess,name:'preSuccess'},

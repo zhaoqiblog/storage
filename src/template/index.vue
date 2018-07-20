@@ -300,12 +300,26 @@
                     <p>从后场库位将商品补货至前置仓</p>
                   </div>
                   <div class="img">
-                    <img src="../assets/pre/icon3.png">
+                    <img src="../assets/home/icon3.png">
+                  </div>
+                </grid-item>
+              </grid>
+              <grid :cols="2">
+              	<grid-item :link="{name: 'concatPickList'}">
+                  <div class="text">
+                    <h2>合并拣货</h2>
+                    <p>订单合并拣货</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon9.png">
                   </div>
                 </grid-item>
               </grid>
             </div>
           </div>
+          <!--<div>
+          	<button @click="printCode">打印二维码</button>
+          </div>-->
         </div>
       </div>
     </scroller>
@@ -390,6 +404,28 @@ export default {
   mounted() {
   },
   methods: {
+  	printCode(){
+  		let param1 = {text:'打印二维码带下测试',size: 10};
+			factory.printQRCode(param1).then(()=>{
+				factory.printQRCode({text:'打印二维码带下测试',size: 20}).then(()=>{
+						factory.printQRCode({text:'打印二维码带下测试',size: 30}).then(()=>{
+							factory.printQRCode({text:'打印二维码带下测试',size: 40}).then(()=>{
+								factory.printQRCode({text:'打印二维码带下测试',size: 50}).then(()=>{
+									factory.printQRCode({text:'打印二维码带下测试',size: 100}).then(()=>{
+										factory.printQRCode({text:'打印二维码带下测试',size: 55}).then(()=>{
+											factory.printQRCode({text:'打印二维码带下测试',size: 22}).then(()=>{
+												factory.printQRCode({text:'打印二维码带下测试',size: 33}).then(()=>{
+												
+											})
+									})
+									})
+								})
+							})
+						})
+					})
+				})
+			})
+  	},
     storeChange (value) {
       const costName = this.$refs.storepicker.getNameValues();
       if(costName){

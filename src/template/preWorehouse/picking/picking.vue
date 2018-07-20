@@ -47,7 +47,8 @@
 				<div class="handel-btn">
 					<a v-if="data.recvinfo&&data.recvinfo.phone" :href="'tel:'+data.recvinfo.phone"><button>联系顾客</button></a>
 					<!--<button @click="printOrder" v-if="isAndroid=='true'">打印小票</button>-->
-					<button v-if="data.status&&data.status!=2" @click="handelPick" class="startPick" :disabled="data.status=='-1'">{{data.status=='-1'?'已退货':'开始拣货'}}</button>
+					<!--v-if="data.status==-1 || data.status==0"-->
+					<button v-if="showStartPick" @click="handelPick" class="startPick" :disabled="data.status=='-1'">{{data.status=='-1'?'已退货':'开始拣货'}}</button>
 				</div>
 			</div>
     	<pre-item-pic v-for="(item,index) in data.products"
@@ -77,7 +78,7 @@
        		待拣货共 <i>{{data.products.length}}</i> 件,已拣货 <i>{{alreadyPick}}</i> 件
       </div>
       <div class="btn-submit">  <!--:disabled=""-->
-        <button type="button" @click="completeOrder" :disabled="data.status==-1">完成</button>
+        <button type="button" @click="completeOrder" :disabled="data.status!=2">完成</button>
       </div>
     </div>
     <div v-transfer-dom class="pre-confirm">
@@ -140,6 +141,7 @@ export default {
       data: {
       	content:[],
       },
+      showStartPick:false,  //开始拣货按钮是否显示
     }
   },
   created() {
@@ -176,6 +178,11 @@ export default {
 		$request.get("/api/online-order/v1/protected/orderdetail/"+id).then(res=>{
 			if(res.success==true){
 				this.data=res.data
+				if(res.data.status==0){
+					this.showStartPick=true;
+				}else{
+					this.showStartPick=false;
+				}
 				this.data.products.forEach(e=>{
 					e.init=true;
 				})
@@ -422,7 +429,7 @@ export default {
   	 * 缺货按钮点击事件,将输入的值回调给当前点击的halfPickNum
   	 */
   	topicksum(id){
-  		if(this.data.status==0){
+  		if(this.data.status!='2'){
   			this.$vux.toast.show({
 		            type: 'text',
 		            text: '点击「 开始拣货 」',
@@ -442,7 +449,7 @@ export default {
   	 * 全部拣货按钮点击事件
   	 */
   	toallpick(id){
-  		if(this.data.status==0){
+  		if(this.data.status!='2'){
   			this.$vux.toast.show({
 		            type: 'text',
 		            text: '点击「 开始拣货 」',
@@ -474,11 +481,15 @@ export default {
     	$request.get("/api/online-order/v1/protected/startpick/"+this.$route.query.id).then(res=>{
 	  			if(res.success==true){
 	  				this.data.status=res.data;
+	  				if(res.data=='2'){
+	  					this.showStartPick=false;
+	  				}
 	  				this.$vux.toast.show({
 	            type: 'text',
 	            text: '拣货任务开始'
 	          })
 	  			}else{
+	  				this.data.status=res.errorCode;  //-1 已退款：按钮不可用，置灰 ， -2 ：退款审核中：完成按钮不可用 ，其他：按钮不可操作，开始拣货可以点击
 	  				this.$vux.toast.show({
 	            type: 'text',
 	            text: res.message
