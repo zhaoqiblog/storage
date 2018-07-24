@@ -6,12 +6,12 @@
     "dependsOn":[],
     "dependsTo":[],
     "releaseNote":"门店库位管理",
-    "build":90,
+    "build":120,
     "name":"门店库位管理",
     "identifier":"yh.storage",
     "action":"",
     "index":"index.html",
     "isPcTest":0,
-    "version":"1.3.41"
+    "version":"1.3.70"
 }
 

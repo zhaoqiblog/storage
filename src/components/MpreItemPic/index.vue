@@ -38,9 +38,9 @@
 	    			</div>
     			</div>
     			<div class="l-list-button  vux-1px-t clearfix">
-    				<a :href="'tel:'" v-if="type&&type=='concat'">
+    				<a :href="'tel:'+phone" v-if="type&&type=='concat'">
 	    				<div v-if="type&&type=='concat'" style="line-height: 33px;font-size: 11px;color: #999999;" class="fl">
-	    					辉21 &nbsp;&nbsp;联系顾客
+	    					{{ordersequencenos}} &nbsp;&nbsp;联系顾客
 	    				</div>
     				</a>
     				<div class="fr">
@@ -78,7 +78,7 @@ export default{
 	    totalNum: [String, Number],//底部按钮总数
 	    alreadyNum:[String,Number],	//已拣货数量
 	    toPicking:[Function] ,  	//未拣货按钮的点击事件
-	    init:[Boolean],				//初始进去显示缺货和全部补货按钮，点击事件之后变为false
+	    init:[Boolean],				//初始进去显示缺货和全部补货按钮，点击事件之后变为false,true:状态是：拣货中
 	    allpick:[Boolean],				//全部已拣
 	    halfPickNum:[String,Number],	//已拣的数量
 	    topicksum:[Function],   	//缺货按钮点击事件
@@ -86,7 +86,8 @@ export default{
 //	    disbale:[Boolean],  		//是否已经开始拣货，未开始，按钮不可点
 		status:[String,Number],  //是否的是历史单据1：是：不显示现有库存和安全库存，0：否，显示现有库存和安全库存
 		type:[String],  //concat 是否是合单界面
-	    
+	    phone:[String,Number],  //合单界面：需要需要联系顾客的电话
+	    ordersequencenos:[String,Number]  //合单界面需要的内容订单号
 	},
 	created(){
 //		console.log(this.preCode)

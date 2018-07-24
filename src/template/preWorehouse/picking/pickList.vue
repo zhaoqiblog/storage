@@ -11,13 +11,11 @@
     	<!--<scroller lock-x>-->
         <div v-if="index==0">
           	<div class="container-list" >
-			        <Group class="list-pre-item" v-for="e,index in data.noPick" :key="index" @click.native="goToPick(e.id,e.toTime,e.creatTime)">
+			        <Group class="list-pre-item" v-if="data.noPick&&data.noPick.length>0" v-for="e,index in data.noPick" :key="index" @click.native="goToPick(e.id,e.toTime,e.creatTime)">
 			       		<div class="item-top vux-1px-b">
 			       			<span class="good-code">{{e.id}}</span>
 			       			<span class="good-time-type">
-			       				<!--<span class="order-type">预约送达6.18</span>-->
 			       				<span class="order-type">{{new Date(e.creatTime).format('yyyy-MM-dd hh:mm:ss')}}</span>
-			       				<!--<span class="order-time">{{new Date(e.creatTime).format('hh:mm')}}-{{new Date(e.creatTime).format('hh:mm')}}</span>-->
 			       			</span>
 			       		</div>
 			       		<div class="pre-list-item-content">
@@ -126,7 +124,7 @@
 						padding: 2px 5px;margin-right: 5px;
 					}
 						.order-form{
-							color: #197FA9;background: #F2FBFE;border: 1px solid #AFE2EB;border-radius: 1px;font-size: 10px;margin-left: 5px;
+							color: #197FA9;background: #F2FBFE;border: 1px solid #AFE2EB;border-radius: 1px;font-size: 10px;
 							&.order-jkd{color: #6DA919;background: #F1FEE9;border: 1px solid #C4EBAF;border-radius: 0px;}
 							}
 							.order-form-immedirte{
@@ -161,6 +159,7 @@ import { XHeader,Group,Tab, TabItem,Cell,Swiper, SwiperItem,Scroller } from 'vux
 import { mapState } from 'vuex';
 import factory from '@/factory.js'
 import $request from '@/service/request.js'
+import config from '@/configuration/product'
 import func from '../../../func.js'
 export default {
   components: {
@@ -291,13 +290,20 @@ name: 'pick-list',
     	}
       $request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
         if(res.success) {
-        	let listName = '';
+        	let listData=[];
+//      	 if(config.filterStore.some((e)=>{return e == this.commonInfo.costNumber})){  //过滤掉永辉生活的订单，不在列表中的门店不需要过滤
+//	          	listData = res.data.content.filter((aItem,inde)=>{
+//	          		return aItem.outerOrderType!==0
+//	          	})
+//	         }else{
+//	         	listData=res.data.content
+//	         }
+	         listData=res.data.content
         	if(status==0){
-        		listName='noPick' 
 	          if(pageNow==1){
 	         		this.data.noPick=[];
-	         	}
-	         this.data.noPick =this.data.noPick.concat(res.data.content)
+	         	}	          	         
+	         this.data.noPick =this.data.noPick.concat(listData)
 		          this.data.noPick.forEach(function(item) {
 		            let supplyNum = 0, products = []
 		            let a = parseInt(item.toTime-new Date().getTime())
@@ -311,9 +317,8 @@ name: 'pick-list',
 	          })
 		         
         		this.page.totalPage=res.data.totalPages
-        	}else{
-        		listName='picking' //拣货中
-        		 this.data.picking =this.data.picking.concat(res.data.content)
+        	}else{ //拣货中
+        		 this.data.picking =this.data.picking.concat(listData)
 	          this.data.picking.forEach(function(item) {
 	            let supplyNum = 0, products = []
 	            let a =item.toTime-new Date().getTime()
@@ -338,7 +343,6 @@ name: 'pick-list',
   },
 
   activated () {
-  	console.log("ppp")
     if(this.$route.query.refresh && 1 == this.$route.query.refresh) {
       this.page = {
         pageNo: 1,

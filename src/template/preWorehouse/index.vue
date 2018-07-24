@@ -1,5 +1,6 @@
 <template>
   <div>
+  	<!--'concat-pick-list'-->
     <keep-alive :include="['pre']">
 
       <router-view class="asda"></router-view>

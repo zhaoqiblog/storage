@@ -41,7 +41,7 @@
 	import { mapState } from 'vuex';
 	import $request from '@/service/request.js'
 	import func from '../../../func.js'
-	
+	import config from '@/configuration/product'
 	export default {
 		components: {
 			XHeader,Group,Cell,MEmpty
@@ -62,7 +62,6 @@
 		},
 		created(){
 			this.getPreList()
-			
 		},
 		mounted(){
 			//监听滚动事件
@@ -89,7 +88,16 @@
 		    	const obj={shopId:this.commonInfo.costNumber,status:1,page: this.page.pageNo,size: this.page.pageSize}
 		      $request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
 		        if(res.success) {
-		          this.data.content =this.data.content.concat(res.data.content)
+		        	let listData=[];
+//		        	 if(config.filterStore.some((e)=>{return e == this.commonInfo.costNumber})){  //过滤掉永辉生活的订单，不在列表中的门店不需要过滤
+//			          	listData = res.data.content.filter((aItem,inde)=>{
+//			          		return aItem.outerOrderType!==0
+//			          	})
+//			         }else{
+//			         	listData=res.data.content
+//			         }
+			         listData=res.data.content
+		          this.data.content =this.data.content.concat(listData)
 		          this.page.totalPage=res.data.totalPages
 		        } else {
 		          this.$vux.toast.show({
@@ -136,7 +144,7 @@
 				padding: 2px 5px;margin-right: 5px;
 			}
 			.order-form{
-				color: #197FA9;background: #F2FBFE;border: 1px solid #AFE2EB;border-radius: 1px;font-size: 10px;margin-left: 5px;
+				color: #197FA9;background: #F2FBFE;border: 1px solid #AFE2EB;border-radius: 1px;font-size: 10px;
 				&.order-jkd{color: #6DA919;background: #F1FEE9;border: 1px solid #C4EBAF;border-radius: 0px;}
 			}
 			.order-form-immedirte{

@@ -10,6 +10,7 @@ let config = {
     ssoToken: 'T213...',
     costNumber: "0010004605"
   },
+  filterStore:['9360'],
 //// 生产
 //upmUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/upm',
 //baseUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/store-inventory'

@@ -8,6 +8,7 @@ let config = {
   userTest: {
 //        uid: '80467269', 
           uid: '80733765',
+//        uid: '80000968',
 //        uid: '80723068',
 //        uid: '80706483',
 //      uid: '80733765',
@@ -28,12 +29,13 @@ let config = {
     costName: "西安市阳光天地店-休闲食品课"
   },
   //测试
-//	upmUrl: 'https://hr.yh-test.com/mas-api/restful/inventory/upm', // 测试环境
-//	baseUrl: 'https://hr.yh-test.com/mas-api/restful/inventory/store-inventory', // 测试环境
+	upmUrl: 'https://hr.yh-test.com/mas-api/restful/inventory/upm', // 测试环境
+	baseUrl: 'https://hr.yh-test.com/mas-api/restful/inventory/store-inventory', // 测试环境
   // baseUrl: 'http://192.168.20.16:8084'
+//   baseUrl: 'http://2.0.3.44:8084/inventory/store-inventory'
     // 生产
-	upmUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/upm',
-	baseUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/store-inventory'
+//	upmUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/upm',
+//	baseUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/store-inventory'
 }
 
 export default config

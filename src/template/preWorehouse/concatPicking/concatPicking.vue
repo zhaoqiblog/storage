@@ -8,66 +8,42 @@
     		</div>
     	</div>
     </div>
-    <div class="scroll-content pre-content pre-content-pic clearfix" ref="scrollWrap">
-    	<div v-for="a,ins in datas" class="fl concat-list-wrap">
+    <div class="scroll-content pre-content pre-content-pic" ref="scrollWrap">
+    	<div class="concat-list-wrap" v-if="datas.ordersequencenos&&datas.ordersequencenos.length>0">
 	    	<div class="pic-item-info" >
 	    		<div>
 	    			<dl class="vux-1px-b">
 	    				<dt style="font-weight: 600;">合单信息</dt>
 	    				<dd>
 	    					<span>拣货员</span>
-	    					<span>{{data.id}} <span style="color: #6fc710;">{{data.ordersequenceno}}</span></span>
+	    					<span>{{datas.id}} <span style="color: #6fc710;">{{datas.operatorName}}</span></span>
 	    				</dd>
 	    				<dd>
 	    					<span>订单数量</span>
-	    					<span v-if="data.products">{{$route.query.id.split("|").length}}</span>
+	    					<span v-if="datas">{{datas.ordersequencenos.length}}</span>
 	    				</dd>
-	    				<!--<dd>
-	    					<span>拣货员</span>
-	    					<span>{{data.status=='0'?'':(data.status=='2'?(data.operatorName ? data.operatorName:commonInfo.name):'')}}</span>
-	    				</dd>-->
 	    			</dl>
 	    		</div>
 	    		<div>
 	    			<ul class="list-title-concat clearfix">
-	    				<!--:class="'fl vux-1px-b '+ ((ine+1)%3==2 ? 'vux-1px-l':'')"-->
-	    				<li v-for="a,ine in datas" class="fl vux-1px-b">
+	    				<li v-for="a,ine in datas.ordersequencenos" class="fl vux-1px-b">
 	    					<span :class="'fl list-concat-conlist '+ (((ine+1)%3==2||(ine+1)%3==1)? 'vux-1px-r':'')">
-	    						<i>{{ine+1}}</i><span>&nbsp;&nbsp;{{a.ordersequenceno}}</span></span>
+	    						<i>{{ine+1}}</i><span>&nbsp;&nbsp;{{a}}</span></span>
 	    				</li>
 	    			</ul>
-	    			<!--<dl v-if="data.expectdeliverydatetime" class="vux-1px-b">
-	    				<dt>顾客信息</dt>
-	    				<dd>
-	    					<span>{{data.expectdeliverydatetime.slottype=='immediate'?'极速送达':'预约送达'}}</span>
-	    					<span>{{new Date( parseInt(data.expectdeliverydatetime.date)).format('yyyy-MM-dd')}}&nbsp;&nbsp;{{data.expectdeliverydatetime.from}}-{{data.expectdeliverydatetime.to}}</span>
-	    				</dd>
-	    				<dd v-if="data.recvinfo">
-	    					<span>顾客信息</span>
-	    					<span>{{data.recvinfo.name}}&nbsp;&nbsp;<span>{{data.recvinfo.phone}}</span></span>
-	    				</dd>
-	    				<dd>
-	    					<span>顾客备注</span>
-	    					<span>{{data.comment}}</span>
-	    				</dd>
-	    			</dl>-->
 	    		</div>
-					<div class="handel-btn">
-						<!--<a v-if="data.recvinfo&&data.recvinfo.phone" :href="'tel:'+data.recvinfo.phone"><button>联系顾客</button></a>
-						<button v-if="data.status&&data.status!=2" @click="handelPick" class="startPick" :disabled="data.status=='-1'">{{data.status=='-1'?'已退货':'开始拣货'}}</button>-->
-					</div>
+					<div class="handel-btn"></div>
 				</div>
-	    	<pre-item-pic v-for="(item,index) in data.products"
-	    		type="concat"
+	    	<pre-item-pic v-for="(item,index) in datas.products"
+	    		:preCode="item.warehouseCode"
 	    		:itemid="item.itemid"
-					:preCode="item.warehouseCode"
 					:nowNum="item.nowNum"
-					:imgurl="item.imgurl"
 					:code="'商品编码  '+(item.barcode)"
 					:name="item.subtitle"
-					:totalNum="item.num"
-					:unit="item.spec.desc"
+					:imgurl="item.imgurl"
+					:unit="item.spec?item.spec.desc:''"
 					:unitq="item.price.value"
+					:totalNum="item.num"
 					:init="item.init"
 					:allpick="item.allpick"
 					:halfPickNum="item.halfPickNum"
@@ -75,24 +51,26 @@
 					:toallpick="toallpick"
 					:disbale="true"
 					:status="0"
+					type="concat"
+	    		:phone="item.phone"
+	    		:ordersequencenos="item.ordersequenceno"
 					:key="index">
 	    	</pre-item-pic>
-	      <!--<m-empty v-if="data.content && data.content.length == 0"></m-empty>-->
+	      <m-empty v-if="datas.products && datas.products.length == 0"></m-empty>
 	      <MpopInput :isShow="showPop" :cancel="cancel" :confirm="confirm" :popItem="popItem" v-if="showPop"/>
 	    </div>
     </div>
     <div class="pre-footer">
-      <div class="btn-add btn-tips-concat" v-if="data.products&&data.products.length>0" @click="showConcatOrder=true">
-       		<!--<i>{{datas.length}}</i>个订单,已拣货 <i>{{alreadyPick}}</i> 件-->
+      <div class="btn-add btn-tips-concat" v-if="datas.products&&datas.products.length>0" @click="showConcatOrder=true">
        		<span class="total-pre">
-       			<i style="">{{datas.length}}</i>个订单
+       			<i style="">{{datas.ordersequencenos.length}}</i>个订单<img style="width: 13px;margin-left: 5px;" src="../../../assets/pre/iconNext@2x.png" alt="" />
        		</span>
        		<span class="concat-t-detail">
-       			待拣货{{datas.length}}件,已拣货0 件
+       			待拣货 {{datas.products.length}} 件,已拣货 <i>{{alreadyPick}}</i> 件
        		</span>
       </div>
       <div class="btn-submit">  <!--:disabled=""-->
-        <button type="button" @click="completeOrder" :disabled="data.status==-1">完成</button>
+        <button type="button" @click="completeOrder">完成</button>
       </div>
     </div>
     <div v-transfer-dom class="pre-confirm">
@@ -109,22 +87,38 @@
         <div class="commen-box">
         	<div class="vux-1px-b comment-head">
         		<h5>订单备注</h5>
-        		<span>共{{datas.length}}单</span>
+        		<span v-if="datas.ordersequencenos&&datas.ordersequencenos.length>0">共{{datas.ordersequencenos.length}}单</span>
         	</div>
         	<ul class="vux-1px-b">
-        		<li v-for="i,index in datas">
+        		<li v-for="i,index in datas.orderInfos">
         			<dl>
-        				<dt><i>{{index+1}}</i>{{i.ordersequenceno}}</dt>
-        				<dd>{{i.recvinfo.name}} {{i.recvinfo.phone}} <img src="../../../assets/pre/iconPhone2x.png"/></dd>
+        				<dt><i>{{index+1}} </i>{{i.ordersequenceno}}</dt>
+        				<dd><a :href="'tel:'+i.recvinfo.phone">{{i.recvinfo.name}} {{i.recvinfo.phone}} <img src="../../../assets/pre/iconPhone2x.png"/></a></dd>
         				<dd>{{i.comment}}</dd>
         			</dl>
         		</li>
         	</ul>
-          <!--<img src="https://ws1.sinaimg.cn/large/663d3650gy1fq6824ur1dj20ia0pydlm.jpg" style="max-width:100%">-->
         </div>
         <div @click="showConcatOrder=false" class="comment-yes">
           <button>知道了</button>
         </div>
+      </x-dialog>
+      <x-dialog v-model="!errInfo.success" class="comment-wrap" hide-on-blur v-if="errInfo.message&&errInfo.message.length>0">
+        <div class="pick-result" >
+        	<h5>拣货结果</h5>
+        	<p>
+        		共{{datas.ordersequencenos.length}}个拣货订单,
+        		{{datas.ordersequencenos.length-errInfo.message.length}}个订单拣货成功,
+        		{{errInfo.message.length}}个订单拣货异常
+        	</p>
+        	<p class="err-info">异常原因：</p>
+        	<ul>
+        		<li v-for="i,index in errInfo.message">
+        			{{i}}
+        		</li>
+        	</ul>
+        </div>
+        <div @click="errConfim" class="comment-yes vux-1px-t" style="color: #3DA5FE;padding-top: 20px;">确认</div>
       </x-dialog>
     </div>
   </div>
@@ -149,7 +143,7 @@ export default {
   computed: mapState({
     commonInfo: state => state.global.commonInfo,
 		time:function(){  //现实的倒计时
-			return this.formate(this.$route.query.toTime-this.now);
+			return this.formate(parseInt(this.datas.toTime)-this.now);
 		}
   }),
   data() {
@@ -169,63 +163,84 @@ export default {
       	content:[],
       },
       datas:[],
-      showConcatOrder:true,  //合单订单备注信息显示与否
+      showConcatOrder:false,  //合单订单备注信息显示与否
+      errInfo:{success:true},   //合并拣货的提示信息
     }
   },
   created() {
-  	const ids =this.$route.query.id.split("|")
-		const _this=this;
-		for(var i=0;i<ids.length;i++){
-			(function(i){
-				_this.getPickingInfo(i)
-				setTimeout(()=>{_this.datas},3000)
-			})(ids[i])
-		}
-//	this.getPickingInfo(this.$route.query.id)
+		this.getPickingInfo();
     let self = this;
 		this.timeIntever = setInterval(function(){
 			self.now = new Date().getTime();
-			if(self.$route.query.toTime-self.now<0){
-				clearInterval(self.timeIntever)
+			if(self.datas.toTime-self.now<0){
+//				clearInterval(self.timeIntever)
 			}
+//			console.log(self.now,self.datas.toTime)
 		}, 1000);
+  },
+  mounted(){
+  	
   },
   destroyed(){
 			clearInterval(this.timeIntever)
 		},
   methods: {
+  	/*
+  	 * 异常错误函数
+  	 */
+  	errConfim(){
+  		if(this.datas.ordersequencenos.length-this.errInfo.message.length>0){
+  			//部分订单成功
+//			this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})
+			let ids = this.$route.query.id.split("|")
+			let pushid=[]
+				this.errInfo.message.forEach((e,index)=>{					
+					let errid = Object.keys(this.errInfo.message[index])[0]
+					ids.forEach((a)=>{
+						if(a!=errid){
+							pushid.push(a)
+						}
+					})
+				})
+				this.$router.push({name:"concatSuccessDetail",query:{id:pushid}})
+  		}else{
+			this.$router.back()  //全部订单都有问题
+//				console.log(this.errInfo.message)
+				
+  		}
+  	},
 	/**
 	 * 获取拣货单信息
 	 */
-	getPickingInfo(id){
-		$request.get("/api/online-order/v1/protected/orderdetail/"+id).then(res=>{
+	getPickingInfo(){
+		$request.post("/api/online-order/v1/protected/mergeorderdetails",this.$route.query.id.split("|")).then((res)=>{
 			if(res.success==true){
-				this.data=res.data
-				res.data.products.forEach(e=>{
+				this.datas=res.data
+				this.datas.products.forEach((e)=>{
 					e.init=true;
 				})
-				this.datas.push(res.data)
-				console.log(this.datas)
-				this.data.products.forEach(e=>{
-					e.init=true;
-				})
-			}else{
-				
+//				this.datas.toTime=new Date().getTime()+30*60*1000;
 			}
+		},(err)=>{
+			console.log(err);
+			
 		})
 	},
   	/**倒计时
   	 * 
   	 */
   	formate(time){
-  		if(time>0){
+//		console.log(time)
 				let hour =parseInt(time/1000/3600);
 				let min  = parseInt((time/1000 - hour * 3600)/60)
 				let sec = parseInt(time/1000 - hour * 3600 - min * 60)
+//				console.log(hour,min,sec)
+  		if(time>0){
 				return   sec >=0 ? hour + '小时' + min + '分钟' + sec + '秒' :'已超时';
 			}else{
-				return '已超时'
+				return '已超时'+(-hour) + '小时'+(-min) + '分钟' + (-sec)+'秒'
 			}
+			
 		},
   	/**
   	 * 返回
@@ -256,11 +271,10 @@ export default {
   	 */
   	confirm(num,id){
   		this.showPop=false;
-  		this.data.products.forEach((e,index)=>{
+  		this.datas.products.forEach((e,index)=>{
 			if(e.itemid==id){
 				e.init=false;
 				e.halfPickNum=num;
-//				console.log(e,e.halfPickNum)
 			}
 		})
   		this.alreadyPick=this.alreadyPick+1
@@ -269,43 +283,25 @@ export default {
   	 * 缺货按钮点击事件,将输入的值回调给当前点击的halfPickNum
   	 */
   	topicksum(id){
-  		if(this.data.status==0){
-  			this.$vux.toast.show({
-		            type: 'text',
-		            text: '点击「 开始拣货 」',
-		            width:'60%',
-		          })
-			
-			}else{
 					this.showPop=true;
-				const data = this.data.products.filter((e,index)=>{
+				const data = this.datas.products.filter((e,index)=>{
 					return e.itemid==id
 				})
 				this.popItem=data[0]
-			}
-//			console.log(this.popItem)
   	},
   	/**
   	 * 全部拣货按钮点击事件
   	 */
   	toallpick(id){
-  		if(this.data.status==0){
-  			this.$vux.toast.show({
-		            type: 'text',
-		            text: '点击「 开始拣货 」',
-		            width:'60%',
-		          })
-			
-			}else{
-	  		this.data.products.forEach((e,index)=>{
+	  		this.datas.products.forEach((e,index)=>{
 					if(e.itemid==id){
 						e.init=false;
 						e.allpick=true;
 						e.halfPickNum=e.num
+//						console.log(e.halfPickNum,e.init)
 					}
 				})
 	  		this.alreadyPick=this.alreadyPick+1
-	  	}
   	},
     /**
      * 去补货详情页
@@ -339,36 +335,39 @@ export default {
      */
     completeOrder(){
     	//判断是否有未拣货的的商品
-    	if(this.data.products.length-this.alreadyPick>0){
+//  	console.log(this.alreadyPick)
+    	if(this.datas.products.length-this.alreadyPick>0){
     		this.$vux.toast.show({
           type: 'text',
           text:'订单中还有未拣货的商品，请进行拣货后提交!'
         })
     	}else{
-		    let obj=	{
-				  "goodsInfoDTOS": [],
-				  "orderid": this.$route.query.id
-				}
-		    this.data.products.forEach((e,index)=>{
-		    	let objs ={
-			      "desc": e.spec.desc,
-			      "diffNum": e.num-e.halfPickNum,  //缺货数量
-			      "goodsBarCode": e.barcode,
-			      "goodsCode": e.goodCode,
-			      "goodsName": e.subtitle,  //山滚名称选哪个
-			      "goodsWarehouseId": e.goodsWarehouseId,
-			      "itemid": e.itemid,
-			      "orderid": this.$route.query.id,  //是否是订单id
-			      "qty": e.halfPickNum,
-			      "saleprice": e.price.value,
-			      "skucode": e.id,		//？
-			      "stockout": e.num-e.halfPickNum>0 ? 1:0,			//是否缺货
-			      "warehouseId": e.warehouseId,
-			      "warehouseCode":e.warehouseCode,
-			      "imgurl":e.imgurl,
-		    	}
-		    	obj.goodsInfoDTOS.push(objs)
-		    })
+				let list = this.datas.orderInfos.map((item)=>{
+					let obj = {orderid:item.id,goodsInfoDTOS:[]} 		
+						this.datas.products.forEach((e)=>{
+							if(e.orderid==item.id){
+								let objs ={
+						      "desc": e.spec ?e.spec.desc:"",
+						      "diffNum": e.num-e.halfPickNum,  //缺货数量
+						      "goodsBarCode": e.barcode,
+						      "goodsCode": e.goodCode,
+						      "goodsName": e.subtitle,  //山滚名称选哪个
+						      "goodsWarehouseId": e.goodsWarehouseId,
+						      "itemid": e.itemid,
+						      "orderid": this.$route.query.id,  //是否是订单id
+						      "qty": e.halfPickNum,
+						      "saleprice": e.price.value,
+						      "skucode": e.id,		//？
+						      "stockout": e.num-e.halfPickNum>0 ? 1:0,			//是否缺货
+						      "warehouseId": e.warehouseId,
+						      "warehouseCode":e.warehouseCode,
+						      "imgurl":e.imgurl,
+					    	}
+								obj.goodsInfoDTOS.push(objs)
+							}
+						})
+						return obj
+				})
 		    let obje={
 					path:'/preSuccess',
 					query:{
@@ -380,22 +379,18 @@ export default {
 						listpage:"/preWorehouse/pickList",
 						path:"/"
 				}}
-			    $request.post("/api/online-order/v1/protected/finishpick",obj).then(res=>{
+			    $request.post("/api/online-order/v1/protected/mergefinishpick",list).then(res=>{
 			    	if(res.success&&res.success==true){
-			    		this.$router.push(obje)
+  						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id.split("|")}})			    		
 			    	}else{
-			    		this.$vux.toast.show({
-		            type: 'text',
-		            text: res.message
-		          })
+			    		this.errInfo=res;
+			    		this.errInfo.message = JSON.parse(this.errInfo.message);
 			    	}
 			    })
 			    
 			    
    		}
     }
-  },
-  mounted() {
   },
 }
 
@@ -449,7 +444,7 @@ export default {
 			}
 		}
 	}
-	.concat-list-wrap{width: 50%;
+	.concat-list-wrap{
 		.list-title-concat{
 				li{
 					width: 33%;
@@ -479,9 +474,24 @@ export default {
 			
 		}
 	}
-	@media screen and (max-width:420px ) {
-		.concat-list-wrap{
-			width: 100%;
+.pick-result{
+	h5{
+		font-size: 18px;
+		color: #333333;
+		line-height: 3.5;
+	}
+	p{
+		padding:0 15px;
+		text-align: left;
+	}
+	.err-info{
+		margin: 15px 0 5px;
+	}
+	ul{
+		padding:0 15px;
+		li{
+			line-height: 1.5;text-align: left;margin-bottom: 10px;
 		}
 	}
+}
 </style>
