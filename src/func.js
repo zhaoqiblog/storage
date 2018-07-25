@@ -90,36 +90,34 @@ console.log(param)
 	 */
 	isOs(){
 		var u = navigator.userAgent, app = navigator.appVersion; 
-		var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器 
+		var isAndroidPlat = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器 
 		var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端 
 		var isAndroid=false;
-		/*alert('是否是Android：'+isAndroid); 
-		alert('是否是iOS：'+isiOS);*/
-		if(isAndroid){
+//		alert('是否是Android：'+isAndroid); 
+//		alert('是否是iOS：'+isiOS);
+		if(isAndroidPlat){
 			isAndroid=true;
 		}else{
 			isAndroid=false;
 		}
-		console.log("ppp")
 		return isAndroid
 	},
 	/*
 	 * 打印功能
 	 */
-	printInfo(data,_this,callback=null){
+	printInfo(data,_this,callback=null,errCallback=null){
 	let test='',byteText="27 97 1 27 33 0 ";
 		factory.string2Byte({text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------\n'}).then(res=>{
 			byteText +=res
 		}).then(()=>{
-			factory.string2Byte({text:data.ordersequenceno+'-配送\n'}).then(res=>{
+			factory.string2Byte({text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送\n')}).then(res=>{
 				byteText +=' 27 97 0 27 33 51 '+res
 			}).then(()=>{
 				factory.string2Byte({text:'--------------------------------\n订 单 号：'+
 					data.id+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
 					'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
 					'收 货 人：'+data.recvinfo.name+'\n'+
-					'联系电话：'+data.recvinfo.phone+'\n'+
-					'收货地址：'+data.recvinfo.address.city+'-'+data.recvinfo.address.detail+'\n'
+					'联系电话：'+data.recvinfo.phone+'\n'+(data.deliverType==0 ?'':'收货地址：'+data.recvinfo.address.city+'-'+data.recvinfo.address.detail+'\n')
 					}).then(res=>{
 					byteText +=' 27 33 00 '+res
 				}).then(()=>{
@@ -173,7 +171,11 @@ console.log(param)
 																					let param = {text:lasttext};
 																					factory.printBytes(param).then(res=>{
 //																									alert(JSON.stringify(res))
-																					},(err)=>{alert(err)}).then(()=>{
+																					},(err)=>{
+																						alert(err);
+																						console.log("打印失败")
+																						errCallback();
+																					}).then(()=>{
 																						let param1 = {text:data.outerOrderId,size: 10};
 																						factory.printQRCode(param1).then(()=>{
 																							factory.printText({text: "\n\n\n--------------------------------\n\n\n\n"})

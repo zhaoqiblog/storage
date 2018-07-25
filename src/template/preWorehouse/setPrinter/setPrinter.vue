@@ -1,0 +1,204 @@
+<template>
+  <div class="shop-supply">
+    <x-header class="vux-1px-b" :left-options="{preventGoBack:true}" @on-click-back="back">设置打印机</x-header>
+  	<div class="print-content">
+  		<p class="print-tip">提示：保持蓝牙开启状态，才能匹配打印机</p>
+  		<group class="group">
+	  		<cell 
+	  			:title="currentDevice.value ? '当前连接设备':'上次连接设备'" 
+	  			:value="currentDevice.value ? currentDevice.name:lastConDevice.name"></cell>
+	  		<!--<cell title="当前连接设备" :value="currentDevice.name"></cell>-->
+	  		<popup-picker 
+	  		title="更换打印机"
+	  		class="showpoSelect vux-1px-t"  
+	    	:data="boothList"  
+	    	v-model="slectBlue" 
+	    	@on-change="changeBlue" 
+	    	show-name 
+	    	placeholder="选择蓝牙设备"
+	    	@on-hide="showSelectBlue=false">
+	    </popup-picker>
+  		</group>
+  	</div>
+  </div>
+</template>
+
+<script>
+	import { XHeader,XSwitch,Group,Cell,PopupPicker } from 'vux'
+	import $request from '@/service/request.js'
+	import factory from '@/factory.js'	
+	import { mapState } from 'vuex';
+	
+	export default {
+		components: {
+			XHeader,XSwitch,Group,Cell,PopupPicker
+		},
+		name: 'set-printer',
+	    computed: mapState({
+	    	commonInfo: state => state.global.commonInfo,
+	    }),
+		data() {
+			return {
+				currentDevice:{},//当前连接的打印设备
+				openBlueTooth:true,
+				boothList:[],
+				connectDevice:{},
+				lastConDevice:{},//之前连接过的设备
+				showSelectBlue:false,
+				slectBlue:[], //选中的蓝牙设备号
+			}
+		},
+		beforeCreated(){},
+		created(){
+//			console.log(sessionStorage.getItem("bluedata"))
+			
+			localStorage.setItem("bluedata","3")
+			this.getBoothList()
+		},
+		methods:{
+			changeBlue(){
+				this.boothList[0].forEach((e)=>{
+					if(e.value==this.slectBlue[0]){
+						console.log("选择了设备"+e.name)
+						this.currentDevice = e;
+						localStorage.setItem("bluedata",e.value);
+						sessionStorage.setItem("bluedata",e.value);
+					}
+				})
+			},			
+			getBoothList(){
+				let deviceId = localStorage.getItem("bluedata");
+				let currentId =sessionStorage.getItem("bluedata")
+				console.log(deviceId)
+				if(window.cordova){
+					factory.getBlueList().then((res)=>{
+						let list = res.map((e)=>{
+							return {name:e.split("=>")[0],value:e.split("=>")[1]}
+						})
+						this.boothList.push(list)
+						//上次
+						if(this.boothList[0].some((e)=>{return e.value==deviceId})){
+							this.lastConDevice = this.boothList[0].filter((n)=>{
+								return n.value == deviceId
+							})[0]
+							alert("上次连接的打印设备为："+this.lastConDevice.name+'值为：'+this.lastConDevice.value);
+						}else{
+							this.lastConDevice={name:'未连接过',value:null}
+							alert("上次没有连接过蓝牙");
+						}
+						//当前
+						if(this.boothList[0].some((e)=>{return e.value==currentId})){
+							this.currentDevice = this.boothList[0].filter((n)=>{
+								return n.value == currentId
+							})[0]
+							alert("当前连接的打印设备为："+this.currentDevice.name+'值为：'+this.currentDevice.value);
+							
+						}else{
+							this.currentDevice={name:'未连接过',value:null}
+							alert("当前未连接过蓝牙");
+						}
+					})
+				}else{
+					this.boothList.push([
+						{name:'设备1',value:'1'},
+						{name:'设备2',value:'2'},
+						{name:'设备3',value:'3'},
+						{name:'设备4',value:'4'}
+					])
+					if(this.boothList[0].some((e)=>{return e.value==deviceId})){
+						this.lastConDevice = this.boothList[0].filter((n)=>{
+							return n.value == deviceId
+						})[0]
+					}else{
+						this.lastConDevice={name:'未连接过',value:null}
+					}
+					if(this.boothList[0].some((e)=>{return e.value==currentId})){
+						this.currentDevice = this.boothList[0].filter((n)=>{
+							return n.value == currentId
+						})[0]
+					}else{
+						this.currentDevice={name:'未连接过',value:null}
+					}
+				}
+			},
+			changeVal(){
+				console.log(this.openBlueTooth)
+			},
+			back(){
+				this.$router.back()
+			},
+	 
+		},
+	}
+</script>
+<style lang="less" scoped>
+.shop-supply .weui-cells .weui-cell{
+	&.vux-x-switch{
+		padding: 6px 10px 6px 36px;
+	}
+}
+	.print-content{
+		font-size: 17px;
+		.print-tip{
+			background: #FFFAD2;
+			font-size: 13px;
+			color: #1C1C1C;
+			line-height: 40px;
+			padding-left: 16px;
+		}
+		.open-printer{
+			/*margin-top: 10px;padding-left: 6%;*/
+			background: #FFFFFF;font-size: 17px;
+		}
+		.selectd-printer{
+			font-size: 17px;
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			padding-left: 12px;
+			height: 45px;
+			img{width: 18px;height: 18px;margin-right: 6px;}
+		}
+		.list-t{
+			margin:25px 0 0 16px;color: #999999;font-size: 13px;
+		}
+		.printer-list{
+			li{
+				height: 45px;background: #FFFFFF;padding-left: 36px;line-height: 45px;
+			}
+		}
+	}
+	.weui-cell:before{
+		border: none;
+	}
+	
+</style>
+<style lang="less">
+	.shop-supply {
+		.print-content{
+			.group{
+				.weui-cells .weui-cell .vux-cell-primary .vux-label{
+					color: #000000 !important;
+				}
+				.weui-cells .weui-cell .weui-cell__ft{
+					color: #999999;
+				}
+				.weui-cell{
+					padding: 13px 16px;
+				}
+				.weui-cell__ft{
+					
+				}
+			}
+		}
+	.print-content .weui-cell_access .weui-cell__ft:after{
+		border: 1px solid #8c8c8c;
+	}
+	}
+	.shop-supply .showpoSelect{
+		.weui-cell_access .weui-cell__ft:after{
+			border: 1px solid #8c8c8c;
+		}
+	}
+</style>
+

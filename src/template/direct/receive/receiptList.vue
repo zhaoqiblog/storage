@@ -418,7 +418,7 @@ export default {
 	.dialog-tips{
 		.weui-dialog{
 		width: 78.1%;
-		border: 1px solid ##979797;
+		border: 1px solid #979797;
 		border-radius: 4px;
 		padding-bottom: 15px;
 		/*max-width: 205px;*/

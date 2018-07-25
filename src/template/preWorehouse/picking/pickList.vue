@@ -102,7 +102,8 @@
 					justify-content: space-between;align-items:center;line-height:30px;
 					margin:0 2.7%;
 					.good-code{
-						font-size: 13px;color: #999999;
+						font-size: 12px;color: #999999;
+						.merge-color{color: #FE833D;}
 					}
 					.good-time-type{
 						font-size: 12px;
@@ -119,7 +120,7 @@
 						&.overTime{color: #D0021B;}
 						span{color: #3DA5FE;}
 					}
-					dd{font-size: 12px;color: #999999;line-height: 2;
+					dd{font-size: 12px;color: #FE833D;line-height: 2;
 					>span{
 						padding: 2px 5px;margin-right: 5px;
 					}

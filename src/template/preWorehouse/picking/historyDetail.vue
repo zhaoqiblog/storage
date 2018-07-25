@@ -66,7 +66,8 @@
     		</div>
 				<div class="handel-btn">
 					<a v-if="data.recvinfo" :href="'tel:'+data.recvinfo.phone"><button>联系顾客</button></a>
-					<button @click="printOrder" v-if="isAndroid=='true'">打印小票</button>
+					<!--v-if="isAndroid=='true'"-->
+					<button @click="printOrder" >打印小票</button>
 					<button v-if="data.status=='0'" class="startPick">开始拣货</button>
 				</div>
 			</div>
@@ -131,7 +132,8 @@ import { mapState } from 'vuex';
   	this.isAndroid =localStorage.getItem("isAndroid");
 			this.getDetail();
 			//判断之前是否连结果蓝牙，如果连接过蓝牙，有列表的话，直接连接
-			if(localStorage.getItem("bluedata")&&this.isAndroid){
+//			if(localStorage.getItem("bluedata")&&this.isAndroid){
+			if(localStorage.getItem("bluedata")){
 				var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 					//连接打印机
 					if(window.cordova){factory.connectBlue(param1).then(res=>{

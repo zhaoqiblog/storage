@@ -308,7 +308,16 @@
               	<grid-item :link="{name: 'concatPickList'}">
                   <div class="text">
                     <h2>合并拣货</h2>
-                    <p>订单合并拣货</p>
+                    <p>前置仓订单合并拣货</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon9.png">
+                  </div>
+                </grid-item>
+                <grid-item :link="{name: 'setPrinter'}">
+                  <div class="text">
+                    <h2>设置打印机</h2>
+                    <p>前置仓拣货前，优先设置打印设备</p>
                   </div>
                   <div class="img">
                     <img src="../assets/home/icon9.png">

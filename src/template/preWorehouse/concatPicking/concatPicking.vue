@@ -158,7 +158,6 @@ export default {
     	showSelectBlue:false, //选择蓝牙
     	slectBlue:[], //选中的蓝牙设备号
     	isConnectDevice:false,
-    	isAndroid:false,
       data: {
       	content:[],
       },

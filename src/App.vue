@@ -38,7 +38,7 @@ export default {
   	}
   },
   created() {
-		localStorage.setItem("isAndroid",func.isOs())
+//		localStorage.setItem("isAndroid",func.isOs())
 		factory.getDeviceInfo().then((res)=>{
   		let plats = res.platform ? true : func.isOs()
   		localStorage.setItem("isAndroid",plats)

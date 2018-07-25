@@ -93,7 +93,7 @@
 			        <Group class="list-pre-item" v-for="e,index in data.history" :key="index">
 				       		<router-link :to="{path:'conHistoryDetail',query:{id:e.id}}">
 					       		<div class="item-top vux-1px-b">
-					       			<span class="good-code">{{e.operatorName}}  已完成</span>
+					       			<span class="good-code">{{e.operatorName}}  拣货  <span v-if="e.mergeId" class="merge-color">合单号{{e.mergeId}}</span></span>
 					       			<span class="good-time-type">
 					       				<span class="order-type">{{new Date(e.finishTime).format('yyyy-MM-dd hh:mm:ss')}}&nbsp; > </span>
 					       			</span>
@@ -104,16 +104,14 @@
 				       				<dl>
 				       					<dt>{{e.orderSequenceNo}} <span style="">&nbsp;{{e.id}}</span></dt>
 				       					<dd>
-				       						<span class="order-form order-jkd" v-if="e.outerOrderType==2">{{e.orderSequenceNo}}</span>
-				       						<span class="order-form" v-if="e.outerOrderType==0">{{e.orderSequenceNo}}</span>
 				       						<span class="order-form">{{e.deliverType=='0'?'自提':'配送'}}</span>
 				       						<span class="order-form-immedirte" v-if="e.deliverType!=='0'&&e.slotType!=='expectTime'">{{e.slotType=='expectTime'?'':'极速达'}}</span>
 				       					</dd>
 				       				</dl>
 				       			</div>
 				       			<div class="button-to-pick">  
-				       				<!--print-btn -->
-				       				<button v-if="isAndroid=='true'" class="" @click="printOrder(e.id)" style="padding: 10px 20px;">打印 X{{e.printCount}}</button>
+				       				<!--print-btn  v-if="isAndroid=='true'" -->
+				       				<button  class="" @click="printOrder(e.id)" style="padding: 10px 20px;">打印 X{{e.printCount}}</button>
 				       			</div>
 				       		</div>
 			       		
@@ -233,7 +231,8 @@ export default {
     },30000)
     })
     //判断之前是否连接过蓝牙
-			if(localStorage.getItem("bluedata")&&this.isAndroid){
+//			if(localStorage.getItem("bluedata")&&this.isAndroid){
+			/*if(localStorage.getItem("bluedata")){
 				//如果之前连结果蓝牙，直接连接
 				let param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 				//连接打印机
@@ -245,7 +244,7 @@ export default {
 						this.isConnectDevice=false
 					})
 				}
-			}
+			}*/
   },
   created() {
   	this.isAndroid=localStorage.getItem("isAndroid");
@@ -282,7 +281,8 @@ export default {
   		this.printId=id;
   		console.log(localStorage.getItem("bluedata"),this.isConnectDevice)
 		//获取蓝牙连接列表，判断是否之前连接过蓝牙
-		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
+//		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
+		if(sessionStorage.getItem("bluedata")){  //session中有蓝牙连接记录
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
 				if(res.success==true){
@@ -453,7 +453,8 @@ export default {
     	}
     	let obj;
 //  	let obj={shopId:this.commonInfo.costNumber,status:status,page:pageNow,size: this.page.pageSize}
-    	if(status==0){
+//  	||status==1
+    	if(status==0||status==1){
     		obj={shopId:this.commonInfo.costNumber,status:status,page:pageNow,size: this.page.pageSize}
     	}else{
     		obj={
@@ -477,7 +478,6 @@ export default {
 		            item.OverText=Math.abs(parseInt(a/(1000*60)));
 		            if(a>0){
 		            	item.isOver=false;
-//		            	item.OverText=parseInt(a/(1000*60));
 		            }else{
 		            	item.isOver=true;
 		            }
@@ -491,10 +491,8 @@ export default {
 	            item.OverText=Math.abs(parseInt((item.toTime-new Date().getTime())/(1000*60)));
 	            if(a>0){
 	            	item.isOver=false;
-//	            	item.OverText=parseInt((item.toTime-new Date().getTime())/(1000*60));
 	            }else{
 	            	item.isOver=true;
-//	            	item.OverText=parseInt((item.toTime-new Date().getTime())/(1000*60));
 	            }
 	          })
         		this.page1.totalPage=res.data.totalPages

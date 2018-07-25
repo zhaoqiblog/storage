@@ -23,10 +23,11 @@
 	    		</div>
 	    		<div>
 	    			<dl>
-	    				<dt>小票分单打印</dt>
+	    				<dt><span v-if="datas.mergeId">合单号&nbsp;{{datas.mergeId}}</span><span v-if="!datas.mergeId">小票分单打印</span></dt>
 	    				<dd class="print-list" v-for="e in datas.orderInfos">
 	    					<span>{{e.ordersequenceno}}&nbsp;&nbsp;{{e.id}}</span>
-	    					<button v-if="isAndroid=='true'" @click="printOrder(e.id)">打印 X{{e.printCount}}</button>
+	    					<!--v-if="isAndroid=='true'"-->
+	    					<button  @click="printOrder(e.id)">打印 X{{e.printCount}}</button>
 	    				</dd>
 	    			</dl>
 	    		</div>
@@ -101,7 +102,6 @@ export default {
     	showSelectBlue:false, //选择蓝牙
     	slectBlue:[], //选中的蓝牙设备号
     	isConnectDevice:false,
-    	isAndroid:false,
       data: {
       },
       datas:[],
@@ -115,11 +115,9 @@ export default {
   created() {
   	this.isAndroid=localStorage.getItem("isAndroid");
 	this.getPickingInfo();
-//	$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
-//				console.log(res)
-//		})
 	//判断之前是否连接过蓝牙
-	if(localStorage.getItem("bluedata")&&this.isAndroid){
+//	if(localStorage.getItem("bluedata")&&this.isAndroid){
+	if(localStorage.getItem("bluedata")){
 		//如果之前连结果蓝牙，直接连接
 		let param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 		//连接打印机
@@ -202,15 +200,12 @@ export default {
 	 * 获取拣货单信息
 	 */
 	getPickingInfo(){
-		console.log(this.$route.query.id)
 		$request.post("/api/online-order/v1/protected/mergepickdetail",this.$route.query.id).then((res)=>{
-			console.log(res.data)
 			if(res.success==true){
 				this.datas=res.data
 				this.datas.orderInfos=res.data.orderInfos.map((e)=>{
 					return {...e,printCount:0}
 				})
-				console.log(this.datas.orderInfos)
 			}
 		})
 	},
