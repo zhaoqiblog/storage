@@ -23,7 +23,11 @@
 	    		</div>
 	    		<div>
 	    			<dl>
-	    				<dt><span v-if="datas.mergeId">合单号&nbsp;{{datas.mergeId}}</span><span v-if="!datas.mergeId">小票分单打印</span></dt>
+	    				<dt>
+	    					<span v-if="datas.mergeId">合单号&nbsp;{{datas.mergeId}}</span>
+	    					<!--<span @click="printAll"><button>一键打印</button></span>-->
+	    					<!--<span v-if="!datas.mergeId">小票分单打印</span>-->
+	    				</dt>
 	    				<dd class="print-list" v-for="e in datas.orderInfos">
 	    					<span>{{e.ordersequenceno}}&nbsp;&nbsp;{{e.id}}</span>
 	    					<!--v-if="isAndroid=='true'"-->
@@ -110,6 +114,7 @@ export default {
       slectBlue:[], //选中的蓝牙设备号
       showSelectBlue:false, //选择蓝牙弹框显示与否
       printId:'',
+      int:null,
     }
   },
   created() {
@@ -117,7 +122,7 @@ export default {
 	this.getPickingInfo();
 	//判断之前是否连接过蓝牙
 //	if(localStorage.getItem("bluedata")&&this.isAndroid){
-	if(localStorage.getItem("bluedata")){
+	/*if(localStorage.getItem("bluedata")){
 		//如果之前连结果蓝牙，直接连接
 		let param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 		//连接打印机
@@ -129,7 +134,11 @@ export default {
 				this.isConnectDevice=false
 			})
 		}
-	}
+	}*/
+  },
+  destory(){
+  	console.log("dis")
+  	clearInterval(this.int)
   },
   methods: {
   	/**
@@ -137,30 +146,44 @@ export default {
 	 */
 	changeBlue(){
 		localStorage.setItem("bluedata",this.slectBlue[0]);
-		alert(this.slectBlue[0])
+		sessionStorage.setItem("bluedata",this.slectBlue[0]);
 //		连接打印机
 		if(window.cordova){
-			var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
+			var param1 = { btAddress:sessionStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 			factory.connectBlue(param1).then(res=>{
-//				alert("连接打印机成功")
 				this.isConnectDevice=true;
 				this.printOrder(this.printId)
 			},(err)=>{
-				alert("连接打印机失败："+err)}				
+				alert("连接打印机失败："+err+'\n'+"请回到首页设置模块修改打印设备")}
 			)
-		}else{
-//			console.log(this.slectBlue)
 		}
 	},
-  	/**
+	//一键打印
+	printAll(){
+		let i = 0;		
+		let ids = this.$route.query.id
+		let _this = this;
+    for(let i = 0;i < ids.length ; i ++){
+		  setTimeout(function(){
+		     _this.printOrder(ids[i])
+		  }, 10 * i);
+    }
+//		(function(){
+//			
+//		})()
+	},
+  /**
 	 * 打印小票
 	 */
 	printOrder(id){
+		console.log(id)
 		//开启蓝牙
   		const _this =this;
   		this.printId=id;
+  		console.log("和人并")
 		//获取蓝牙连接列表，判断是否之前连接过蓝牙
-		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
+//		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
+		if(sessionStorage.getItem("bluedata")){
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
 				if(res.success==true){
@@ -169,12 +192,29 @@ export default {
 							r.printCount = res.data[0].printCount
 						}
 					})
-					console.log(this.datas.orderInfos)
 					func.printInfo(res.data[0],this,()=>{
 						this.$vux.toast.show({
 			            type: 'text',
-			            text: '打印成功',
+			            text: res.data[0].ordersequenceno+'打印成功',
 			          })
+					},(err)=>{
+						alert(err)
+//						alert(res.data[0].ordersequenceno+"打印失败")
+						if(this.commonInfo.blueList[0].length>0){
+							this.showSelectBlue=true;
+						}else{
+							factory.getBlueList().then((res)=>{
+								let arrays = res.map((e)=>{
+									return {name:e.split("=>")[0],value:e.split("=>")[1]}
+								})
+								this.$store.commit("updateCommonInfo", {
+						    	blueList:[arrays],
+						    });
+						    this.showSelectBlue=true;
+							},(err)=>{
+									alert(err);
+							})
+						}
 					})
 				}else{
 					this.$vux.toast.show({
@@ -193,6 +233,8 @@ export default {
 			    	blueList:[arrays],
 			    });
 			    this.showSelectBlue=true;
+				},(err)=>{
+						alert(err);
 				})
 		}
 	},

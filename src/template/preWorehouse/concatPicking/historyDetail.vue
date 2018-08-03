@@ -10,7 +10,7 @@
     			<div class="vux-1px-b">
 	    			<div>
 	    				<h5>拣货已完成</h5>
-	    				<div class="order-form"> <span>{{data.ordersequenceno}}</span></div>
+	    				<div class="order-forms"> <span>{{data.ordersequenceno}}</span></div>
 	    			</div>
 	    			<div>
 	    				<img src="../../../assets/common/icon_yiwancheng.png"/>
@@ -137,7 +137,7 @@ import { mapState } from 'vuex';
 //})
 			//判断之前是否连结果蓝牙，如果连接过蓝牙，有列表的话，直接连接
 //			if(localStorage.getItem("bluedata")&&this.isAndroid){
-			if(localStorage.getItem("bluedata")){
+			/*if(localStorage.getItem("bluedata")){
 				var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 					//连接打印机
 					if(window.cordova){factory.connectBlue(param1).then(res=>{
@@ -148,7 +148,7 @@ import { mapState } from 'vuex';
 						this.isConnectDevice=false
 					})
 				}
-			}
+			}*/
 		},
 		methods:{
 				/**
@@ -156,16 +156,15 @@ import { mapState } from 'vuex';
 			 */
 			changeBlue(){
 				localStorage.setItem("bluedata",this.slectBlue[0]);
+				sessionStorage.setItem("bluedata",this.slectBlue[0]);
 		//		连接打印机
 				if(window.cordova){
-					var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
+					var param1 = { btAddress:sessionStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 					factory.connectBlue(param1).then(res=>{
-//								alert("连接打印机")
-		//						alert(JSON.stringify(res))
 								this.isConnectDevice=true;
+								this.printOrder(this.printId)
 							},(err)=>{
-								alert("连接打印机失败："+err)}
-								
+								alert("连接打印机失败："+err+'\n'+"请回到首页设置模块修改打印设备")}
 							).then(()=>{
 								this.printOrder()
 							})
@@ -200,7 +199,8 @@ import { mapState } from 'vuex';
   		const _this =this;
   		this.printId=id;
 		//获取蓝牙连接列表，判断是否之前连接过蓝牙
-		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
+//		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
+		if(sessionStorage.getItem("bluedata")){
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
 				console.log(res)
@@ -212,6 +212,23 @@ import { mapState } from 'vuex';
 			            type: 'text',
 			            text: '打印成功',
 			          })
+					},(err)=>{
+						//打印失败，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
+						if(this.commonInfo.blueList[0].length>0){
+							this.showSelectBlue=true;
+						}else{
+							factory.getBlueList().then((res)=>{
+								let arrays = res.map((e)=>{
+									return {name:e.split("=>")[0],value:e.split("=>")[1]}
+								})
+								this.$store.commit("updateCommonInfo", {
+						    	blueList:[arrays],
+						    });
+						    this.showSelectBlue=true;
+							},(err)=>{
+									alert(err);
+							})
+						}
 					})
 				}else{
 					this.$vux.toast.show({
@@ -230,6 +247,8 @@ import { mapState } from 'vuex';
 			    	blueList:[arrays],
 			    });
 			    this.showSelectBlue=true;
+				},(err)=>{
+						alert(err);
 				})
 		}
 	},
@@ -281,7 +300,7 @@ import { mapState } from 'vuex';
 				justify-content: space-between;
 				align-items: center;
 				h5{font-size: 18px;color: #303030;line-height: 1.8;}
-				.order-form{
+				.order-forms{
 					>span{background: #F2FBFE;
 						border: 1px solid #AFE2EB;
 						border-radius: 1px;

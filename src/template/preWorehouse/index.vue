@@ -3,7 +3,7 @@
   	<!--'concat-pick-list'-->
     <keep-alive :include="['pre']">
 
-      <router-view class="asda"></router-view>
+      <router-view ></router-view>
     </keep-alive>
   </div>
 </template>

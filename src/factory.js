@@ -38,9 +38,10 @@ export default {
           cordova.exec(function(msg) {
             resolve(msg)
           }, function(msg) {
-            reject("ERROR:"+msg)
+            reject("ERROR factory:"+msg)
           }, name, method, params || [])
         } catch (e) {
+        	alert("factory "+ e)
           console.log('_error', 'widget error:', e)
           reject(e)
         }
@@ -101,7 +102,6 @@ export default {
    */
   printQRCode:function(param){
 		return this.callApi(_MIDEA_BLUE,"printQRCode",[param])
-  	
   },
   /**
    * 转byte数组

@@ -16,15 +16,15 @@
     				</dl>
     				<img src="../../../assets/pre/icon1.png"/>
     			</div>
-    			<p>补货单号：<span>{{preSupplyInfo.supplementBillNo}}</span></p>
-    			<p>创建日期：<span>{{new Date(preSupplyInfo.creatTime).format("yyyy-MM-dd hh:mm:ss")}}</span></p> 
-    			<p>补货SKU总数：<span>{{preSupplyInfo.skuNum}}</span></p>     			
+    			<p>补货单号：<span>{{preSupplyConfirm.supplementBillNo}}</span></p>
+    			<p>创建日期：<span>{{new Date(preSupplyConfirm.creatTime).format("yyyy-MM-dd hh:mm:ss")}}</span></p> 
+    			<p>补货SKU总数：<span>{{preSupplyConfirm.supplyItemDTOS.length}}</span></p>     			
     			<p>补货员：<span>{{commonInfo.name}}</span></p>     			
     		</div>
     	</div>
     </div>
     <div class="scroll-content pre-supply-list confirm-list" ref="scrollWrap">
-    		<div v-if="preSupplyInfo&&preSupplyInfo.supplyItemDTOS" v-for="e,index in preSupplyInfo.supplyItemDTOS" class="item-pre-supply">
+    		<div v-if="preSupplyConfirm&&preSupplyConfirm.supplyItemDTOS" v-for="e,index in preSupplyConfirm.supplyItemDTOS" class="item-pre-supply">
     			<p class="pre-supply-code">商品编码：{{e.goodsBarCode}}</p>
     			<p class="pre-supply-name vux-1px-b">{{e.goodsName}}</p>
     			<div class="pre-supply-title ">
@@ -70,7 +70,8 @@ import {XInput} from 'vux';
 		components: {XInput},
 		computed: mapState({
 		    commonInfo: state => state.global.commonInfo,
-		    preSupplyInfo:state=>state.prePick.preSupplyInfo,
+		    preSupplyConfirm:state=>state.prePick.preSupplyConfirm,
+		    
 		}),
 		data() {
 			return {
@@ -79,14 +80,13 @@ import {XInput} from 'vux';
 			}
 		},
 		created(){
-			this.preSupplyInfo.supplyItemDTOS.forEach((e,index)=>{
+			this.preSupplyConfirm.supplyItemDTOS.forEach((e,index)=>{
 				e.leftOver=0;
 				e.supplyNum=Number(e.supplyNum)
 				if(e.supplyChannelDTOList[0].fromWarehouseId==-1){
 					e.leftOver = e.supplyNum
 					e.supplyChannelDTOList[0].reaNum=0
 				}else{
-//					console.log("ppp")
 					e.supplyChannelDTOList.forEach((a,ac)=>{
 						a.reaNum='';
 						e.leftOver=0
@@ -94,19 +94,16 @@ import {XInput} from 'vux';
 				}
 			})
 			let shopnum=0;
-			this.preSupplyInfo.supplyItemDTOS.forEach(e=>{
+			this.preSupplyConfirm.supplyItemDTOS.forEach(e=>{
 				e.supplyChannelDTOList.forEach(a=>{
 					if(a.fromWarehouseId==-1){
 						shopnum++;
 					}
 				})
-				if(shopnum==this.preSupplyInfo.supplyItemDTOS.length){
+				if(shopnum==this.preSupplyConfirm.supplyItemDTOS.length){
 					this.disab=false;
 				}
 			})
-//			if(this.preSupplyInfo.supplyItemDTOS.length==1&&this.preSupplyInfo.supplyItemDTOS[0].supplyChannelDTOList[0].fromWarehouseId==-1){
-//					this.disab=false;
-//			}
 		},
 		
 		methods:{
@@ -124,7 +121,7 @@ import {XInput} from 'vux';
 					this.disab=false;
 				}
 				e.wareValuenum=e.supplyNum-e.leftOver
-				this.$store.commit("setPreSupplyInfo",Object.assign({}, this.preSupplyInfo))
+				this.$store.commit("setPreSupplyConfirm",Object.assign({}, this.preSupplyConfirm))
 			},
 			/**
 			 * 返回
@@ -139,10 +136,10 @@ import {XInput} from 'vux';
 			submitSupply(){
 //				console.log(this.preSupplyInfo)
 				let obj ={
-				  "creatTime": this.preSupplyInfo.creatTime,
-				  "id": this.preSupplyInfo.id,
-				  "skuNum": this.preSupplyInfo.skuNum,
-				  "supplementBillNo": this.preSupplyInfo.supplementBillNo,
+				  "creatTime": this.preSupplyConfirm.creatTime,
+				  "id": this.preSupplyConfirm.id,
+				  "skuNum": this.preSupplyConfirm.skuNum,
+				  "supplementBillNo": this.preSupplyConfirm.supplementBillNo,
 				  "supplyItemRequestDTOS": [
 				    {
 				      "frontWarehouseCode": "string",
@@ -164,7 +161,7 @@ import {XInput} from 'vux';
 				  "totalNum": 0
 				}
 				let list1=[];
-				this.preSupplyInfo.supplyItemDTOS.forEach((e,index)=>{
+				this.preSupplyConfirm.supplyItemDTOS.forEach((e,index)=>{
 					obj.totalNum+=e.supplyNum;
 					
 					if(e.supplyNum!==0){

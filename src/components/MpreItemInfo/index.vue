@@ -116,6 +116,12 @@ export default{
 		font-size: 12px;
     color: #999999;
     padding-left: 10px;
+    &.warn{
+    	color: #D0021B;
+    	>span{
+    		color: #D0021B;
+    	}
+    }
     >span{
     	color: #303030;
     }

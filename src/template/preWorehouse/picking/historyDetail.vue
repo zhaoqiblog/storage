@@ -10,7 +10,7 @@
     			<div class="vux-1px-b">
 	    			<div>
 	    				<h5>拣货已完成</h5>
-	    				<div class="order-form"> <span>{{data.ordersequenceno}}</span></div>
+	    				<div class="order-forms"> <span>{{data.ordersequenceno}}</span></div>
 	    			</div>
 	    			<div>
 	    				<img src="../../../assets/common/pic_success.png"/>

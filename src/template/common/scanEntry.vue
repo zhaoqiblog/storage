@@ -41,7 +41,7 @@ export default {
          * 收货口
          */
         receive: {
-          header: { title: '托盘扫货' },
+          header: { title: '托盘收货' },
           scanButton: { name: '托盘二维码', to: 'trayReceiving', icons: require('../../assets/scan/pic_scantuopan.png') }
         },
         sampling: {

@@ -314,11 +314,6 @@ export default {
 			}
 		}
 	}
-	.pre-content{
-		.list-info-cell .l-list-ct .l-list-content .l-list-code em{
-			width: auto;
-			max-width: 100%;color: #999999;
-		}
 	}
 	.pre-confirm{
 		.weui-dialog{

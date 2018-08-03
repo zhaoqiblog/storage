@@ -73,26 +73,6 @@
                   </div>
                 </grid-item>
               </grid> -->
-              <!--<grid :cols="2">
-                <grid-item :link="{name: 'scanEntry', query: {key: 'goodsTostore'}}">
-                  <div class="text">
-                    <h2>商品入库</h2>
-                    <p>将商品送至目标库位并完成入库</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/ico4.png">
-                  </div>
-                </grid-item>
-                <grid-item :link="{name: 'scanEntry', query: {key: 'trayStorage'}}">
-                  <div class="text">
-                    <h2>托盘入库</h2>
-                    <p>托盘送至库位，并与库位进行关联</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/ico3.png">
-                  </div>
-                </grid-item>
-              </grid>-->
             <!--</div>-->
           <!--</div>-->
           <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 1}">
@@ -124,17 +104,6 @@
                   </div>
                   <div class="img">
                     <img src="../assets/home/ico11.png">
-                  </div>
-                </grid-item>-->
-              </grid>
-              <grid :cols="2">
-                <!--<grid-item :link="{name: 'scanEntry', query: {key: 'shopReturnWarehouse'}}">
-                  <div class="text">
-                    <h2>卖场还货</h2>
-                    <p>将卖场商品返回至仓库的目标库位</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/ico12.png">
                   </div>
                 </grid-item>-->
               </grid>
@@ -227,15 +196,6 @@
             <!--<group-title @click.native="toggle(5)"><i class="i-line"></i>直送<i class="i-arrow"></i></group-title>-->
             <!--<div class="content">-->
               <!--<grid :cols="2">-->
-                <!--<grid-item :link="{name: 'scanEntry', query: {key: 'directOrderInfo'}}">
-                  <div class="text">
-                    <h2>直送收货</h2>
-                    <p>供应商直送商品收货</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/ico14.png">
-                  </div>
-                </grid-item>-->
                 <!-- <grid-item :link="{name: 'scanEntry', query: {key: 'directAddGoods'}}">
                 <div class="text">
                   <h2>直送上架</h2>
@@ -324,10 +284,34 @@
                   </div>
                 </grid-item>
               </grid>
+              <grid :cols="2">
+              	<!--<grid-item :link="{name: 'concatPicking1',query:{id:'1202840630069000|1205100470016021|1205100170026011'}}">
+                  <div class="text">
+                    <h2>测试单据</h2>
+                    <p>前置仓订单合并拣货</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon9.png">
+                  </div>
+                </grid-item>-->
+                <!--<grid-item :link="{name: 'setPrinter'}">
+                  <div class="text">
+                    <h2>设置打印机</h2>
+                    <p>前置仓拣货前，优先设置打印设备</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon9.png">
+                  </div>
+                </grid-item>-->
+              </grid>
             </div>
           </div>
           <!--<div>
-          	<button @click="printCode">打印二维码</button>
+          	<button @click="printCode">打印</button>
+          	<button @click="printtext">打印文字，text方法</button>
+          	<button @click="printByte">byte方法打印</button>
+          	<button @click="printByte2">打印二维码</button>
+          	<button @click="printCode">打印</button>
           </div>-->
         </div>
       </div>
@@ -411,8 +395,55 @@ export default {
   	this.init();
   },
   mounted() {
+//	setTimeout(()=>{
+//		$request.post("/api/online-order/v1/protected/batchpickdetail",['1205100770095081']).then((res)=>{
+//		
+//		})
+//	},3000)
+  	
   },
   methods: {
+  	printByte(){
+  		let param = {text: "我们都是好孩子09365",size: 10}
+  		factory.string2Byte(param).then((res)=>{
+  			alert("success"+res)
+  			let params={text:'27 97 1 27 33 0 '+res}
+  			factory.printBytes(params).then((res)=>{
+  				alert("打印成功")
+  			},(err)=>{alert("打印失败"+err)})
+  		},(err)=>{
+  			alert("转byte数组失败"+err)
+  		})
+  		
+  	},
+  	printByte2(){
+  		let param = {text: "我们都是好孩子09365",size: 10}
+  		factory.string2Byte(param).then((res)=>{
+  			alert("success"+res)
+  			let params={text:'27 97 1 27 33 0 '+res}
+  			alert(JSON.stringify(params))
+  			factory.printBytes(params).then((res)=>{
+  				alert("打印成功 "+res)
+	  			factory.printBytes({text:'27 33 -12 '+res}).then((res)=>{
+	  				alert("第二次打印成功"+res)
+	  			},(err)=>{
+	  				alert("第二次打印失败"+res)
+	  			})
+  				
+  			},(err)=>{alert("打印失败"+err)})
+  		},(err)=>{
+  			alert("转byte数组失败"+err)
+  		})
+  		
+  	},
+  	printtext(){
+  		var param = {text: "小票：270500027719 收银员：010121212122121\n=======\n\n"};
+  		factory.printText(param).then((res)=>{
+  			alert("success"+res)
+  		},(err)=>{
+  			alert("打印失败"+err)
+  		})
+  	},
   	printCode(){
   		let param1 = {text:'打印二维码带下测试',size: 10};
 			factory.printQRCode(param1).then(()=>{

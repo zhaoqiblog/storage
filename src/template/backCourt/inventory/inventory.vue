@@ -206,7 +206,7 @@ export default {
       	if(isWareCode.length>0){
       		this.positionGoods('6930210788662')
       	}else{
-      		$request.get("api/product-query/v1/protected/queryGoodsWarehouseInfo",{goodsBarCode:'6930210788662',costCenterNum:this.commonInfo.costNumber}).then(res=>{
+      		$request.get("api/product-query/v1/protected/queryGoodsWarehouseInfo",{goodsBarCode:'319233',costCenterNum:this.commonInfo.costNumber}).then(res=>{
         		if(res.success==true){
         			this.showEmpty=false;
         			let obj = {...res.data,id:res.data.goodsWarehouseId,type:'input',count:0,warehouseCode:this.$route.query.scanResult}

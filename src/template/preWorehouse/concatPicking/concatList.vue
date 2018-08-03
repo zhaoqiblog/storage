@@ -2,21 +2,45 @@
   <div class="pre-picking">
     <x-header class="vux-1px-b" :left-options="{preventGoBack:true}" @on-click-back="back">
     	合单拣货
-    	<!--<a slot="right">设置</a>-->
+    	<!--<a slot="right"><router-link to='searchOrder'>搜索</router-link></a>-->
     </x-header>
     <tab v-model="index" active-color="#3DA5FE">
-	      <tab-item v-for="(i,ins) in ['待拣货','拣货中','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
+	      <tab-item v-for="(i,ins) in ['待拣货 刷新','拣货中','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
 	    </tab>
     <div class="scroll-content pre-pick-list pre-concat-list" ref="scrollWrap">
         <div v-if="index==0">
           	<div class="container-list" >
-			        <Group class="list-pre-item" v-for="e,index in data.noPick" :key="index">
+          		<pre-list-concats v-for="e,index in data.noPick" :key='index'
+          			:id="e.id"
+          			:classInfo="e.classInfo"
+          			:isOver="e.isOver"
+          			:outerOrderType="e.outerOrderType"
+          			:creatTime="e.creatTime"
+          			:OverText="e.OverText"
+          			:skuNum="e.skuNum"
+          			:orderSequenceNo="e.orderSequenceNo"
+          			:deliverType="e.deliverType"
+          			:slotType="e.slotType"
+          			:receiveOrder="receiveOrder"
+          			></pre-list-concats>
+			    </div>
+			    <m-empty v-if="data.noPick && data.noPick.length == 0"></m-empty>
+			    <div v-if="page.isEnd" class="theEnd">已经到底啦</div>
+        </div>
+        <div v-if="index==1">
+          	<div class="container-list" >
+			        <Group class="list-pre-item" v-for="e,index in data.picking" :key="index">
 			       		<div class="item-top vux-1px-b">
-			       			<span class="good-code">{{e.id}}</span>
+			       			<span class="good-code">
+					   				<span class="order-name">{{e.orderSequenceNo}}</span>
+					   				<span class="order-form">{{e.deliverType=='0'?'自提':'配送'}}</span>
+					   				<span class="order-form-immedirte" v-if="e.deliverType!=='0'&&e.slotType!=='expectTime'">{{e.slotType=='expectTime'?'':'极速达'}}</span>
+					   			</span>
+			       			<!--<span class="good-code">{{e.id}}</span>-->
 			       			<span class="good-time-type">
 			       				<span class="order-type">{{new Date(e.creatTime).format('yyyy-MM-dd hh:mm:ss')}}</span>
 			       			</span>
-			       		</div>			       		
+			       		</div>
 			       		<div class="pre-list-item-content">
 			       			<div>
 			       				<dl>
@@ -26,52 +50,10 @@
 			       						<span>{{e.OverText}}</span> 分钟
 			       					</dt>
 			       					<dd>
-			       						商品SKU&nbsp;{{e.skuNum}}
-			       						<span class="order-form order-jkd" v-if="e.outerOrderType==2">{{e.orderSequenceNo}}</span>
-			       						<span class="order-form" v-if="e.outerOrderType==0">{{e.orderSequenceNo}}</span>
-			       						<span class="order-form">{{e.deliverType=='0'?'自提':'配送'}}</span>
-			       						<span class="order-form-immedirte" v-if="e.deliverType!=='0'&&e.slotType!=='expectTime'">{{e.slotType=='expectTime'?'':'极速达'}}</span>
-			       					</dd>
-			       				</dl>
-			       			</div>
-			       			<!--<label :for="'radios'+index" class="radisLabel" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;">-->
-			       			<div class="button-to-pick">
-			       					<button @click="receiveOrder(e.id)" style="width: 70px;height: 30px;line-height: 29px;padding: 0;">接单</button>
-			       				
-			       					<!--<input type="checkbox" name="radios" 
-			       						:id="'radios'+index" v-model="selectLists" 
-			       						:value="e.id"  @change="changeSeleList('nopick')" style="position: absolute;top: 80px;right: 20px;"/>-->
-			       			</div>
-			       			</label>
-			       		</div>
-			       		
-			        </Group>
-			    </div>
-			    <m-empty v-if="data.noPick && data.noPick.length == 0"></m-empty>
-			    <div v-if="page.isEnd" class="theEnd">已经到底啦</div>
-        </div>
-        <div v-if="index==1">
-          	<div class="container-list" >
-			        <Group class="list-pre-item" v-for="e,index in data.picking" :key="index">
-			       		<div class="item-top vux-1px-b">
-			       			<span class="good-code">{{e.id}}</span>
-			       			<span class="good-time-type">
-			       				<span class="order-type">{{new Date(e.creatTime).format('yyyy-MM-dd hh:mm:ss')}}</span>
-			       			</span>
-			       		</div>
-			       		<div class="pre-list-item-content">
-			       			<div>
-			       				<dl>
-			       					<dt v-if="e.isOver" class="overTime">已超时 {{e.OverText}} 分钟</dt>
-			       					<dt v-if="!e.isOver">
-			       						剩余 
-			       						<span>{{e.OverText}}</span> 分钟
-			       					</dt>
-			       					<dd>商品SKU&nbsp;{{e.skuNum}}
-			       						<span class="order-form order-jkd" v-if="e.outerOrderType==2">{{e.orderSequenceNo}}</span>
-			       						<span class="order-form" v-if="e.outerOrderType==0">{{e.orderSequenceNo}}</span>
-			       						<span class="order-form">{{e.deliverType=='0'?'自提':'配送'}}</span>
-			       						<span class="order-form-immedirte" v-if="e.deliverType!=='0'&&e.slotType!=='expectTime'">{{e.slotType=='expectTime'?'':'极速达'}}</span>
+			       						商品SKU&nbsp;{{e.skuNum}},
+			       						<span class="category-num" v-if="e.classInfo">生鲜{{e.classInfo.freshFoodNum}}个,</span>
+					   						<span class="category-num" v-if="e.classInfo">加工品{{e.classInfo.processedFoodNum}}个,</span>
+					   						<span class="category-num" v-if="e.classInfo">冻品{{e.classInfo.frozenFoodNum}}个</span>
 			       					</dd>
 			       				</dl>
 			       			</div>
@@ -86,6 +68,7 @@
 			        </Group>
 			    </div>
 			    <div v-if="page1.isEnd" class="theEnd">已经到底啦</div>
+			    <!--<m-empty v-if="data.noPick && data.noPick.length == 0"></m-empty>-->
 			    <m-empty v-if="data.picking && data.picking.length == 0"></m-empty>
         </div>
         <div v-if="index==2">
@@ -124,14 +107,14 @@
      <div class="pre-footer" v-if="index==1">
       <div class="btn-add btn-tips">
        		<input type="checkbox" name="selectDefault" id="selectDefault" v-model="selectDefault" @change="changeDefault()"/>
-       		<label for="selectDefault">&nbsp;&nbsp;默认4单，可多选</label>      		
+       		<label for="selectDefault">&nbsp;&nbsp;默认8单，可多选</label>      		
       </div>
       <div class="btn-submit concat-pre">
         <button type="button" :disabled="selectLists.length==0" @click="startPick">开始拣货</button>
       </div>
     </div>
     <popup-picker 
-    	v-if="commonInfo.blueList" 
+    	v-if="showSelectBlue" 
     	:show-cell="false" class="showposdiffer"  
     	:data="commonInfo.blueList" 
     	:show="showSelectBlue" 
@@ -259,17 +242,16 @@ export default {
 	 */
 	changeBlue(){
 		localStorage.setItem("bluedata",this.slectBlue[0]);
+		sessionStorage.setItem("bluedata",this.slectBlue[0]);
 //		连接打印机
 		if(window.cordova){
-			var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
+			var param1 = { btAddress:sessionStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 			factory.connectBlue(param1).then(res=>{
 				this.isConnectDevice=true;
 				this.printOrder(this.printId)
 			},(err)=>{
-				alert("连接打印机失败："+err)}				
+				alert("连接打印机失败："+err+'\n'+"请回到首页设置模块修改打印设备")}
 			)
-		}else{
-			console.log(this.slectBlue)
 		}
 	},
   /**
@@ -279,10 +261,10 @@ export default {
 		//开启蓝牙
   		const _this =this;
   		this.printId=id;
-  		console.log(localStorage.getItem("bluedata"),this.isConnectDevice)
 		//获取蓝牙连接列表，判断是否之前连接过蓝牙
 //		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
-		if(sessionStorage.getItem("bluedata")){  //session中有蓝牙连接记录
+		if(sessionStorage.getItem("bluedata")){  //session中有蓝牙连接记录，说明当前蓝牙蓝牙已经在连接中，不用重复连接
+			console.log(sessionStorage.getItem("bluedata"))
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
 				if(res.success==true){
@@ -296,9 +278,25 @@ export default {
 	            type: 'text',
 	            text: '打印成功',
 	          })
+					},(err)=>{
+						//打印失败，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
+						if(this.commonInfo.blueList[0].length>0){
+							this.showSelectBlue=true;
+						}else{
+							factory.getBlueList().then((res)=>{
+								let arrays = res.map((e)=>{
+									return {name:e.split("=>")[0],value:e.split("=>")[1]}
+								})
+								this.$store.commit("updateCommonInfo", {
+						    	blueList:[arrays],
+						    });
+						    this.showSelectBlue=true;
+							},(err)=>{
+								alert(err);
+							})
+						}
 					})
 				}else{
-					console.log("请求数据失败")
 					this.$vux.toast.show({
 	            type: 'text',
 	            text: res.message||'获取该订单数据失败，请联系管理员',
@@ -307,7 +305,6 @@ export default {
 			})
 		}else{
 			//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-			console.log("lanya")
 				factory.getBlueList().then((res)=>{
 					let arrays = res.map((e)=>{
 						return {name:e.split("=>")[0],value:e.split("=>")[1]}
@@ -316,7 +313,8 @@ export default {
 			    	blueList:[arrays],
 			    });
 			    this.showSelectBlue=true;
-			    console.log(this.showSelectBlue,this.commonInfo.blueList)
+				},(err)=>{
+						alert(err);
 				})
 		}
 	},
@@ -328,7 +326,7 @@ export default {
   		if(this.selectDefault){
 	  		if(this.index==1){ //拣货中
 	  			this.data.picking.forEach((a,index)=>{
-	  				if(index<4){
+	  				if(index<8){
 		  				this.selectLists.push(a.id)
 		  			}
 	  			})
@@ -343,11 +341,10 @@ export default {
   	 */
   	changeSeleList(val){
 //		console.log(val)
-  		if(this.selectLists.length!==4){
+  		if(this.selectLists.length!==8){
   			this.selectDefault=false;
   		}else{
-  			this.selectDefault=true;
-  			
+  			this.selectDefault=true;  			
   		}
   	},
   	/*
@@ -454,7 +451,7 @@ export default {
     	let obj;
 //  	let obj={shopId:this.commonInfo.costNumber,status:status,page:pageNow,size: this.page.pageSize}
 //  	||status==1
-    	if(status==0||status==1){
+    	if(status==0){
     		obj={shopId:this.commonInfo.costNumber,status:status,page:pageNow,size: this.page.pageSize}
     	}else{
     		obj={
@@ -471,22 +468,24 @@ export default {
 	          if(pageNow==1){
 	         		this.data.noPick=[];
 	         	}
-	         this.data.noPick =this.data.noPick.concat(res.data.content)
-		          this.data.noPick.forEach(function(item) {
-		            let supplyNum = 0, products = []
-		            let a = parseInt(item.toTime-new Date().getTime())
-		            item.OverText=Math.abs(parseInt(a/(1000*60)));
-		            if(a>0){
-		            	item.isOver=false;
-		            }else{
-		            	item.isOver=true;
-		            }
+	          res.data.content.map((item,ins)=>{
+			            let supplyNum = 0, products = []
+			            item.classInfo=JSON.parse(item.classInfo)
+			            let a = parseInt(item.toTime-new Date().getTime())	
+			            item.OverText=Math.abs(parseInt(a/(1000*60)));
+			            if(a>0){
+			            	item.isOver=false;
+			            }else{
+			            	item.isOver=true;
+			            }
 	          })
+	         this.data.noPick =this.data.noPick.concat(res.data.content)
+		          //
         		this.page.totalPage=res.data.totalPages
         	}else if(status==2){ //拣货中
-        		  this.data.picking =this.data.picking.concat(res.data.content)
-	          	this.data.picking.forEach(function(item) {
+	          res.data.content.forEach(function(item) {
 	            let supplyNum = 0, products = []
+	            item.classInfo=JSON.parse(item.classInfo)
 	            let a =item.toTime-new Date().getTime()
 	            item.OverText=Math.abs(parseInt((item.toTime-new Date().getTime())/(1000*60)));
 	            if(a>0){
@@ -495,6 +494,7 @@ export default {
 	            	item.isOver=true;
 	            }
 	          })
+	          this.data.picking =this.data.picking.concat(res.data.content)
         		this.page1.totalPage=res.data.totalPages
         	}else{  //历史
         		 this.data.history =this.data.history.concat(res.data.content)

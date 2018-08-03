@@ -17,7 +17,7 @@ export default {
      * 倒计时
      * @params（time）:时间间隔
      */
-    formate(time){
+/*    formate(time){
 		let hour =parseInt(time/1000/3600);
 		let min  = parseInt((time/1000 - hour * 3600)/60)
 		let sec = parseInt(time/1000 - hour * 3600 - min * 60)
@@ -30,6 +30,18 @@ export default {
 			ac=[];
 		}
 		return ac
+	},*/
+	
+	
+	formate(time){
+		let hour =parseInt(time/1000/3600);
+		let min  = parseInt((time/1000 - hour * 3600)/60)
+		let sec = parseInt(time/1000 - hour * 3600 - min * 60)
+		if(time>0){
+			return   sec >=0 ? hour + '小时' + min + '分钟' + sec + '秒' :'已超时';
+		}else{
+			return '已超时'+(-hour) + '小时'+(-min) + '分钟' + (-sec)+'秒'
+		}
 	},
 	/**
 	 * 吧事件转化成分钟数
@@ -106,15 +118,18 @@ console.log(param)
 	 * 打印功能
 	 */
 	printInfo(data,_this,callback=null,errCallback=null){
+		let isShort = data.goodsInfoDTOS.some((i)=>{
+			return i.diffNum>0
+		})
 	let test='',byteText="27 97 1 27 33 0 ";
 		factory.string2Byte({text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------\n'}).then(res=>{
 			byteText +=res
 		}).then(()=>{
-			factory.string2Byte({text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送\n')}).then(res=>{
+			factory.string2Byte({text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整\n':'\n')}).then(res=>{
 				byteText +=' 27 97 0 27 33 51 '+res
 			}).then(()=>{
 				factory.string2Byte({text:'--------------------------------\n订 单 号：'+
-					data.id+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
+					data.id+'\n打印次数：'+data.printCount+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
 					'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
 					'收 货 人：'+data.recvinfo.name+'\n'+
 					'联系电话：'+data.recvinfo.phone+'\n'+(data.deliverType==0 ?'':'收货地址：'+data.recvinfo.address.city+'-'+data.recvinfo.address.detail+'\n')
@@ -131,25 +146,30 @@ console.log(param)
 							data.goodsInfoDTOS.forEach((a,index)=>{
 								let e = a;
 								let indexn = index;
-								queen.push(indexn,e);
+								console.log(indexn,e)
+								if(e.qty>0){queen.push(indexn,e)}
 								if(index==data.goodsInfoDTOS.length-1){
 									queen.start((lasttext)=>{
 //													alert("lasttext---"+lasttext);
+//										factory.string2Byte({text:'\商品金额：'+data.amount.goodsamount/100}).then(res=>{
 										factory.string2Byte({text:'\商品金额：'+data.amount.goodsamount/100}).then(res=>{
 											lasttext +=' 27 97 0 27 33 00 '+res
 										}).then(()=>{
-											factory.string2Byte({text:'\n订单运费：'}).then(res=>{
+											factory.string2Byte({text:'\n订单运费：'+data.amount.freightamount/100}).then(res=>{
 												lasttext +=' 27 97 0 27 33 00 '+res
 											}).then(()=>{
-												factory.string2Byte({text:data.amount.freightamount/100}).then(res=>{
-													lasttext +=' 27 97 2 27 33 00 '+res
-												}).then(()=>{
-													factory.string2Byte({text:'\n商品优惠：'}).then(res=>{
+//												factory.string2Byte({text:data.amount.freightamount/100}).then(res=>{
+//													alert("lasttext1.3--- ----"+res+"------"+lasttext);
+//													lasttext +=' 27 97 2 27 33 00 '+res
+//												})
+//												.then(()=>{
+													factory.string2Byte({text:'\n商品优惠：'+(data.amount.coupondiscountamount+data.amount.promotiondiscountamount)/100}).then(res=>{
 														lasttext +=' 27 97 0 27 33 00 '+res
 													}).then(()=>{
-														factory.string2Byte({text:(data.amount.coupondiscountamount+data.amount.promotiondiscountamount)/100}).then(res=>{
-															lasttext +=' 27 97 2 27 33 00 '+res
-														}).then(()=>{
+//														factory.string2Byte({text:(data.amount.coupondiscountamount+data.amount.promotiondiscountamount)/100}).then(res=>{
+//															lasttext +=' 27 97 2 27 33 00 '+res
+//														})
+//														.then(()=>{
 															factory.string2Byte({text:'\n运费优惠：'+data.amount.freightpromotionamount/100+'\n'}).then(res=>{
 																lasttext +=' 27 97 0 27 33 00 '+res
 															}).then(()=>{
@@ -165,12 +185,10 @@ console.log(param)
 																			factory.string2Byte({text:'谢谢惠顾，欢迎再次光临 \n'+data.shop.address+'\n'+'配送时间:09:00 - 20:00\n联系客服：400-800-5050\n\n签名栏：\n\n\n提货码:'+data.outerOrderId}).then(res=>{
 																				lasttext +=' 27 97 1 27 33 0 '+res
 																			}).then(()=>{
-//																							alert(lasttext)
-																				if(_this.isConnectDevice){  //如果为true，代表打印机连接成功
-//																								alert("开始打印:"+lasttext);
+//																				if(_this.isConnectDevice){  //如果为true，代表打印机连接成功
 																					let param = {text:lasttext};
 																					factory.printBytes(param).then(res=>{
-//																									alert(JSON.stringify(res))
+//																						alert(JSON.stringify(res))
 																					},(err)=>{
 																						alert(err);
 																						console.log("打印失败")
@@ -183,17 +201,17 @@ console.log(param)
 																							callback()
 																						})
 																					})
-																				}else{
-																					alert("还未连接打印机,请先连接打印机")
-																				}
+//																				}else{
+//																					alert("还未连接打印机,请先连接打印机")
+//																				}
 																			})
 																		})
 																	})
 																})
 															})
-														})
+//														})
 													})
-												})
+//												})
 											})
 										})
 									})
@@ -208,23 +226,25 @@ console.log(param)
 								function func(byteText,callback){
 									let index = funarry[Ind][0];
 									let e = funarry[Ind][1];
-									factory.string2Byte({text:(index+1)+'.'+e.goodsName+'   '+e.desc+'\n'}).then(res=>{
-										byteText +=' 27 33 00 '+res
-									}).then(()=>{
-										factory.string2Byte({text:'X'+e.qty+'\n'}).then(res=>{
-											byteText +=' 27 97 2 27 33 52 '+res
+//									if(e.qty>0){   //缺货商品数量为0的不显示
+										factory.string2Byte({text:(index+1)+'.'+e.goodsName+'   '+e.desc+'\n'}).then(res=>{
+											byteText +=' 27 33 00 '+res
 										}).then(()=>{
-											factory.string2Byte({text:e.goodsBarCode}).then(res=>{
-												byteText +=' 27 97 0 27 33 00 '+res
+											factory.string2Byte({text:'X'+e.qty+'\n'}).then(res=>{
+												byteText +=' 27 97 2 27 33 52 '+res
 											}).then(()=>{
-												factory.string2Byte({text:'\n单价￥'+e.saleprice+'    金额￥'+(e.saleprice*e.qty)+'\n--------------------------------\n'}).then(res=>{
+												factory.string2Byte({text:e.goodsBarCode}).then(res=>{
 													byteText +=' 27 97 0 27 33 00 '+res
 												}).then(()=>{
-													callback(byteText);
+													factory.string2Byte({text:'\n单价￥'+e.saleprice+'    金额￥'+(e.saleprice*e.qty)+'\n--------------------------------\n'}).then(res=>{
+														byteText +=' 27 97 0 27 33 00 '+res
+													}).then(()=>{
+														callback(byteText);
+													})
 												})
 											})
 										})
-									})
+//									}
 								}
 								return {
 									push:function(indexn,e){

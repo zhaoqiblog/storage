@@ -39,7 +39,7 @@
 			      <tab-item v-for="(i,ins) in ['待拣货('+(datas.products.length-listData.picked.length)+')','已拣货('+(listData.picked.length)+')']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
 			    </tab>
 					<div v-show="index==0" class="noPicks">
-			    	<pre-pic-all class="uuuuiuiu" v-if="item.pickStatus=='0'" v-for="(item,index) in datas.products"
+			    	<pre-item-pic class="uuuuiuiu" v-if="item.pickStatus=='0'" v-for="(item,index) in datas.products"
 			    		:objInfo='item'
 			    		:preCode="item.warehouseCode"
 			    		:itemid="item.itemid"
@@ -60,11 +60,11 @@
 			    		:phone="item.phone"
 			    		:ordersequencenos="item.ordersequenceno"
 							:key="index">
-			    	</pre-pic-all>
+			    	</pre-item-pic>
 			    	<m-empty class="datas" v-if="listData.picked.length == datas.products.length"></m-empty>
 		    	</div>
 		    	<div v-show="index==1" class="pickeds">
-			    	<pre-pic-all class="popopo" v-if="item.pickStatus=='1'" v-for="(item,index) in datas.products"
+			    	<pre-item-pic class="popopo" v-if="item.pickStatus=='1'" v-for="(item,index) in datas.products"
 			    		:objInfo='item'
 			    		:preCode="item.warehouseCode"
 			    		:itemid="item.itemid"
@@ -85,7 +85,7 @@
 			    		:phone="item.phone"
 			    		:ordersequencenos="item.ordersequenceno"
 							:key="index">
-			    	</pre-pic-all>
+			    	</pre-item-pic>
 			    	<m-empty class="popo" v-if="listData.picked.length==0"></m-empty>
 		    	</div>
 	    	</div>
@@ -243,25 +243,10 @@ export default {
 		$request.post("/api/online-order/v1/protected/mergeorderdetails",this.$route.query.id.split("|")).then((res)=>{
 			if(res.success==true){
 				this.datas=Object.assign({},res.data)
-				let listTmp = []
-				let tempObj={}
 				this.datas.products.forEach((e,index)=>{
-					tempObj[e.barcode]=e;
 					e.init=true;
 					e.pickStatus = '0';
 				})
-				Object.keys(tempObj).forEach((n)=>{
-					let oj=Object.assign({},tempObj[n]);
-					oj.orders=[];
-					this.datas.products.filter((an,ain)=>{
-						if(n==an.barcode&&oj.itemid!==an.itemid){
-							oj.num +=an.num;
-							oj.orders.push({itemid:an.itemid,ordersequenceno:an.ordersequenceno})
-						}
-					})
-					listTmp.push(oj)
-				})
-				console.log(res.data.products[1].num,res.data.products[3].num)
 				this.listData.noPick = this.datas.products.concat([]);
 				this.listData.picked = [];
 			}

@@ -99,7 +99,7 @@
 				}
 				.item-top{
 					display:flex;
-					justify-content: space-between;align-items:center;line-height:30px;
+					justify-content: space-between;align-items:center;line-height:35px;
 					margin:0 2.7%;
 					.good-code{
 						font-size: 12px;color: #999999;

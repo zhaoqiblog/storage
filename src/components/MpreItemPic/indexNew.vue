@@ -59,12 +59,13 @@
 <script>
 	
 export default{
-	name: 'pre-item-pic',
+	name: 'pre-pic-all',
 	data(){
 		return {
 		}
 	},
 	props:{
+		objInfo:[Object],  //当前传过来的对象
 		itemid:[String],//当前id
 	    preCode: [String, Number],//顶部的前置仓号,没有则不显示
 	    code: [String, Number],//编号位置文本,没有则不显示，即商品编号
@@ -89,6 +90,7 @@ export default{
 	},
 	created(){
 		typeof this.totalNum == "string" && (this.totalNum = parseInt(this.totalNum));
+//		console.log(this.objInfo)
 	},
 	
 	methods:{

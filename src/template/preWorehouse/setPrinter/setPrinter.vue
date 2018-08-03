@@ -50,19 +50,26 @@
 		},
 		beforeCreated(){},
 		created(){
-//			console.log(sessionStorage.getItem("bluedata"))
-			
-			localStorage.setItem("bluedata","3")
 			this.getBoothList()
 		},
 		methods:{
 			changeBlue(){
 				this.boothList[0].forEach((e)=>{
-					if(e.value==this.slectBlue[0]){
+					if(e.value&&e.value==this.slectBlue[0]){
 						console.log("选择了设备"+e.name)
-						this.currentDevice = e;
-						localStorage.setItem("bluedata",e.value);
-						sessionStorage.setItem("bluedata",e.value);
+						
+						console.log(sessionStorage.getItem("bluedata"))
+						//选择完毕连接打印机
+						let param1 = { btAddress:e.value };//这里传入用户点击的目标蓝牙设备地址
+						//连接打印机
+						factory.connectBlue(param1).then(res=>{
+							localStorage.setItem("bluedata",e.value);
+							sessionStorage.setItem("bluedata",e.value);
+							this.currentDevice = e;
+						},(err)=>{
+							alert("error:打印机 "+err)
+							this.currentDevice ={}
+						})
 					}
 				})
 			},			
@@ -72,31 +79,34 @@
 				console.log(deviceId)
 				if(window.cordova){
 					factory.getBlueList().then((res)=>{
+//						alert(res)
 						let list = res.map((e)=>{
 							return {name:e.split("=>")[0],value:e.split("=>")[1]}
 						})
-						this.boothList.push(list)
+						if(list.length>0){
+							this.boothList.push(list)
+						}else{
+							this.boothList.push([{name:'无设备可用，请先匹配设备',value:null}])
+						}
 						//上次
 						if(this.boothList[0].some((e)=>{return e.value==deviceId})){
 							this.lastConDevice = this.boothList[0].filter((n)=>{
 								return n.value == deviceId
 							})[0]
-							alert("上次连接的打印设备为："+this.lastConDevice.name+'值为：'+this.lastConDevice.value);
 						}else{
 							this.lastConDevice={name:'未连接过',value:null}
-							alert("上次没有连接过蓝牙");
 						}
 						//当前
 						if(this.boothList[0].some((e)=>{return e.value==currentId})){
 							this.currentDevice = this.boothList[0].filter((n)=>{
 								return n.value == currentId
 							})[0]
-							alert("当前连接的打印设备为："+this.currentDevice.name+'值为：'+this.currentDevice.value);
-							
 						}else{
 							this.currentDevice={name:'未连接过',value:null}
-							alert("当前未连接过蓝牙");
 						}
+					},(err)=>{
+						alert("获取蓝牙列表失败！"+err);
+						this.boothList.push([{name:err,value:null}])
 					})
 				}else{
 					this.boothList.push([
@@ -105,6 +115,7 @@
 						{name:'设备3',value:'3'},
 						{name:'设备4',value:'4'}
 					])
+//					this.boothList.push([{name:'无设备可用，请先匹配设备',value:null}])
 					if(this.boothList[0].some((e)=>{return e.value==deviceId})){
 						this.lastConDevice = this.boothList[0].filter((n)=>{
 							return n.value == deviceId
