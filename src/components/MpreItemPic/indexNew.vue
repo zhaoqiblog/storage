@@ -36,19 +36,28 @@
 	    			</p>
 	    			</div>
     			</div>
-    			<div class="l-list-button  vux-1px-t clearfix">
-    				<a :href="'tel:'+phone" v-if="type&&type=='concat'">
-	    				<div v-if="type&&type=='concat'" class="fl pre-list-l">
-	    					<span style="color: #333333;font-weight: 600;">{{ordersequencenos}}</span> &nbsp;&nbsp;<span class="ordername">联系顾客</span>
+    			<div class="l-list-button  vux-1px-t clearfix" v-if="init">
+    				<div class="fr">
+    					<button  style="margin-bottom: 8px;" @click="pickAllGood(itemid)">一键拣货</button>
+    				</div>
+    			</div>
+    			<div class="l-list-button  vux-1px-t clearfix" v-for="(n,inn) in objInfo.orders" :key="inn">
+    				<a :href="'tel:'+n.phone" v-if="type&&type=='concat'">
+	    				<div v-if="type&&type=='concat'" class="fl pre-list-l" style="display: flex;justify-content: flex-start;align-items: center;">
+	    					<span style="color: #6C6C6C;font-weight: 600;">{{n.ordersequenceno}}
+	    					<span style="color: #333333;margin: 0 10px;">x{{n.num}}</span>
+	    					</span> &nbsp;&nbsp;<span class="ordername">
+	    						<img style="width: 15px;margin-top: 5px;" src="../../assets/pre/iconphone@3x.png"/>
+	    					</span>
 	    				</div>
     				</a>
     				<div class="fr">
-	    				<button @click="tolessPick(itemid)" v-if="init" class="no-pick">缺货</button>
-	    				<button v-if="init" @click="toPickAll(itemid)">全部拣货</button>
-	    				<button class="all-pick" @click="tolessPick(itemid)" v-if="halfPickNum==totalNum">全部已拣</button>
-	    				<button class="half-pick" @click="tolessPick(itemid)" v-if="halfPickNum>0&&halfPickNum!=0&&halfPickNum!=totalNum">已拣X{{halfPickNum}}</button>
-	    				<button class="half-no-goods" @click="tolessPick(itemid)" v-if="halfPickNum>0&&halfPickNum!==0&&totalNum-halfPickNum>0">缺货X{{totalNum-halfPickNum}}</button>
-	    				<button class="all-no-goods" @click="tolessPick(itemid)" v-if="halfPickNum==0">全部缺货</button>
+	    				<button @click="tolessPick(itemid,n.itemid)" v-if="init||n.init" class="no-pick">缺货</button>
+	    				<button v-if="init||n.init" @click="toPickAll(itemid,n.itemid)">拣货</button>
+	    				<button class="all-pick" @click="tolessPick(itemid,n.itemid)" v-if="n.halfPickNum==n.num">全部已拣</button>
+	    				<button class="half-pick" @click="tolessPick(itemid,n.itemid)" v-if="n.halfPickNum>0&&n.halfPickNum!=0&&n.halfPickNum!=n.num">已拣X{{n.halfPickNum}}</button>
+	    				<button class="half-no-goods" @click="tolessPick(itemid,n.itemid)" v-if="n.halfPickNum>0&&n.halfPickNum!==0&&n.num-n.halfPickNum>0">缺货X{{n.num-n.halfPickNum}}</button>
+	    				<button class="all-no-goods" @click="tolessPick(itemid,n.itemid)" v-if="n.halfPickNum==0">全部缺货</button>
     				</div>
     			</div>
     		</div>
@@ -63,6 +72,9 @@ export default{
 	data(){
 		return {
 		}
+	},
+	created(){
+//		console.log(objInfo.orders)
 	},
 	props:{
 		objInfo:[Object],  //当前传过来的对象
@@ -86,26 +98,31 @@ export default{
 		status:[String,Number],  //是否的是历史单据1：是：不显示现有库存和安全库存，0：否，显示现有库存和安全库存
 		type:[String],  //concat 是否是合单界面
 	    phone:[String,Number],  //合单界面：需要需要联系顾客的电话
-	    ordersequencenos:[String,Number]  //合单界面需要的内容订单号
+	    ordersequencenos:[String,Number],  //合单界面需要的内容订单号
+	    
+	    pickAllGoods:[Function],   //一键拣货函数
 	},
 	created(){
 		typeof this.totalNum == "string" && (this.totalNum = parseInt(this.totalNum));
-//		console.log(this.objInfo)
 	},
 	
 	methods:{
 		/**
 		 * 缺货按钮点击事件
 		 */
-		tolessPick(id){
-			this.topicksum(id)
+		tolessPick(pid,id){
+			this.topicksum(pid,id)
 		},
 		/**
 		 * 全部拣货按钮点击事件
 		 */
-		toPickAll(id){
-			this.toallpick(id)
-		}
+		toPickAll(pid,id){
+			this.toallpick(pid,id)
+		},
+		//一键拣货
+		pickAllGood(id){
+			this.pickAllGoods(id)
+		},
 	},
 	
 }

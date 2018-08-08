@@ -39,7 +39,6 @@
 		data (){
 			return {
 				picNum:0,
-//				showPope:false,
 			}
 		},
 		props:["isShow","cancel","confirm","popItem"],
@@ -49,7 +48,7 @@
 			},
 			confirms(){
 
-				this.confirm(this.picNum,this.popItem.itemid)
+				this.confirm(this.picNum,this.popItem.pid,this.popItem.itemid)
 			},
 		},
 		created(){

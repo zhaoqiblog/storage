@@ -36,7 +36,7 @@
 				</div>
 				<div class="tab-wrap">
 					<tab v-model="index" active-color="#3DA5FE">
-			      <tab-item v-for="(i,ins) in ['待拣货('+(datas.products.length-listData.picked.length)+')','已拣货('+(listData.picked.length)+')']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
+			      <tab-item v-for="(i,ins) in ['待拣货('+(datas.products.length-listData.picked.length)+')','已拣货('+(listData.picked.length)+')']" :key="ins">{{i}}</tab-item>
 			    </tab>
 					<div v-show="index==0" class="noPicks">
 			    	<pre-pic-all class="uuuuiuiu" v-if="item.pickStatus=='0'" v-for="(item,index) in datas.products"
@@ -55,6 +55,7 @@
 							:halfPickNum="item.halfPickNum"
 							:topicksum="topicksum"
 							:toallpick="toallpick"
+							:pickAllGoods="pickAllGoods"
 							:status="0"
 							type="concat"
 			    		:phone="item.phone"
@@ -229,7 +230,6 @@ export default {
 						}
 					})
 				})
-				console.log(pushid);
 				this.$router.push({name:"concatSuccessDetail",query:{id:pushid}})
   		}else{
 			this.$router.back()  //全部订单都有问题
@@ -247,30 +247,27 @@ export default {
 				let tempObj={}
 				this.datas.products.forEach((e,index)=>{
 					tempObj[e.barcode]=e;
-					e.init=true;
+					e.init=true;  //初始状态：缺货和全部拣货按钮显示与否
 					e.pickStatus = '0';
 				})
 				Object.keys(tempObj).forEach((n)=>{
 					let oj=Object.assign({},tempObj[n]);
-					oj.orders=[];
+					oj.orders=[Object.assign({},oj)];   //orders 是原始的数据
 					this.datas.products.filter((an,ain)=>{
 						if(n==an.barcode&&oj.itemid!==an.itemid){
 							oj.num +=an.num;
-							oj.orders.push({itemid:an.itemid,ordersequenceno:an.ordersequenceno})
+							oj.orders.push(Object.assign({},an))
 						}
 					})
 					listTmp.push(oj)
 				})
-				console.log(res.data.products[1].num,res.data.products[3].num)
+				this.datas.products = listTmp;
 				this.listData.noPick = this.datas.products.concat([]);
 				this.listData.picked = [];
 			}
 		},(err)=>{
 //			console.log(err);
 		})
-	},
-	//tab切换
-	clickItem(){
 	},
   	/**
   	 * 缺货弹窗取消函数
@@ -281,66 +278,105 @@ export default {
   	/**
   	 * 缺货弹窗确认按钮
   	 */
-  	confirm(num,id){
+  	confirm(num,pid,id){
   		this.showPop=false;
+  		let isExitPicked = this.listData.picked.some((item)=>{return item.itemid==pid})  //判断已拣货的列表里是否有改商品
   		this.datas.products.forEach((e,index)=>{
-			if(e.itemid==id){
+			if(e.itemid==pid){
 				e.init=false;
-				e.halfPickNum=num;
-				e.pickStatus=1;				
-				if(this.listData.picked.some((item)=>{return item.itemid==id})){				
-				}else{
+				e.orders = e.orders.map((n)=>{
+					let obj = n
+					if(obj.itemid==id){
+						obj.halfPickNum=num;   //halfPickNum : 拣货的数量
+						obj.init=false;
+						obj = Object.assign({},n)
+					}
+					return obj
+				})
+				
+				if(e.orders.filter((item)=>{return item.init==false}).length==e.orders.length&&!isExitPicked){
+					//列表全部拣过货之后
+					e.pickStatus=1;
 					this.listData.picked.push(e)
 				}
 			}
 		})
-  		this.alreadyPick=this.alreadyPick+1
-  		
   	},
   	/**
   	 * 缺货按钮点击事件,将输入的值回调给当前点击的halfPickNum
   	 */
-  	topicksum(id){
+  	topicksum(pid,id){
 			this.showPop=true;
-			const data = this.datas.products.filter((e,index)=>{
-				return e.itemid==id
+			let seleItem= null;
+			this.datas.products.forEach((e,index)=>{
+				if(e.itemid==pid){
+					seleItem = e.orders.filter((n)=>{
+						return n.itemid == id
+					})
+				}
 			})
-			this.popItem=data[0]
+			this.popItem=seleItem[0];
+			this.popItem.pid = pid;
   	},
   	/**
   	 * 全部拣货按钮点击事件
   	 */
-  	toallpick(id){
+  	toallpick(pid,id){
 	  		this.datas.products.forEach((e,index)=>{
-					if(e.itemid==id){
+					if(e.itemid==pid){
 						e.init=false;
-						e.allpick=true;
-						e.halfPickNum=e.num
-						e.pickStatus=1;
-//						this.listData.picked.push(e)
-						if(this.listData.picked.some((item)=>{return item.itemid==id})){				
-							}else{
-								this.listData.picked.push(e)
+						e.orders.forEach((n)=>{
+							if(n.itemid==id){
+								n.halfPickNum=n.num;
+								n.init=false;
 							}
+						})
+						if(e.orders.filter((item)=>{return item.init==false}).length==e.orders.length){
+							e.pickStatus=1;
+							this.listData.picked.push(e)
+						}
 					}
 				})
 	  		this.alreadyPick=this.alreadyPick+1
+  	},
+  	/**
+  	 * 一键拣货
+  	 */
+  	pickAllGoods(id){
+  		this.datas.products.forEach(e=>{
+  			if(e.itemid==id){
+  				e.init=false;
+  				e.pickStatus=1;
+  				e.orders.forEach((n)=>{
+  					n.allpick=true
+  					n.halfPickNum=n.num
+  					n.init=false;
+  				})
+  				this.listData.picked.push(e)  // 将一键拣货拣过的合并订单放到已拣货中
+  			}
+  		})
   	},
     /**
      * 完成拣货
      */
     completeOrder(){
     	//判断是否有未拣货的的商品
-//  	if(this.datas.products.length-this.listData.picked.length>0){
-//  		this.$vux.toast.show({
-//        type: 'text',
-//        text:'需对商品“拣货”确认'
-//      })
-//  	}else{
-				let list = this.datas.orderInfos.map((item)=>{
+    	if(this.datas.products.length-this.listData.picked.length>0){
+    		this.$vux.toast.show({
+          type: 'text',
+          text:'需对商品“拣货”确认'
+        })
+    	}else{
+				let allList = [];
+				this.datas.products.forEach((e)=>{
+					e.orders.forEach((n)=>{
+						allList.push(n)
+					})
+				})
+				let lists = this.datas.orderInfos.map((item)=>{
 					let obj = {orderid:item.id,goodsInfoDTOS:[]}
-						this.datas.products.forEach((e)=>{
-							if(e.orderid==item.id){
+					allList.forEach((e)=>{
+						if(e.orderid==item.id){
 								let objs ={
 						      "desc": e.spec ?e.spec.desc:"",
 						      "diffNum": e.num-e.halfPickNum,  //缺货数量
@@ -360,23 +396,23 @@ export default {
 					    	}
 								obj.goodsInfoDTOS.push(objs)
 							}
-						})
-						return obj
+					})
+					return obj
 				})
-				console.log(obj)
-//		    $request.post("/api/online-order/v1/protected/mergefinishpick",list).then(res=>{
-//		    	if(res.success&&res.success==true){
-//						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id.split("|")}})			    		
-//		    	}else{
-//		    		this.errInfo=res;
-//		    		this.errInfo.message = JSON.parse(this.errInfo.message);
-//		    		this.errInfo.message.forEach((e)=>{
-//		    			let key = Object.keys(e)[0]
-//		    			e.name = key+':'+e[key]
-//		    		})
-//		    	}
-//		  	})
-// 		}
+				console.log(lists)
+		    $request.post("/api/online-order/v1/protected/mergefinishpick",lists).then(res=>{
+		    	if(res.success&&res.success==true){
+						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id.split("|")}})			    		
+		    	}else{
+		    		this.errInfo=res;
+		    		this.errInfo.message = JSON.parse(this.errInfo.message);
+		    		this.errInfo.message.forEach((e)=>{
+		    			let key = Object.keys(e)[0]
+		    			e.name = key+':'+e[key]
+		    		})
+		    	}
+		  	})
+   		}
     }
   },
 }

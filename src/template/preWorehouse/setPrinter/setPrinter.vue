@@ -56,9 +56,6 @@
 			changeBlue(){
 				this.boothList[0].forEach((e)=>{
 					if(e.value&&e.value==this.slectBlue[0]){
-						console.log("选择了设备"+e.name)
-						
-						console.log(sessionStorage.getItem("bluedata"))
 						//选择完毕连接打印机
 						let param1 = { btAddress:e.value };//这里传入用户点击的目标蓝牙设备地址
 						//连接打印机
@@ -66,6 +63,7 @@
 							localStorage.setItem("bluedata",e.value);
 							sessionStorage.setItem("bluedata",e.value);
 							this.currentDevice = e;
+//							alert(res)
 						},(err)=>{
 							alert("error:打印机 "+err)
 							this.currentDevice ={}
@@ -76,7 +74,6 @@
 			getBoothList(){
 				let deviceId = localStorage.getItem("bluedata");
 				let currentId =sessionStorage.getItem("bluedata")
-				console.log(deviceId)
 				if(window.cordova){
 					factory.getBlueList().then((res)=>{
 //						alert(res)
@@ -104,8 +101,10 @@
 						}else{
 							this.currentDevice={name:'未连接过',value:null}
 						}
+//						alert(JSON.stringify(this.blueList))
 					},(err)=>{
 						alert("获取蓝牙列表失败！"+err);
+//						alert(JSON.stringify(this.blueList))
 						this.boothList.push([{name:err,value:null}])
 					})
 				}else{

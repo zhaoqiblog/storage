@@ -9,10 +9,18 @@
     		<div class="success-top">
     			<div class="vux-1px-b">
 	    			<div>
-	    				<h5>拣货已完成</h5>
-	    				<div class="order-forms"> <span>{{data.ordersequenceno}}</span></div>
+	    				<h5 >
+	    					<span v-if="data.status=='1'"> 拣货已完成 > </span>
+	    					<span v-if="data.status=='0'"> 待拣货 </span>
+	    					<span v-if="data.status=='2'"> 拣货中 </span>
+	    				</h5>
+	    				<div class="order-forms">
+	    					<span>{{data.ordersequenceno}}</span>
+	    					<span :class="data.deliverType=='0'?'order-type-dif order-form':'order-form'">{{data.deliverType=='0'?'自提':'配送'}}</span>
+	    					<span v-if="data.expectdeliverydatetime" :class="data.expectdeliverydatetime.slottype=='expectTime'?'':'emiient'">{{data.expectdeliverydatetime.slottype=='expectTime'?'预约送达':'极速达'}}</span>
+	    				</div>
 	    			</div>
-	    			<div>
+	    			<div v-if="data.status=='1'">
 	    				<img src="../../../assets/common/icon_yiwancheng.png"/>
 	    			</div>
     			</div>
@@ -36,27 +44,26 @@
     					<span>缺货sku</span>
     					<span>{{parseInt(data.unFinishSkuNum)}}</span>
     				</dd>
-    				<dd>
-    					<span>拣货员</span>
+    				<dd v-if="data.status=='2'||data.status=='1'">
+    					<span >拣货员</span>
     					<span>{{data.operatorName}}</span>
     				</dd>
-    				<dd>
+    				<dd v-if="data.status=='2'||data.status=='1'">
     					<span>完成时间</span>
     					<span>{{new Date(data.finishTime).format("yyyy-MM-dd hh:mm:ss")}}</span>
     				</dd>
     			</dl>
     		</div>
     		<div style="padding-top: 0;">
-    			<!--v-if="data.expectdeliverydatetime"-->
     			<dl  class="vux-1px-b">
     				<dt>顾客信息</dt>
-    				<dd v-if="data.expectdeliverydatetime">
-    					<span >{{data.expectdeliverydatetime.slottype=='immediate'?'极速送达':'预约送达'}}</span>
-    					<span>{{new Date(parseInt(data.expectdeliverydatetime.date)).format('yyyy-MM-dd')}}&nbsp;&nbsp;{{data.expectdeliverydatetime.from}}-{{data.expectdeliverydatetime.to}}</span>
+    				<dd v-if="data.expectdeliverydatetime" class="fle">
+    					<span >收货人</span>
+    					<a :href="'tel:'+data.recvinfo.phone" class="phones"><span>{{data.recvinfo.name+data.recvinfo.phone}}</span><img src="../../../assets/pre/iconphone@3x.png"/></a>
     				</dd>
     				<dd v-if="data.recvinfo">
-    					<span>顾客信息</span>
-    					<span>{{data.recvinfo.name}}&nbsp;&nbsp;<span>{{data.recvinfo.phone}}</span></span>
+    					<span>配送地址</span>
+    					<span>{{data.recvinfo.address.city+data.recvinfo.address.area+data.recvinfo.address.detail}}&nbsp;&nbsp;<span>{{data.recvinfo.phone}}</span></span>
     				</dd>
     				<dd>
     					<span>顾客备注</span>
@@ -66,17 +73,55 @@
     		</div>
 				<div class="handel-btn">
 					<a v-if="data.recvinfo" :href="'tel:'+data.recvinfo.phone"><button>联系顾客</button></a>
-					<!--v-if="isAndroid=='true'"-->
-					<button  @click="printOrder(data.id)" >打印 &nbsp;&nbsp; X{{data.printCount}}</button>
-					<button v-if="data.status=='0'" class="startPick">开始拣货</button>
+					<button v-if="data.status=='1'"  @click="printOrder(data.id)" >打印 &nbsp;&nbsp; X{{data.printCount}}</button>
 				</div>
+			</div>
+			<div class="other-order-info pic-item-info">
+				<div class="pic-item-info">
+				<dl  class="vux-1px-b">
+    				<dt>配送信息</dt>
+    				<dd v-if="data.expectdeliverydatetime">
+    					<span >{{data.expectdeliverydatetime.slottype=='immediate'?'极速送达':'预约送达'}}</span>
+    					<span>{{new Date(parseInt(data.expectdeliverydatetime.date)).format('yyyy-MM-dd')}}&nbsp;&nbsp;{{data.expectdeliverydatetime.from}}-{{data.expectdeliverydatetime.to}}</span>
+    				</dd>
+    				<dd v-if="data.recvinfo">
+    					<span>送货方式</span>
+    					<span>{{data.deliverType=='0'?'自提':'配送'}}</span></span>
+    				</dd>
+    			</dl>
+    			<dl  class="vux-1px-b" v-if="data.amount">
+    				<dt>支付信息</dt>
+    				<dd v-if="data.expectdeliverydatetime">
+    					<span >商品总额</span>
+    					<span>￥{{data.amount.goodsamount/100}}</span>
+    				</dd>
+    				<dd v-if="data.recvinfo">
+    					<span>订单运费</span>
+    					<span>￥{{data.amount.freightamount/100}}</span>
+    				</dd>
+    				<dd>
+    					<span>包装费</span>
+    					<span>￥{{data.amount.packagingamount/100}}</span>
+    				</dd>
+    				<dd>
+    					<span>商品优惠</span>
+    					<span>￥{{(data.amount.coupondiscountamount+data.amount.promotiondiscountamount)/100}}</span>
+    				</dd>
+    				<dd>
+    					<span>运费优惠</span>
+    					<span>￥{{data.amount.freightpromotionamount/100}}</span>
+    				</dd>
+    			</dl>
+    			</div>
 			</div>
     	<pre-item-pic v-for="(item,index) in data.goodsInfoDTOS"
     		:itemid="item.itemid"
     		:imgurl="item.imgurl"
+    		type='concat'
 				:preCode="item.warehouseCode"
 				:code="'商品编码 '+(item.goodsBarCode)"
 				:name="item.goodsName"
+				:ordersequencenos="item.ordersequencenos"
 				:totalNum="item.qty+item.diffNum"
 				:unit="item.desc"
 				:unitq="item.saleprice"
@@ -84,6 +129,7 @@
 				:allpick="item.allpick"
 				:halfPickNum="item.qty"
 				:status="1"
+				:isSearch='true'
 				:key="index">
     	</pre-item-pic>
     	<m-empty v-if="data.content && data.goodsInfoDTOS.length == 0"></m-empty>
@@ -103,24 +149,20 @@
 <script>
 	import { XHeader,PopupPicker } from 'vux'
 	import $request from '@/service/request.js'
-import factory from '@/factory.js'
-import func from "@/func.js"
-import { mapState } from 'vuex';
+	import factory from '@/factory.js'
+	import func from "@/func.js"
+	import { mapState } from 'vuex';
 	
 	export default {
 		components: {
 			XHeader,PopupPicker
 		},
-		name: 'pick-list',
-  computed: mapState({
-    commonInfo: state => state.global.commonInfo,
-  }),
+		name: 'search-detail',
+	  	computed: mapState({
+	    	commonInfo: state => state.global.commonInfo,
+	  	}),
 		data() {
 			return {
-//				data:[
-//					{code:"BH955715041315160064",time:'2018-01-23 16:13:17',status:'已完成',total:15,complete:12},
-//					{code:"Bertert715041315160064",time:'2018-01-23 16:13:17',status:'已完成',total:22,complete:22},
-//				],
 				data:{goodsInfoDTOS:[]},
 				showSelectBlue:false, //选择蓝牙
 	    	slectBlue:[], //选中的蓝牙设备号
@@ -130,25 +172,8 @@ import { mapState } from 'vuex';
 			}
 		},
 		created(){
-  	  this.isAndroid =localStorage.getItem("isAndroid");
+  	  	this.isAndroid =localStorage.getItem("isAndroid");
 			this.getDetail();
-//$request.post("/api/online-order/v1/protected/batchpickdetail",['1204950830081010']).then((res)=>{
-//	
-//})
-			//判断之前是否连结果蓝牙，如果连接过蓝牙，有列表的话，直接连接
-//			if(localStorage.getItem("bluedata")&&this.isAndroid){
-			/*if(localStorage.getItem("bluedata")){
-				var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
-					//连接打印机
-					if(window.cordova){factory.connectBlue(param1).then(res=>{
-//						alert("连接打印机")
-						this.isConnectDevice=true;
-					},(err)=>{
-						alert("error:打印机 "+err+'， 请点击打印小票按钮重新选择打印机')
-						this.isConnectDevice=false
-					})
-				}
-			}*/
 		},
 		methods:{
 				/**
@@ -189,7 +214,8 @@ import { mapState } from 'vuex';
 			 * 返回
 			 */
 			back(){
-				this.$router.back()
+//				this.$router.back()
+				this.$router.push({name:'searchOrder',query:{isBack:true}})
 			},
 	 /**
 	 * 打印小票
@@ -203,7 +229,6 @@ import { mapState } from 'vuex';
 		if(sessionStorage.getItem("bluedata")){
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
-				console.log(res)
 				if(res.success==true){
 					this.printData=res.data[0];
 					this.data.printCount=res.data[0].printCount
@@ -256,62 +281,42 @@ import { mapState } from 'vuex';
 		}
 	}
 </script>
-
 <style lang="less">
-	.pre-pic-history-detail{
-		/*margin-top: 10px;*/
-		
-		.detail-top{
-			background:#FFFFFF;
-			p{padding: 0 20px;}
+	.pre-content-pic .pic-item-info > div {
+		dt{font-size: 14px;}
+		dd{
+			>span:nth-child(2){
+				color: #333333;
+			}
 		}
-		.pre-pic-history-detail{
+	}
+</style>
+<style lang="less" scoped>
+	.pic-item-info{
+		&.other-order-info{
 			margin-top: 10px;
 		}
-	}
-
-	.pre-pic-history-list {
-		
-	}
-	.pre-content-title{
-		&.pre-detail-title{
-			.picking-title .pick-code{
-				top: 10px;
-				height: 140px;
-				padding-top: 8px;
-				box-sizing: border-box;
-				p{
-					padding: 9px 0 0px 30px;
-				}
-			}
+		a:-webkit-any-link{
+			color: #333333;
 		}
-		
-	}
-	.pre-difer{
-		top: 56px;
-	}
-	.pre-content-pic{
-	.pic-item-info{
-		.success-top{
-			padding: 0 10px;
-			
-			>div{
-				padding: 13px 10px;display: flex;
-				justify-content: space-between;
-				align-items: center;
-				h5{font-size: 18px;color: #303030;line-height: 1.8;}
-				.order-forms{
-					>span{background: #F2FBFE;
-						border: 1px solid #AFE2EB;
-						border-radius: 1px;
-						margin-right: 10px;
-						opacity: 0.8;
-						padding: 0px 5px;font-size: 10px;
-					}
-					}
-				img{width: 70px;position: absolute;top: 10px;right: 15px;}
-			}
+		.phones{
+			display: flex;justify-content: flex-start;align-items: center;
+			img{width: 15px;margin-left: 5px;}
+		}
+		.fle{display: flex;justify-content: flex-start;}
+		dd{display: flex;justify-content: flex-start;
+			>span:nth-child(2){flex: 1;}
 		}
 	}
+	.order-forms {
+		span{color: #197FA9;}
+		.emiient{
+			background: #FEF6E9;
+			border: 1px solid #EBD3AF !important;
+			border-radius: 1px;
+			font-size: 10px;
+			color: #A95519;
+			text-align: center;
+		}
 	}
 </style>

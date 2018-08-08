@@ -267,7 +267,7 @@
               <grid :cols="2">
               	<grid-item :link="{name: 'concatPickList'}">
                   <div class="text">
-                    <h2>合并拣货</h2>
+                    <h2>合单拣货</h2>
                     <p>前置仓订单合并拣货</p>
                   </div>
                   <div class="img">
@@ -285,7 +285,7 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
-              	<!--<grid-item :link="{name: 'concatPicking1',query:{id:'1202840630069000|1205100470016021|1205100170026011'}}">
+              	<!--<grid-item :link="{name: 'test',query:{id:'1202840630069000|1205100470016021|1205100170026011'}}">
                   <div class="text">
                     <h2>测试单据</h2>
                     <p>前置仓订单合并拣货</p>

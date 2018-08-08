@@ -61,6 +61,7 @@ export default {
 	scrollListen (_this,anchor,callback=null) {
 //    const _this = _this
 //    let anchor = this.$refs.scrollWrap
+		console.log("pop")
       anchor.addEventListener('scroll', function() {
         var scrollTop = document.body.scrollTop;
         let top=anchor.scrollTop,
@@ -114,10 +115,26 @@ console.log(param)
 		}
 		return isAndroid
 	},
+	/**
+	 * 打印之前获取蓝牙列表
+	 */
+	getBlueList(factory){
+		factory.getBlueList().then((res)=>{
+					let arrays = res.map((e)=>{
+						return {name:e.split("=>")[0],value:e.split("=>")[1]}
+					})
+					this.$store.commit("updateCommonInfo", {
+			    	blueList:[arrays],
+			    });
+			    this.showSelectBlue=true;
+				},(err)=>{
+						alert(err);
+				})
+	},
 	/*
 	 * 打印功能
 	 */
-	printInfo(data,_this,callback=null,errCallback=null){
+	printInfo(data,_this,callback=null,errCallback=null){   //这个函数
 		let isShort = data.goodsInfoDTOS.some((i)=>{
 			return i.diffNum>0
 		})
@@ -146,7 +163,6 @@ console.log(param)
 							data.goodsInfoDTOS.forEach((a,index)=>{
 								let e = a;
 								let indexn = index;
-								console.log(indexn,e)
 								if(e.qty>0){queen.push(indexn,e)}
 								if(index==data.goodsInfoDTOS.length-1){
 									queen.start((lasttext)=>{
@@ -187,19 +203,31 @@ console.log(param)
 																			}).then(()=>{
 //																				if(_this.isConnectDevice){  //如果为true，代表打印机连接成功
 																					let param = {text:lasttext};
-																					factory.printBytes(param).then(res=>{
+																					factory.printBytes(param).then(res=>{  //1.先执行这里，先执行三次这里
 //																						alert(JSON.stringify(res))
+			
+																						console.log("大印文字成功")
+																						let param1 = {text:data.outerOrderId,size: 10};
+																						factory.printQRCode(param1).then(()=>{  //2.上边完成之后进来执行这个，后执行三次这个
+																							console.log("大印码成功")
+																							factory.printText({text: "\n\n\n--------------------------------\n\n\n\n"}).then(()=>{
+																								callback()  //都执行完之后的回调函数,是不是这样，我先试试看
+																							})
+																						})
 																					},(err)=>{
 																						alert(err);
 																						console.log("打印失败")
 																						errCallback();
-																					}).then(()=>{
-																						let param1 = {text:data.outerOrderId,size: 10};
-																						factory.printQRCode(param1).then(()=>{
-																							factory.printText({text: "\n\n\n--------------------------------\n\n\n\n"})
-																						}).then(()=>{
-																							callback()
-																						})
+																					})
+																					.then(()=>{
+//																						let param1 = {text:data.outerOrderId,size: 10};
+//																						factory.printQRCode(param1).then(()=>{  //2.上边完成之后进来执行这个，后执行三次这个
+//																							factory.printText({text: "\n\n\n--------------------------------\n\n\n\n"}).then(()=>{
+//																								callback()  //都执行完之后的回调函数,是不是这样，我先试试看
+//																							})
+//																						}).then(()=>{
+//																							
+//																						})
 																					})
 //																				}else{
 //																					alert("还未连接打印机,请先连接打印机")
@@ -226,25 +254,23 @@ console.log(param)
 								function func(byteText,callback){
 									let index = funarry[Ind][0];
 									let e = funarry[Ind][1];
-//									if(e.qty>0){   //缺货商品数量为0的不显示
-										factory.string2Byte({text:(index+1)+'.'+e.goodsName+'   '+e.desc+'\n'}).then(res=>{
-											byteText +=' 27 33 00 '+res
+									factory.string2Byte({text:(index+1)+'.'+e.goodsName+'   '+e.desc+'\n'}).then(res=>{
+										byteText +=' 27 33 00 '+res
+									}).then(()=>{
+										factory.string2Byte({text:'X'+e.qty+'\n'}).then(res=>{
+											byteText +=' 27 97 2 27 33 52 '+res
 										}).then(()=>{
-											factory.string2Byte({text:'X'+e.qty+'\n'}).then(res=>{
-												byteText +=' 27 97 2 27 33 52 '+res
+											factory.string2Byte({text:e.goodsBarCode}).then(res=>{
+												byteText +=' 27 97 0 27 33 00 '+res
 											}).then(()=>{
-												factory.string2Byte({text:e.goodsBarCode}).then(res=>{
+												factory.string2Byte({text:'\n单价￥'+e.saleprice+'    金额￥'+(e.saleprice*e.qty)+'\n--------------------------------\n'}).then(res=>{
 													byteText +=' 27 97 0 27 33 00 '+res
 												}).then(()=>{
-													factory.string2Byte({text:'\n单价￥'+e.saleprice+'    金额￥'+(e.saleprice*e.qty)+'\n--------------------------------\n'}).then(res=>{
-														byteText +=' 27 97 0 27 33 00 '+res
-													}).then(()=>{
-														callback(byteText);
-													})
+													callback(byteText);
 												})
 											})
 										})
-//									}
+									})
 								}
 								return {
 									push:function(indexn,e){

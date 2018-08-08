@@ -2,7 +2,7 @@
   <div class="pre-picking">
     <x-header class="vux-1px-b" :left-options="{preventGoBack:true}" @on-click-back="back">
     	合单拣货
-    	<!--<a slot="right"><router-link to='searchOrder'>搜索</router-link></a>-->
+    	<a slot="right"><router-link to='searchOrder'>搜索</router-link></a>
     </x-header>
     <tab v-model="index" active-color="#3DA5FE">
 	      <tab-item v-for="(i,ins) in ['待拣货 刷新','拣货中','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
@@ -211,7 +211,7 @@ export default {
 			this.page.pageNo=1;
 			this.$refs.scrollWrap.scrollTop=0
     	this.getSupplyList(0,this.page.pageNo)  
-    },30000)
+    },15000)
     })
     //判断之前是否连接过蓝牙
 //			if(localStorage.getItem("bluedata")&&this.isAndroid){

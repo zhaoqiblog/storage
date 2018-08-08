@@ -5,6 +5,7 @@ const state ={
 	confirmShopList:[], //卖场补货确认页列表数据
 	backSupplyList:[], //后场补货至前置仓，选择商品页数据
 	backConfirmList:[], //后场补货至前置仓，确认页数据
+	searchList:{},  //搜索界面数据
 };
 const mutations ={  //方法：同步事件
 	setPreSupplyInfo(state,data){
@@ -34,6 +35,9 @@ const mutations ={  //方法：同步事件
 	},
 	setBackConfirmList(state,data){
 		state.backConfirmList=data;
+	},
+	setSearchList(state,data){
+		state.searchList=data
 	}
 };
 const actions={
@@ -57,6 +61,9 @@ const actions={
 	},
 	setBackConfirmList({commit},data){
 		commit("setBackConfirmList",data)
+	},
+	setSearchList({commit},data){
+		commit("setSearchList",data)
 	}
 }
 //方法只能通过commit触发：使用时：

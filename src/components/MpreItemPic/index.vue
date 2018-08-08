@@ -36,7 +36,7 @@
 	    			</p>
 	    			</div>
     			</div>
-    			<div class="l-list-button  vux-1px-t clearfix">
+    			<div class="l-list-button  vux-1px-t clearfix" v-if="!isSearch">
     				<a :href="'tel:'+phone" v-if="type&&type=='concat'">
 	    				<div v-if="type&&type=='concat'" class="fl pre-list-l">
 	    					<span style="color: #333333;font-weight: 600;">{{ordersequencenos}}</span> &nbsp;&nbsp;<span class="ordername">联系顾客</span>
@@ -85,7 +85,8 @@ export default{
 		status:[String,Number],  //是否的是历史单据1：是：不显示现有库存和安全库存，0：否，显示现有库存和安全库存
 		type:[String],  //concat 是否是合单界面
 	    phone:[String,Number],  //合单界面：需要需要联系顾客的电话
-	    ordersequencenos:[String,Number]  //合单界面需要的内容订单号
+	    ordersequencenos:[String,Number],  //合单界面需要的内容订单号
+	    isSearch:[Boolean],  //是否是设置界面
 	},
 	created(){
 		typeof this.totalNum == "string" && (this.totalNum = parseInt(this.totalNum));

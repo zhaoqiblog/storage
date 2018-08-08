@@ -16,12 +16,14 @@ import conHistoryDetail from '../../template/preWorehouse/concatPicking/historyD
 import concatSuccessDetail from '../../template/preWorehouse/concatPicking/concatSuccessDetail.vue'  //前置合并拣货成功
 
 import concatPicking1 from '../../template/preWorehouse/concatPicking/concatPicking2.vue'  //前置仓拣货列表
-
+import test1 from '../../template/preWorehouse/concatPicking/test1.vue'  //前置合并拣货成功
 /*
  * 设置打印机
  */
 import setPrinter from '../../template/preWorehouse/setPrinter/setPrinter.vue'  //前置仓拣货列表
 import searchOrder from '../../template/preWorehouse/concatPicking/search.vue'
+import searchDetail from '../../template/preWorehouse/concatPicking/searchDetail.vue'
+
 /**
  * 前置仓补货
  */
@@ -74,9 +76,12 @@ import wareHouseConfirm from '../../template/preWorehouse/backStorage/confirmGoo
  			 {path:'concatPicking',name:'concatPicking',component:concatPicking,meta:{index:2.1}},
  			 {path:'conHistoryDetail',name:'conHistoryDetail',component:conHistoryDetail,meta:{index:2.1}},
  			 {path:'concatSuccessDetail',name:'concatSuccessDetail',component:concatSuccessDetail,meta:{index:2.1}},
+ 			 {path:'test',name:'test',component:test1,meta:{index:2.1}},
  			 
  			 {path:'setPrinter',name:'setPrinter',component:setPrinter,meta:{index:2.1}},
+ 			
  			 {path:'searchOrder',name:'searchOrder',component:searchOrder},
+ 			 {path:'searchDetail',name:'searchDetail',component: searchDetail},
  			 {path:'concatPicking1',name:'concatPicking1',component:concatPicking1,meta:{index:2.1}},
  			 
  			 
