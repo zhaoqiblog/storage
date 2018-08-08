@@ -31,7 +31,7 @@
 	    				<dd class="print-list" v-for="e in datas.orderInfos">
 	    					<span>{{e.ordersequenceno}}&nbsp;&nbsp;{{e.id}}</span>
 	    					<!--v-if="isAndroid=='true'"-->
-	    					<button  @click="printOrder(e.id)">打印 X{{e.printCount}}</button>
+	    					<button  @click="printAll(e.id)">打印 X{{e.printCount}}</button>
 	    				</dd>
 	    			</dl>
 	    		</div>
@@ -120,21 +120,6 @@ export default {
   created() {
   	this.isAndroid=localStorage.getItem("isAndroid");
 	this.getPickingInfo();
-	//判断之前是否连接过蓝牙
-//	if(localStorage.getItem("bluedata")&&this.isAndroid){
-	/*if(localStorage.getItem("bluedata")){
-		//如果之前连结果蓝牙，直接连接
-		let param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
-		//连接打印机
-		if(window.cordova){
-			factory.connectBlue(param1).then(res=>{
-				this.isConnectDevice=true;
-			},(err)=>{
-				alert("error:打印机 "+err)
-				this.isConnectDevice=false
-			})
-		}
-	}*/
   },
   destory(){
   	console.log("dis")
@@ -153,6 +138,7 @@ export default {
 			factory.connectBlue(param1).then(res=>{
 				this.isConnectDevice=true;  //连接打印机之后打印，调用打印方法
 //				this.printOrder(this.printId)
+				console.log(this.printId);
 				this.printOrders(this.printId.length,this.printId)
 			},(err)=>{
 				alert("连接打印机失败："+err+'\n'+"请回到首页设置模块修改打印设备")}
@@ -160,29 +146,29 @@ export default {
 		}
 	},
 	//一键打印
-	printAll(){
+	printAll(codeid){
 		let i = 0;		
 		let ids = this.$route.query.id.split("|")
 		let _this = this;
-//		for(let i = 0;i<ids.length;i++){
-//			(function)(i)  //这个方法之前试过了，不行，主要是因为他要执行的是两个异步函数，不是i一个异步函数也就是说所有异步执行完了之后才打印，不是，方法是：先打印文字，在打印二维码，需要这两个在同一张单子上，
-////			现在的结果是，文字和二维码不在同一个单子上，明白了！那你的callback哪里出问题？？callback是执行了的，否则不会打三次，我的意思是你的callback问题在哪
-////没有解决
-////嗯嗯，怎么弄
-//		}
+		if(codeid){
+				this.printId=ids;
+			 _this.printOrders(1,[codeid])
+		}else{
+			console.log(ids)
+			this.printId=ids;
+	     _this.printOrders(ids.length,ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
+		}
 		
-//  for(let i = 0;i < ids.length ; i ++){
-//		  setTimeout(function(){
-//		     _this.printOrder(ids[i])
-//		  }, 10 * i);
-//  }  //看这里之前注释掉的，这种方法是可疑的，但是就是会出现，我说的，先把所有的一个方法执行完，在之心下一个
-     _this.printOrders(ids.length,ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
+	},
+	printSingle(){
+		
 	},
 	printOrders(length,ids,callback=null){
 	//开启蓝牙
 	const _this =this;
-	this.printId=ids;
+//	this.printId=ids;
 	let ind=0;  //默认为0
+	console.log(ids)
 	//获取蓝牙连接列表，判断是否之前连接过蓝牙
 	if(sessionStorage.getItem("bluedata")){
 		//获取打印小票信息

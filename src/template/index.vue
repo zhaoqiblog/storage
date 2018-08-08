@@ -285,7 +285,7 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
-              	<!--<grid-item :link="{name: 'test',query:{id:'1202840630069000|1205100470016021|1205100170026011'}}">
+              	<grid-item :link="{name: 'test',query:{id:'1202840630069000|1205100470016021|1205100170026011'}}">
                   <div class="text">
                     <h2>测试单据</h2>
                     <p>前置仓订单合并拣货</p>
@@ -293,7 +293,7 @@
                   <div class="img">
                     <img src="../assets/home/icon9.png">
                   </div>
-                </grid-item>-->
+                </grid-item>
                 <!--<grid-item :link="{name: 'setPrinter'}">
                   <div class="text">
                     <h2>设置打印机</h2>
