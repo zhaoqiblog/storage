@@ -298,14 +298,15 @@
 		.demo5-item {
 		  width: 44.5%;
 		  height: 32px;
-		  line-height: 34px;
+		  line-height: 32px;
 		  text-align: center;
 		  border-radius: 3px;
 		  border: 1px solid #ccc;
 		  background-color: #fff;box-sizing: border-box;
 		}
 		.demo5-item-selected {
-		  border-color: rgba(74,144,226,0.40);;color: #4A90E2;
+		  border-color: rgba(74,144,226,0.80);;color: #4A90E2;border-width: 2px;
+		  line-height: 30px;
 		}
 	}
 </style>

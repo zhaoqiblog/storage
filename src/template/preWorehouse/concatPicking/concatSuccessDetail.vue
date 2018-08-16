@@ -66,9 +66,7 @@
       		<router-link :to="{name: 'concatPickList'}">
         		<button type="button">继续拣货</button>
         	</router-link>
-        </div>
-       
-      
+       </div>       
     </div>
     <popup-picker 
     	v-if="commonInfo.blueList" 

@@ -12,10 +12,7 @@ import selectGoods from "../../template/turnoverArea/goodsToStore/selectGoods.vu
 import goodsToStoreSuccess from "../../template/turnoverArea/goodsToStore/continue.vue"   //商品入库-入库商品选择
 
 
-import shopSelect from "../../template/turnoverArea/goodsShelves/shopSelect.vue"     //商品上架
-import shopSelectConfirm from "../../template/turnoverArea/goodsShelves/shopSelectConfirm.vue"  //商品上架
 
-//import replenishmen from "../../template/turnoverArea/replenishmen.vue"   //托盘补货到卖场
 
 //后场界面
 import backCount from "../../template/backCourt/index.vue"  
@@ -30,7 +27,6 @@ import inventory from "../../template/backCourt/inventory/inventory.vue"   				/
 import inventoryResult from "../../template/backCourt/inventory/inventoryResult.vue"   				//库位盘点差异比较页面
 
 
-//import mergeLocation from "../../template/backCourt/mergeLocation.vue"   //库位合并-选择将要合并的商品
 import selectMergeGoods from "../../template/backCourt/warehouseMerge/selectMergeGoods.vue"   //库位合并-选择将要合并的商品
 import mergeGoodsAmount from "../../template/backCourt/warehouseMerge/mergeGoodsAmount.vue"   //库位合并-输入合并数量
 import mergeGoodsConfirm from "../../template/backCourt/warehouseMerge/mergeGoodsConfirm.vue"   //库位合并-输入合并数量
@@ -68,9 +64,6 @@ export default [
         {path:'goodsAmount',name:'goodsAmount',component:goodsAmount},
         {path:'goodsToStore',name:'goodsToStore',component:goodsToStore},
         
-    //商品上架   
-        {path:'shopSelect',name:'shopSelect',component:shopSelect},
-        {path:'shopSelectConfirm',name:'shopSelectConfirm',component:shopSelectConfirm},
     ]
 },
 {path:"/success",component:success,name:"success"},

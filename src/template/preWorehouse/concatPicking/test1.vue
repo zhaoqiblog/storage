@@ -25,7 +25,7 @@
 	    			<dl>
 	    				<dt class="pick-success-print">
 	    					<span v-if="datas.mergeId">合单号&nbsp;{{datas.mergeId}}</span>
-	    					<span @click="printAll"><button>一键打印</button></span>
+	    					<span @click="printAll(null)"><button>一键打印</button></span>
 	    					<!--<span v-if="!datas.mergeId">小票分单打印</span>-->
 	    				</dt>
 	    				<dd class="print-list" v-for="e in datas.orderInfos">
@@ -71,12 +71,12 @@
       
     </div>
     <popup-picker 
-    	v-if="commonInfo.blueList" 
+    	v-if="commonInfo.blueList"
     	:show-cell="false" class="showposdiffer"  
-    	:data="commonInfo.blueList" 
-    	:show="showSelectBlue" 
-    	v-model="slectBlue" 
-    	@on-change="changeBlue" 
+    	:data="commonInfo.blueList"
+    	:show="showSelectBlue"
+    	v-model="slectBlue"
+    	@on-change="changeBlue"
     	show-name 
     	@on-hide="showSelectBlue=false"></popup-picker>
   </div>
@@ -119,10 +119,9 @@ export default {
   },
   created() {
   	this.isAndroid=localStorage.getItem("isAndroid");
-	this.getPickingInfo();
+		this.getPickingInfo();
   },
   destory(){
-  	console.log("dis")
   	clearInterval(this.int)
   },
   methods: {
@@ -137,8 +136,6 @@ export default {
 			var param1 = { btAddress:sessionStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 			factory.connectBlue(param1).then(res=>{
 				this.isConnectDevice=true;  //连接打印机之后打印，调用打印方法
-//				this.printOrder(this.printId)
-				console.log(this.printId);
 				this.printOrders(this.printId.length,this.printId)
 			},(err)=>{
 				alert("连接打印机失败："+err+'\n'+"请回到首页设置模块修改打印设备")}
@@ -146,16 +143,15 @@ export default {
 		}
 	},
 	//一键打印
-	printAll(codeid){
-		let i = 0;		
-		let ids = this.$route.query.id.split("|")
+	printAll(id){
+		let i = 0;	
 		let _this = this;
-		if(codeid){
-				this.printId=ids;
-			 _this.printOrders(1,[codeid])
+		let ids = _this.$route.query.id
+		if(id){
+				_this.printId=[id];
+			 _this.printOrders(1,[id])
 		}else{
-			console.log(ids)
-			this.printId=ids;
+			_this.printId=ids;
 	     _this.printOrders(ids.length,ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
 		}
 		
@@ -166,9 +162,7 @@ export default {
 	printOrders(length,ids,callback=null){
 	//开启蓝牙
 	const _this =this;
-//	this.printId=ids;
 	let ind=0;  //默认为0
-	console.log(ids)
 	//获取蓝牙连接列表，判断是否之前连接过蓝牙
 	if(sessionStorage.getItem("bluedata")){
 		//获取打印小票信息
@@ -188,7 +182,6 @@ export default {
 	            text: res.data[0].ordersequenceno+'打印成功',  //这个弹框只执行了一次
 	          })
 					},(err)=>{
-						alert(err)
 						if(this.commonInfo.blueList[0].length>0){
 							this.showSelectBlue=true;
 						}else{
@@ -201,7 +194,8 @@ export default {
 						    });
 						    this.showSelectBlue=true;
 							},(err)=>{
-									alert(err);
+								
+									alert(err+"获取蓝牙列表失败回掉函数");
 							})
 						}
 					})
@@ -209,19 +203,15 @@ export default {
 			})
 }else{		  //进来函数之后length>1，执行else内容
 	let _thiss= this
-			var callbacks=function(){  //2.回调函数进来这里  //6.又进来这里  //9，进来这里，就是这里啊什么问题，我不知道什么问题，那你写的这个没成功
-//				成功了,是会执行三次的，不成功的话不会执行三次，就职可能这里写的有问题，实现你要的结果不就，关键是没有啊你不是说打印了三次吗，可是三次的文字和二维码不是一起打的，是打了三次文字，三次二维码，我要的是三次的文字+二维码，不是分开
-//也就是说打印了 6次嗯，因为这个文字和二维码都是异步
-				
-				ind++;  //3.第一次回调 ind ：1  ///7. ind：2  //10.ind :3
+			var callbacks=function(){
+				ind++;
 				if(ind>=length){  //11.进来这里，退出循环
 					return;
 				}else{ //4.进来这里
-					console.log("第"+ind+"打印")
+//					console.log("第"+ind+"打印")
 					_thiss.printOrders(1,[ids[ind]],callbacks) //5.执行这个，完成之后执行回调函数  //8，再一次执行，完成回调
 				}
 			}
-			console.log("第一次打印")
 			_thiss.printOrders(1,[ids[0]],callbacks)  //1，首先执行这里，传入回掉函数callbacks，第一遍执行完，执行回掉函数
 		}
 	}else{
@@ -239,77 +229,11 @@ export default {
 			})
 	}
 },
-	
-	
-	
-	
-  /**
-	 * 打印小票
-	 */
-	printOrder(id,callback=null){
-		//开启蓝牙
-  		const _this =this;
-  		this.printId=id;
-		//获取蓝牙连接列表，判断是否之前连接过蓝牙
-		if(sessionStorage.getItem("bluedata")){
-			//获取打印小票信息
-			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
-				if(res.success==true){
-					this.datas.orderInfos.forEach((r)=>{
-						if(r.id==id){
-							r.printCount = res.data[0].printCount
-						}
-					})
-					func.printInfo(res.data[0],this,()=>{
-						this.$vux.toast.show({
-			            type: 'text',
-			            text: res.data[0].ordersequenceno+'打印成功',
-			          })
-					},(err)=>{
-						alert(err)
-						if(this.commonInfo.blueList[0].length>0){
-							this.showSelectBlue=true;
-						}else{
-							factory.getBlueList().then((res)=>{
-								let arrays = res.map((e)=>{
-									return {name:e.split("=>")[0],value:e.split("=>")[1]}
-								})
-								this.$store.commit("updateCommonInfo", {
-						    	blueList:[arrays],
-						    });
-						    this.showSelectBlue=true;
-							},(err)=>{
-									alert(err);
-							})
-						}
-					})
-				}else{
-					this.$vux.toast.show({
-	          type: 'text',
-	          text: res.message||'获取该订单数据失败，请联系管理员',
-          })
-				}
-			})
-		}else{
-			//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-				factory.getBlueList().then((res)=>{
-					let arrays = res.map((e)=>{
-						return {name:e.split("=>")[0],value:e.split("=>")[1]}
-					})
-					this.$store.commit("updateCommonInfo", {
-			    	blueList:[arrays],
-			    });
-			    this.showSelectBlue=true;
-				},(err)=>{
-						alert(err);
-				})
-		}
-	},
 	/**
 	 * 获取拣货单信息
 	 */
 	getPickingInfo(){
-		$request.post("/api/online-order/v1/protected/mergepickdetail",this.$route.query.id.split("|")).then((res)=>{
+		$request.post("/api/online-order/v1/protected/mergepickdetail",this.$route.query.id).then((res)=>{
 			if(res.success==true){
 				this.datas=res.data
 				this.datas.orderInfos=res.data.orderInfos.map((e)=>{

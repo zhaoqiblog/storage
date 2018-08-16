@@ -45,7 +45,7 @@
 			    		:itemid="item.itemid"
 							:nowNum="item.nowNum"
 							:code="'商品编码  '+(item.barcode)"
-							:name="item.subtitle+(item.itemid)+(item.num)"
+							:name="item.subtitle+' '"
 							:imgurl="item.imgurl"
 							:unit="item.spec?item.spec.desc:''"
 							:unitq="item.price.value"
@@ -241,6 +241,7 @@ export default {
 	 */
 	getPickingInfo(){
 		$request.post("/api/online-order/v1/protected/mergeorderdetails",this.$route.query.id.split("|")).then((res)=>{
+//		$request.post("https://zsyh.yonghui.cn/mas-api/restful/inventory/store-inventory/api/online-order/v1/protected/mergeorderdetails",this.$route.query.id.split("|")).then((res)=>{
 			if(res.success==true){
 				this.datas=Object.assign({},res.data)
 				let listTmp = []

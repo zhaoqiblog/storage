@@ -13,10 +13,10 @@ import historyDetail from '../../template/preWorehouse/picking/historyDetail.vue
 import concatPickList from '../../template/preWorehouse/concatPicking/concatList.vue'  //前置仓拣货列表
 import concatPicking from '../../template/preWorehouse/concatPicking/concatPicking.vue'  //前置仓拣货列表
 import conHistoryDetail from '../../template/preWorehouse/concatPicking/historyDetail.vue'  //前置仓拣货列表
-import concatSuccessDetail from '../../template/preWorehouse/concatPicking/concatSuccessDetail.vue'  //前置合并拣货成功
+import test1 from '../../template/preWorehouse/concatPicking/concatSuccessDetail.vue'  //前置合并拣货成功
 
 import concatPicking1 from '../../template/preWorehouse/concatPicking/concatPicking2.vue'  //前置仓拣货列表
-import test1 from '../../template/preWorehouse/concatPicking/test1.vue'  //前置合并拣货成功
+import concatSuccessDetail from '../../template/preWorehouse/concatPicking/test1.vue'  //前置合并拣货成功
 /*
  * 设置打印机
  */

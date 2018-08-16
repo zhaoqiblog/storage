@@ -50,31 +50,6 @@
               </grid>
             </div>
           </div>
-          <!--<div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex === 1}">
-            <group-title @click.native="toggle(1)"><i class="i-line"></i>周转区<i class="i-arrow"></i></group-title>
-            <div class="content">-->
-              <!-- <grid :cols="2">
-                <grid-item :link="{name: 'scanEntry', query: {key: 'goodsToMall'}}">
-                  <div class="text">
-                    <h2>商品上架</h2>
-                    <p>将周转区的托盘商品直接上架至卖场</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/ico5.png">
-                  </div>
-                </grid-item>
-                <grid-item :link="{name: 'scanEntry', query: {key: 'goodsTostore'}}">
-                  <div class="text">
-                    <h2>商品入库</h2>
-                    <p>将托盘的商品送至目标库位并完成入库</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/ico4.png">
-                  </div>
-                </grid-item>
-              </grid> -->
-            <!--</div>-->
-          <!--</div>-->
           <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 1}">
             <group-title @click.native="toggle(1)"><i class="i-line"></i>卖场<i class="i-arrow"></i></group-title>
             <div class="content">
@@ -224,13 +199,22 @@
             <group-title @click.native="toggle(3)"><i class="i-line"></i>前置仓<i class="i-arrow"></i></group-title>
             <div class="content">
               <grid :cols="2">
-                <grid-item :link="{name: 'pickList'}">
+                <!--<grid-item :link="{name: 'pickList'}">
                   <div class="text">
                     <h2>前置仓拣货</h2>
                     <p>接收线上订单，开始挑拣商品</p>
                   </div>
                   <div class="img">
                     <img src="../assets/home/icon17.png">
+                  </div>
+                </grid-item>-->
+                <grid-item :link="{name: 'concatPickList'}">
+                  <div class="text">
+                    <h2>合单拣货</h2>
+                    <p>前置仓订单合并拣货</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon9.png">
                   </div>
                 </grid-item>
                 <grid-item :link="{name: 'supplyList'}">
@@ -265,7 +249,7 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
-              	<grid-item :link="{name: 'concatPickList'}">
+              	<!--<grid-item :link="{name: 'concatPickList'}">
                   <div class="text">
                     <h2>合单拣货</h2>
                     <p>前置仓订单合并拣货</p>
@@ -273,7 +257,7 @@
                   <div class="img">
                     <img src="../assets/home/icon9.png">
                   </div>
-                </grid-item>
+                </grid-item>-->
                 <grid-item :link="{name: 'setPrinter'}">
                   <div class="text">
                     <h2>设置打印机</h2>
@@ -285,7 +269,7 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
-              	<grid-item :link="{name: 'test',query:{id:'1202840630069000|1205100470016021|1205100170026011'}}">
+              	<!--<grid-item :link="{name: 'test',query:{id:'1202840630069000|1205100470016021|1205100170026011'}}">
                   <div class="text">
                     <h2>测试单据</h2>
                     <p>前置仓订单合并拣货</p>
@@ -293,7 +277,7 @@
                   <div class="img">
                     <img src="../assets/home/icon9.png">
                   </div>
-                </grid-item>
+                </grid-item>-->
                 <!--<grid-item :link="{name: 'setPrinter'}">
                   <div class="text">
                     <h2>设置打印机</h2>

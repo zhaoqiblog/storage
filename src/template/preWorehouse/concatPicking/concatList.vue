@@ -392,7 +392,7 @@ export default {
   	},
   	startPick(){
   		clearInterval(this.timer)
-  		this.$router.push({path:'concatPicking',query:{'id':this.selectLists.join("|")}})
+			this.$router.push({path:'concatPicking',query:{'id':this.selectLists.join("|")}})
   	},
   	/*
   	 *去拣货  status,

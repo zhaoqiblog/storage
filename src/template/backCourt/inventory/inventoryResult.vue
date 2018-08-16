@@ -105,7 +105,7 @@ export default {
     	this.$router.push({path:'/fail',query:{text: res.message||'服务器错误,获取库位盘点差异结果失败,请重试!',title: '库位盘点', path:'/scanEntry?key=inventory'}})
     }
   	},err=>{
-  		this.$router.push({path:'/fail',query:{text:'服务器错误,获取库位盘点差异结果失败,请重试!' ,title: '库位盘点',info: '', path:'/scanEntry?key=goodsTostore'}})
+  		this.$router.push({path:'/fail',query:{text:'服务器错误,获取库位盘点差异结果失败,请重试!' ,title: '库位盘点',info: '', path:'/scanEntry?key=inventory'}})
   	})
   },
   methods: {

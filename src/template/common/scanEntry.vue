@@ -84,10 +84,6 @@ export default {
         	 header: { title: '商品入库' },
           scanButton: { name: '托盘二维码/订单号', to: 'selectGoods',icons: require('../../assets/scan/pic_scantuopan.png') }
         },
-        goodsToMall:{  //商品呢上架
-        	 header: { title: '商品上架' },
-          scanButton: { name: '托盘二维码', to: 'shopSelect',icons: require('../../assets/scan/pic_scantuopan.png') }
-        },
         /*
          * 后场
          */
