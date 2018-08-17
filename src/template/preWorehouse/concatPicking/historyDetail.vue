@@ -200,7 +200,7 @@ import { mapState } from 'vuex';
   		this.printId=id;
 		//获取蓝牙连接列表，判断是否之前连接过蓝牙
 //		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
-		if(sessionStorage.getItem("bluedata")){
+//		if(sessionStorage.getItem("bluedata")){
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
 				console.log(res)
@@ -237,20 +237,21 @@ import { mapState } from 'vuex';
 		          })
 				}
 			})
-		}else{
+//		}else{
+//			console.log("lanyaweilianjei")
 			//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-				factory.getBlueList().then((res)=>{
-					let arrays = res.map((e)=>{
-						return {name:e.split("=>")[0],value:e.split("=>")[1]}
-					})
-					this.$store.commit("updateCommonInfo", {
-			    	blueList:[arrays],
-			    });
-			    this.showSelectBlue=true;
-				},(err)=>{
-						alert(err);
-				})
-		}
+//				factory.getBlueList().then((res)=>{
+//					let arrays = res.map((e)=>{
+//						return {name:e.split("=>")[0],value:e.split("=>")[1]}
+//					})
+//					this.$store.commit("updateCommonInfo", {
+//			    	blueList:[arrays],
+//			    });
+//			    this.showSelectBlue=true;
+//				},(err)=>{
+//						alert(err);
+//				})
+//		}
 	},
 	
 		}
