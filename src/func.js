@@ -139,31 +139,30 @@ console.log(param)
 			return i.diffNum>0
 		})
 		let printText='',printArray=[]
-		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
-		printArray.push({printSetData:{alignMode:1,charSize:3},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'')})
+		/*printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
+		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'')})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
 					data.id+'\n打印次数：'+data.printCount+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
 					'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
 					'收 货 人：'+data.recvinfo.name+'\n'+
 					'联系电话：'+data.recvinfo.phone+'\n'+(data.deliverType==0 ?'':'收货地址：'+data.recvinfo.address.city+'-'+data.recvinfo.address.detail)})
-		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'备注：'+data.comment})
+		printArray.push({printSetData:{alignMode:0,charSize:1},printType:0,text:'备注：'+data.comment})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n购买商品'})
 		data.goodsInfoDTOS.forEach((e,index)=>{
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:(index+1)+'.'+e.goodsName+'   '+e.desc})
-			printArray.push({printSetData:{alignMode:2,charSize:3},printType:0,text:'X'+e.qty})
+			printArray.push({printSetData:{alignMode:2,charSize:1},printType:0,text:'X'+e.qty})
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:e.goodsBarCode})
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'单价￥'+e.saleprice+'金额￥'+(e.saleprice*e.qty)+'\n--------------------------------'})
 		})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'商品金额：'+data.amount.goodsamount/100})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'订单运费：'+data.amount.freightamount/100})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'商品优惠：'+(data.amount.coupondiscountamount+data.amount.promotiondiscountamount)/100})
-		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'运费优惠：'+data.amount.freightpromotionamount/100+'\n--------------------------------\n'})
-		printArray.push({printSetData:{alignMode:0,charSize:4},printType:0,text:'订单件数：'+data.amount.productcount/100})
-		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'应收金额：'+data.amount.totalamount/100+'\n--------------------------------'})
-		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'谢谢惠顾，欢迎再次光临 \n'+data.shop.address+'\n'+'配送时间:09:00 - 20:00\n联系客服：400-800-5050\n\n提货码:'+data.outerOrderId})
-		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'提货码：'})
-		printArray.push({printSetData:{alignMode:0,charSize:0},printType:1,text:data.outerOrderId})
-		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:"签名栏：\n\n\n--------------------------------\n\n\n"})
+		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'运费优惠：'+data.amount.freightpromotionamount/100+'\n--------------------------------'})
+		printArray.push({printSetData:{alignMode:0,charSize:1},printType:0,text:'订单件数：'+data.amount.productcount/100})
+		printArray.push({printSetData:{alignMode:0,charSize:0,feedLine:1},printType:0,text:'应收金额：'+data.amount.totalamount/100+'\n--------------------------------'})
+		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'谢谢惠顾，欢迎再次光临 \n'+data.shop.address+'\n'+'配送时间:09:00 - 20:00\n联系客服：400-800-5050\n\n提货码:'+data.outerOrderId})*/
+		printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,width:100,height:150,"modelSize":5},printType:2,text:data.outerOrderId})
+//		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:"\n\n签名栏：\n\n\n--------------------------------\n\n\n"})
 		let datas = {datas:printArray}
 		console.log("dayindayi ")
 		factory.print(datas).then((res)=>{

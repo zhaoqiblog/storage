@@ -40,6 +40,7 @@ export default {
   created() {
 //		localStorage.setItem("isAndroid",func.isOs())
 		factory.getDeviceInfo().then((res)=>{
+			alert(JSON.stringify(res))
   		let plats = res.platform ? true : func.isOs()
   		localStorage.setItem("isAndroid",plats)
   	})
@@ -79,6 +80,7 @@ export default {
       if(window.cordova) {
         if(Object.keys(this.commonInfo).length == 0) {
           factory.getUser().then(result => {
+          	alert(JSON.stringify(result))
           	if(result.uid){
 	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.uid).then(res => {
 //	            	console.log(res.success)
