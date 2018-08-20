@@ -403,7 +403,7 @@ export default {
 				console.log(lists)
 		    $request.post("/api/online-order/v1/protected/mergefinishpick",lists).then(res=>{
 		    	if(res.success&&res.success==true){
-						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id.split("|")}})			    		
+						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})			    		
 		    	}else{
 		    		this.errInfo=res;
 		    		this.errInfo.message = JSON.parse(this.errInfo.message);

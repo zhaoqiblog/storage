@@ -38,6 +38,7 @@ export default {
   	}
   },
   created() {
+  	console.log("app1")
 //		localStorage.setItem("isAndroid",func.isOs())
 		factory.getDeviceInfo().then((res)=>{
 			alert(JSON.stringify(res))
@@ -54,6 +55,10 @@ export default {
 		   document.activeElement.scrollIntoViewIfNeeded();  
 		 }, 100); 
 		} });
+		
+
+		
+		
   },
   mounted() {
     factory.changeColor([255, 255, 255]);

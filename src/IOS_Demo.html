@@ -1,0 +1,360 @@
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <title>
+        js调用java
+    </title>
+</head>
+
+<body>
+<p>
+    <xmp id="show">
+    </xmp>
+</p>
+<p>
+    <xmp id="init">
+    </xmp>
+</p>
+<p>
+    <input type="text" id="text1" value="用户名(username)" />
+</p>
+<p>
+    <input type="text" id="text2" value="password" />
+</p>
+<p>
+    <input type="button" id="enter" value="发消息给Native" onclick="testClick();"
+    />
+</p>
+<p>
+    <input type="button" id="enter1" value="调用Native方法" onclick="testClick1();"
+    />
+</p>
+<p>
+    <input type="button" id="enter2" value="显示html" onclick="testDiv();" />
+</p>
+<p>
+    <input type="button" id="print" value="打印" onclick="print()">
+</p>
+<p>
+    <input type="button" id="scan" value="扫描" onclick="scan()">
+</p>
+<p>
+    <input type="button" id="showMessage" value="弹窗" onclick="showMessage()">
+</p>
+<p>
+    <input type="button" id="showNav" value="显示导航栏" onclick="showNav()">
+</p>
+<p>
+    <input type="button" id="hideNav" value="隐藏导航栏" onclick="hideNav()">
+</p>
+<p>
+    <input type="button" id="setNavText" value="设置导航栏文字" onclick="setNavText('设置导航栏文字')">
+</p>
+<p>
+    <input type="button" id="closeSwipeBack" value="关闭滑动返回" onclick="closeSwipeBack()">
+</p>
+<p>
+    <input type="button" id="openSwipeBack" value="开启滑动返回" onclick="openSwipeBack()">
+</p>
+<p>
+    <input type="button" id="getAccessToken" value="获取token" onclick="getAccessToken()">
+</p>
+<p>
+    <input type="button" id="showInput" value="显示键盘" onclick="showInput()">
+</p>
+<p>
+    <input type="button" id="hideInput" value="隐藏键盘" onclick="hideInput()">
+</p>
+<p>
+    <input type="button" id="getDeviceInfo" value="获取设备信息" onclick="getDeviceInfo()">
+</p>
+<p>
+    <input type="button" id="getUserInfo" value="获取用户信息" onclick="getUserInfo()">
+</p>
+<p>
+    <input type="button" id="dial" value="拨打电话" onclick="dial('10086')">
+</p>
+<p>
+    <input type="button" id="exit" value="退出网页" onclick="exit()">
+</p>
+
+</body>
+<script>
+    function setupWebViewJavascriptBridge(callback) {
+        //第一次调用这个方法的时候，为false
+        if (window.cordova) {
+            var result = callback(cordova);
+            return result;
+        }
+        //第一次调用的时候，也是false
+        if (window.WVJBCallbacks) {
+            var result = window.WVJBCallbacks.push(callback);
+            return result;
+        }
+        //把callback对象赋值给对象。
+        window.WVJBCallbacks = [callback];
+        //这段代码的意思就是执行加载WebViewJavascriptBridge_JS.js中代码的作用
+        var WVJBIframe = document.createElement('iframe');
+        WVJBIframe.style.display = 'none';
+        WVJBIframe.src = 'https://__bridge_loaded__';
+        document.documentElement.appendChild(WVJBIframe);
+        setTimeout(function() {
+            document.documentElement.removeChild(WVJBIframe)
+        }, 0);
+    }
+
+    //setupWebViewJavascriptBridge执行的时候传入的参数，这是一个方法。
+    function callback(bridge) {
+        var uniqueId = 1
+        //把WEB中要注册的方法注册到bridge里面
+        bridge.registerHandler('OC调用JS提供的方法', function(data, responseCallback) {
+            log('OC调用JS方法成功', data)
+            var responseData = { 'JS给OC调用的回调':'回调值!' }
+            log('OC调用JS的返回值', responseData)
+            responseCallback(responseData)
+        })
+    };
+    //驱动所有hander的初始化
+    setupWebViewJavascriptBridge(callback);
+
+    function testDiv() {
+        document.getElementById("show").innerHTML = document.getElementsByTagName("html")[0].innerHTML;
+    }
+
+    function testClick() {
+        var str1 = document.getElementById("text1").value;
+        var str2 = document.getElementById("text2").value;
+
+        //send message to native
+        var data = {id: 1, content: "这是一个图片 <img src=\"a.png\"/> test\r\nhahaha"};
+        window.cordova.send(
+            data
+            , function(responseData) {
+                document.getElementById("show").innerHTML = "repsonseData from java, data = " + responseData
+            }
+        );
+
+    }
+
+    function testClick1() {
+        var str1 = document.getElementById("text1").value;
+        var str2 = document.getElementById("text2").value;
+
+        //call native method
+        window.cordova.callHandler(
+            'submitFromWeb'
+            , {'param': '中文测试'}
+            , function(responseData) {
+                document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+            }
+        );
+    }
+
+    function bridgeLog(logContent) {
+        document.getElementById("show").innerHTML = logContent;
+    }
+
+    /**
+     扫描功能
+     **/
+    function scan() {
+        //call native method
+        window.cordova.callHandler(
+            'scan'
+            , {'param': '扫描'}
+            , function(responseData) {
+                alert(responseData)
+                document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+            }
+        );
+
+    }
+    /**
+     打印功能
+     **/
+    function print(){
+        var datas="{\"datas\":[{\"printSetData\":{\"alignMode\":0,\"charSize\":0,\"feedLine\":0,\"isPrintTextCut\":true,\"modelSize\":5},\"printType\":0,\"text\":\"打印内容\"},{\"printSetData\":{\"alignMode\":1,\"charSize\":1,\"feedLine\":1,\"isPrintTextCut\":true,\"modelSize\":5},\"printType\":1,\"text\":\"AAABBB1\"},{\"printSetData\":{\"alignMode\":2,\"charSize\":2,\"feedLine\":2,\"isPrintTextCut\":true,\"modelSize\":5},\"printType\":2,\"text\":\"AAABBB2\"}]}"
+        //call native method
+        window.cordova.callHandler(
+            'print'
+            , {'param':datas}
+        );
+        // window.bridge.callHandler('printf', datas, function responseCallback(responseData) {
+        //     console.log("JS received response:", responseData)
+        // })
+        // setupWebViewJavascriptBridge(function(bridge) {
+        //     bridge.callHandler('getAccessToken', datas, function responseCallback(responseData) {
+        //         console.log("JS received response:", responseData)
+        //     })
+        // })
+        // window.cordova.callHandler(
+        //     'printf');
+    }
+    /**
+     弹窗功能
+     **/
+    function showMessage() {
+        // body...
+        window.cordova.callHandler(
+            'showMessage',
+            {'param':"js调用java,发送消息"}
+        );
+    }
+
+    //设置导航栏title
+    function setNavText(text) {
+        window.cordova.callHandler(
+            'setNavText',
+            {'param':text});
+    }
+    /**
+     显示导航栏
+     **/
+    function showNav() {
+        // body...
+        window.cordova.callHandler(
+            'showNav');
+    }
+    /**
+     隐藏导航栏
+     **/
+    function hideNav() {
+        // body...
+        window.cordova.callHandler(
+            'hideNav');
+    }
+    /**
+     关闭滑动返回
+     **/
+    function closeSwipeBack() {
+        // body...
+        window.cordova.callHandler(
+            'closeSwipeBack');
+    }
+    /**
+     开启滑动返回
+     **/
+    function openSwipeBack() {
+        // body...
+        window.cordova.callHandler(
+            'openSwipeBack');
+    }
+    /**
+     显示键盘
+     **/
+    function showInput() {
+        // body...
+        window.cordova.callHandler(
+            'showInput');
+    }
+    /**
+     隐藏键盘
+     **/
+    function openSwipeBack() {
+        // body...
+        window.cordova.callHandler(
+            'hideInput');
+    }
+    /**
+     获取Token
+     **/
+    function getAccessToken() {
+        //call native method
+        window.cordova.callHandler(
+            'getAccessToken'
+            , {'param': 'Token'}
+            , function(responseData) {
+                alert(responseData)
+                document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+            }
+        );
+    }
+    /**
+     获取设备信息
+     **/
+    function getDeviceInfo() {
+        //call native method
+        window.cordova.callHandler(
+            'getDeviceInfo'
+            , {'param': 'deviceInfo'}
+            , function(responseData) {
+                alert(responseData)
+                document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+            }
+        );
+    }
+    /**
+     获取用户信息
+     **/
+    function getUserInfo() {
+        //call native method
+        window.cordova.callHandler(
+            'getUserInfo'
+            , {'param': 'userInfo'}
+            , function(responseData) {
+                alert(responseData)
+                document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+            }
+        );
+    }
+    /**
+     拨打电话
+     **/
+    function dial(phone) {
+        //call native method
+        window.cordova.callHandler(
+            'dial'
+            , {'param': phone}
+            , function(responseData) {
+                document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+            }
+        );
+    }
+    /**
+     退出网页
+     **/
+    function exit() {
+        // body...
+        window.cordova.callHandler(
+            'exit');
+    }
+
+    function connectcordova(callback) {
+        if (window.cordova) {
+            callback(cordova)
+        } else {
+            document.addEventListener(
+                'cordovaReady'
+                , function() {
+                    callback(cordova)
+                },
+                false
+            );
+        }
+    }
+
+    connectcordova(function(bridge) {
+        bridge.init(function(message, responseCallback) {
+            console.log('JS got a message', message);
+            var data = {
+                'Javascript Responds': '测试中文!'
+            };
+
+            if (responseCallback) {
+                console.log('JS responding with', data);
+                responseCallback(data);
+            }
+        });
+
+        bridge.registerHandler("functionInJs", function(data, responseCallback) {
+            document.getElementById("show").innerHTML = ("data from Java: = " + data);
+            if (responseCallback) {
+                var responseData = "Javascript Says Right back aka!";
+                responseCallback(responseData);
+            }
+        });
+    })
+</script>
+
+</html>
+

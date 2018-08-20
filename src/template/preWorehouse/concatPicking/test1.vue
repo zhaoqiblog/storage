@@ -233,7 +233,8 @@ export default {
 	 * 获取拣货单信息
 	 */
 	getPickingInfo(){
-		$request.post("/api/online-order/v1/protected/mergepickdetail",this.$route.query.id).then((res)=>{
+		let ids = this.$route.query.id.split("|")
+		$request.post("/api/online-order/v1/protected/mergepickdetail",ids).then((res)=>{
 			if(res.success==true){
 				this.datas=res.data
 				this.datas.orderInfos=res.data.orderInfos.map((e)=>{

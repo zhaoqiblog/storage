@@ -92,8 +92,7 @@
 				       					</dd>
 				       				</dl>
 				       			</div>
-				       			<div class="button-to-pick">  
-				       				<!--print-btn  v-if="isAndroid=='true'" -->
+				       			<div class="button-to-pick">
 				       				<button  class="" @click="printOrder(e.id)" style="padding: 10px 20px;">打印 X{{e.printCount}}</button>
 				       			</div>
 				       		</div>
@@ -174,7 +173,6 @@ export default {
       selectDefault:'',//默认拣货数据
       selectLists:[], //选择的列表
       status:'nopick',
-      isAndroid:false,
       isConnectDevice:false,  //打印机是否连接成功
       slectBlue:[], //选中的蓝牙设备号
       showSelectBlue:false, //选择蓝牙弹框显示与否
@@ -213,24 +211,8 @@ export default {
     	this.getSupplyList(0,this.page.pageNo)  
     },15000)
     })
-    //判断之前是否连接过蓝牙
-//			if(localStorage.getItem("bluedata")&&this.isAndroid){
-			/*if(localStorage.getItem("bluedata")){
-				//如果之前连结果蓝牙，直接连接
-				let param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
-				//连接打印机
-				if(window.cordova){
-					factory.connectBlue(param1).then(res=>{
-						this.isConnectDevice=true;
-					},(err)=>{
-						alert("error:打印机 "+err)
-						this.isConnectDevice=false
-					})
-				}
-			}*/
   },
   created() {
-  	this.isAndroid=localStorage.getItem("isAndroid");
     this.getSupplyList(0);
   },
   destroyed(){
@@ -334,7 +316,6 @@ export default {
   		}else{
   			this.selectLists=[]
   		}
-  		console.log(this.selectLists)
   	},
   	/*
   	 * 手动选择单据事件

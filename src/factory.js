@@ -1,39 +1,81 @@
- function connectWebViewJavascriptBridge(callback) {
-    if (window.cordova) {
-        callback(cordova)
-    } else {
-        document.addEventListener(
-            'WebViewJavascriptBridgeReady'
-            , function() {
-                callback(cordova)
-            },
-            false
-        );
+ var u = navigator.userAgent, app = navigator.appVersion; 
+ var isAndroidPlat = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器 
+  function setupWebViewJavascriptBridge(callback) {
+        //第一次调用这个方法的时候，为false
+        if (window.cordova) {
+            var result = callback(cordova);
+            return result;
+        }
+        //第一次调用的时候，也是false
+        if (window.WVJBCallbacks) {
+            var result = window.WVJBCallbacks.push(callback);
+            return result;
+        }
+        
+        //把callback对象赋值给对象。
+        window.WVJBCallbacks = [callback];
+        //这段代码的意思就是执行加载WebViewJavascriptBridge_JS.js中代码的作用
+        var WVJBIframe = document.createElement('iframe');
+        WVJBIframe.style.display = 'none';
+        WVJBIframe.src = 'https://__bridge_loaded__';
+        document.documentElement.appendChild(WVJBIframe);
+        setTimeout(function() {
+            document.documentElement.removeChild(WVJBIframe)
+            
+        }, 0);
     }
-}
 
-connectWebViewJavascriptBridge(function(bridge) {
-    bridge.init(function(message, responseCallback) {
-        console.log('JS got a message', message);
-        var data = {
-            'Javascript Responds': '测试中文!'
-        };
-
-        if (responseCallback) {
-            console.log('JS responding with', data);
-            responseCallback(data);
+    //setupWebViewJavascriptBridge执行的时候传入的参数，这是一个方法。
+    function callback(bridge) {
+        var uniqueId = 1
+        //把WEB中要注册的方法注册到bridge里面
+        bridge.registerHandler('OC调用JS提供的方法', function(data, responseCallback) {
+            log('OC调用JS方法成功', data)
+            var responseData = { 'JS给OC调用的回调':'回调值!' }
+            log('OC调用JS的返回值', responseData)
+            responseCallback(responseData)
+            alert(3)
+        })
+    };
+    //驱动所有hander的初始化
+    setupWebViewJavascriptBridge(callback);
+    
+  function connectcordova(callback) {
+        if (window.cordova) {
+            callback(cordova)
+        } else {
+            document.addEventListener(
+                'cordovaReady'
+                , function() {
+                    callback(cordova)
+                },
+                false
+            );
         }
-    });
+    }
 
-    bridge.registerHandler("functionInJs", function(data, responseCallback) {
-        if (responseCallback) {
-            var responseData = "Javascript Says Right back aka!";
-            responseCallback(responseData);
-        }
-    });
-})
-//window.cordova = window.WebViewJavascriptBridge ? window.WebViewJavascriptBridge : null;
-//console.log(window.cordova)
+    connectcordova(function(bridge) {
+        bridge.init(function(message, responseCallback) {
+            console.log('JS got a message', message);
+            var data = {
+                'Javascript Responds': '测试中文!'
+            };
+
+            if (responseCallback) {
+                console.log('JS responding with', data);
+                responseCallback(data);
+            }
+        });
+
+        bridge.registerHandler("functionInJs", function(data, responseCallback) {
+//          document.getElementById("show").innerHTML = ("data from Java: = " + data);
+            if (responseCallback) {
+                var responseData = "Javascript Says Right back aka!";
+                responseCallback(responseData);
+            }
+        });
+    })
+//alert(window.cordova)
 const
   _MIDEA_COMMON = 'MideaCommon',
   _MIDEA_USER = 'MideaUser',
@@ -59,14 +101,14 @@ export default {
       if (window.cordova) {
         try {       	
           cordova.callHandler(name,params || null,function(msg) {
+          	alert(typeof(msg))
             let jsonRes = JSON.parse(msg);
+            alert(msg)
             resolve(jsonRes)
           }, function(msg) {
           	console.log('失败的捕捉的错误')
             reject("ERROR factory:"+msg)
           })
-          
-          
         } catch (e) {
         	alert("factory "+ e)
           console.log('_error', 'widget error:', e)
@@ -156,7 +198,10 @@ export default {
    * @return {*|promise}
    */
   getUser: function() {
-    return this.callApi(_MIDEA_USER, 'getUser', null)
+    return this.callApi('getUserInfo', null)
+  },
+  getAccessToken:function(){
+  	return this.callApi('getAccessToken',{'param': 'Token'})
   },
   /**
    * 启动扫码

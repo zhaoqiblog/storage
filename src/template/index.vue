@@ -290,13 +290,6 @@
               </grid>
             </div>
           </div>
-          <!--<div>
-          	<button @click="printCode">打印</button>
-          	<button @click="printtext">打印文字，text方法</button>
-          	<button @click="printByte">byte方法打印</button>
-          	<button @click="printByte2">打印二维码</button>
-          	<button @click="printCode">打印</button>
-          </div>-->
         </div>
       </div>
     </scroller>
@@ -376,80 +369,17 @@ export default {
   	
   },
   created(){
-  	this.init();
+  	
   },
   mounted() {
-//	setTimeout(()=>{
-//		$request.post("/api/online-order/v1/protected/batchpickdetail",['1205100770095081']).then((res)=>{
-//		
-//		})
-//	},3000)
+  	console.log("index")
+  	let _this=this;
+	setTimeout(()=>{
+  		_this.init();
+	},1000)
   	
   },
   methods: {
-  	printByte(){
-  		let param = {text: "我们都是好孩子09365",size: 10}
-  		factory.string2Byte(param).then((res)=>{
-  			alert("success"+res)
-  			let params={text:'27 97 1 27 33 0 '+res}
-  			factory.printBytes(params).then((res)=>{
-  				alert("打印成功")
-  			},(err)=>{alert("打印失败"+err)})
-  		},(err)=>{
-  			alert("转byte数组失败"+err)
-  		})
-  		
-  	},
-  	printByte2(){
-  		let param = {text: "我们都是好孩子09365",size: 10}
-  		factory.string2Byte(param).then((res)=>{
-  			alert("success"+res)
-  			let params={text:'27 97 1 27 33 0 '+res}
-  			alert(JSON.stringify(params))
-  			factory.printBytes(params).then((res)=>{
-  				alert("打印成功 "+res)
-	  			factory.printBytes({text:'27 33 -12 '+res}).then((res)=>{
-	  				alert("第二次打印成功"+res)
-	  			},(err)=>{
-	  				alert("第二次打印失败"+res)
-	  			})
-  				
-  			},(err)=>{alert("打印失败"+err)})
-  		},(err)=>{
-  			alert("转byte数组失败"+err)
-  		})
-  		
-  	},
-  	printtext(){
-  		var param = {text: "小票：270500027719 收银员：010121212122121\n=======\n\n"};
-  		factory.printText(param).then((res)=>{
-  			alert("success"+res)
-  		},(err)=>{
-  			alert("打印失败"+err)
-  		})
-  	},
-  	printCode(){
-  		let param1 = {text:'打印二维码带下测试',size: 10};
-			factory.printQRCode(param1).then(()=>{
-				factory.printQRCode({text:'打印二维码带下测试',size: 20}).then(()=>{
-						factory.printQRCode({text:'打印二维码带下测试',size: 30}).then(()=>{
-							factory.printQRCode({text:'打印二维码带下测试',size: 40}).then(()=>{
-								factory.printQRCode({text:'打印二维码带下测试',size: 50}).then(()=>{
-									factory.printQRCode({text:'打印二维码带下测试',size: 100}).then(()=>{
-										factory.printQRCode({text:'打印二维码带下测试',size: 55}).then(()=>{
-											factory.printQRCode({text:'打印二维码带下测试',size: 22}).then(()=>{
-												factory.printQRCode({text:'打印二维码带下测试',size: 33}).then(()=>{
-												
-											})
-									})
-									})
-								})
-							})
-						})
-					})
-				})
-			})
-  	},
     storeChange (value) {
       const costName = this.$refs.storepicker.getNameValues();
       if(costName){
@@ -467,10 +397,16 @@ export default {
     },
     init () {
       if(window.cordova) {
+//    	alert(Object.keys(this.commonInfo).length)
         if(Object.keys(this.commonInfo).length == 0) {
-          factory.getUser().then(result => {
-          	if(result.uid){
-	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.uid).then(res => {
+        	factory.getAccessToken().then((res)=>{
+        		
+        	})
+         factory.getUser().then(result => {
+          	console.log(result.info)
+          	alert(JSON.stringify(result.info))
+          	if(result.info.userNo){
+	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.info.userNo).then(res => {
 	              if(res.success) {
 	                let userInfo = Object.assign(res.data);
 	                res.data.costCenterNum = res.data.costNumber
@@ -519,9 +455,15 @@ export default {
 	                }
 	              })
             }
+          }).catch((err)=>{
+          	alert(err)
           })
         }
       } else {
+      	alert("非手机环境")
+      	 factory.scan().then(res=>{
+	      		
+	      	}) 
         $request.get($conf.upmUrl + "/api/v1/public/user/" + $conf.userTest.uid).then(res => {
           if(res.success) {
             let userInfo = Object.assign(res.data);
@@ -546,6 +488,7 @@ export default {
             		let storeInfos= response.data==null ? {}: response.data
             		this.$store.dispatch("changetoreInfo",storeInfos)
             })
+          	
           } else {
             this.$vux.toast.show({
               type: 'text',

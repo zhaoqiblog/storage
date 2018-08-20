@@ -8,8 +8,6 @@ import shop from './shop'
 import backStorage from './backStorage'
 import preWorehouse from './preWorehouse'
 
-
-import factory from '@/factory'
 import $request from '@/service/request.js'
 import $conf from 'configuration'
 

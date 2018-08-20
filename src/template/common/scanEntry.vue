@@ -142,10 +142,9 @@ export default {
      * 手机扫描
      */
     scan () {
+    	console.log(window.cordova)
       if(window.cordova) {
         factory.scan().then(res => {
-//      	alert("ppppppppp");
-					console.log(typeof(res));
           this.$router.push({ name: this.data[this.key].scanButton.to, query: { scanResult: res.text }})
         })
       } else {

@@ -60,6 +60,21 @@
             <input type="button" id="getAccessToken" value="获取token" onclick="getAccessToken()">
         </p>
         <p>
+            <input type="button" id="showInput" value="显示键盘" onclick="showInput()">
+        </p>
+        <p>
+            <input type="button" id="hideInput" value="隐藏键盘" onclick="hideInput()">
+        </p>
+        <p>
+            <input type="button" id="getDeviceInfo" value="获取设备信息" onclick="getDeviceInfo()">
+        </p>
+        <p>
+            <input type="button" id="getUserInfo" value="获取用户信息" onclick="getUserInfo()">
+        </p>
+        <p>
+            <input type="button" id="dial" value="拨打电话" onclick="dial('10086')">
+        </p>
+        <p>
             <input type="button" id="exit" value="退出网页" onclick="exit()">
         </p>
 
@@ -75,7 +90,7 @@
 
             //send message to native
             var data = {id: 1, content: "这是一个图片 <img src=\"a.png\"/> test\r\nhahaha"};
-            window.WebViewJavascriptBridge.send(
+            window.cordova.send(
                 data
                 , function(responseData) {
                     document.getElementById("show").innerHTML = "repsonseData from java, data = " + responseData
@@ -89,7 +104,7 @@
             var str2 = document.getElementById("text2").value;
 
             //call native method
-            window.WebViewJavascriptBridge.callHandler(
+            window.cordova.callHandler(
                 'submitFromWeb'
                 , {'param': '中文测试'}
                 , function(responseData) {
@@ -107,7 +122,7 @@
         **/
         function scan() {
             //call native method
-            window.WebViewJavascriptBridge.callHandler(
+            window.cordova.callHandler(
                 'scan'
                 , {'param': '扫描'}
                 , function(responseData) {
@@ -120,45 +135,19 @@
         打印功能
         **/
         function print(){
-//          var datas=
-//          {'datas':[
-//          	{printSetData:
-//          		{alignMode:0,charSize:0,feedLine:0,isPrintTextCut:true,modelSize:5},
-//          		printType:0,text:"打印内容"},
-//          		{printSetData:
-//          			{alignMode:1,charSize:1,feedLine:1,isPrintTextCut:true,modelSize:5},
-//          			printType:1,text:AAABBB1},{printSetData:{\"alignMode\":2,\"charSize\":2,\"feedLine\":2,\"isPrintTextCut\":true,\"modelSize\":5},\"printType\":2,\"text\":\"AAABBB2\"}
-//          	
-//          	]
-//          }
-            			var datas = {
-            				datas:[
-            					{
-            						printSetData:{alignMode:0,charSize:0,feedLine:0,isPrintTextCut:true,modelSize:5},
-            						printType:0,text:打印内容
-            					},
-            					{
-            						printSetData:{alignMode:1,charSize:1,feedLine:1,isPrintTextCut:true,modelSize:5},
-            						printType:1,text:AAABBB1
-            					},
-            					{
-            						printSetData:{alignMode:2,charSize:2,feedLine:2,isPrintTextCut:true,modelSize:5},
-            						printType:2,text:AAABBB2
-            					}
-            					]
-            				}
+            var datas="{\"datas\":[{\"printSetData\":{\"alignMode\":0,\"charSize\":0,\"feedLine\":0,\"isPrintTextCut\":true,\"modelSize\":5},\"printType\":0,\"text\":\"打印内容\"},{\"printSetData\":{\"alignMode\":1,\"charSize\":1,\"feedLine\":1,\"isPrintTextCut\":true,\"modelSize\":5},\"printType\":1,\"text\":\"AAABBB1\"},{\"printSetData\":{\"alignMode\":2,\"charSize\":2,\"feedLine\":2,\"isPrintTextCut\":true,\"modelSize\":5},\"printType\":2,\"text\":\"AAABBB2\"}]}"
              //call native method
-            window.WebViewJavascriptBridge.callHandler(
+            window.cordova.callHandler(
                 'print'
                 , {'param':datas}
             );
         }
         /**
-        	弹窗功能
+        弹窗功能
         **/
         function showMessage() {
         	// body...
-        	window.WebViewJavascriptBridge.callHandler(
+        	window.cordova.callHandler(
         		'showMessage',
         		{'param':"js调用java,发送消息"}
         		);
@@ -166,7 +155,7 @@
 
         //设置导航栏title
         function setNavText(text) {
-            bridge.callHandler(
+            window.cordova.callHandler(
                 'setNavText',
                 {'param':text});
         }
@@ -175,7 +164,7 @@
         **/
         function showNav() {
         	// body...
-        	window.WebViewJavascriptBridge.callHandler(
+        	window.cordova.callHandler(
         		'showNav');
         }
         /**
@@ -183,7 +172,7 @@
         **/
         function hideNav() {
         	// body...
-        	window.WebViewJavascriptBridge.callHandler(
+        	window.cordova.callHandler(
         		'hideNav');
         }
         /**
@@ -191,27 +180,84 @@
         **/
         function closeSwipeBack() {
         	// body...
-        	window.WebViewJavascriptBridge.callHandler(
+        	window.cordova.callHandler(
         		'closeSwipeBack');
         }
         /**
         开启滑动返回
         **/
         function openSwipeBack() {
-        	// body...
-        	window.WebViewJavascriptBridge.callHandler(
-        		'openSwipeBack');
+            // body...
+            window.cordova.callHandler(
+                'openSwipeBack');
+        }
+        /**
+        显示键盘
+        **/
+        function showInput() {
+            // body...
+            window.cordova.callHandler(
+                'showInput');
+        }
+        /**
+        隐藏键盘
+        **/
+        function openSwipeBack() {
+            // body...
+            window.cordova.callHandler(
+                'hideInput');
         }
         /**
         获取Token
         **/
         function getAccessToken() {
             //call native method
-            window.WebViewJavascriptBridge.callHandler(
+            window.cordova.callHandler(
                 'getAccessToken'
                 , {'param': 'Token'}
                 , function(responseData) {
-                	alert(responseData)
+                    alert(responseData)
+                    document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+                }
+            );
+        }
+        /**
+        获取设备信息
+        **/
+        function getDeviceInfo() {
+            //call native method
+            window.cordova.callHandler(
+                'getDeviceInfo'
+                , {'param': 'deviceInfo'}
+                , function(responseData) {
+                    alert(responseData)
+                    document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+                }
+            );
+        }
+        /**
+        获取用户信息
+        **/
+        function getUserInfo() {
+            //call native method
+            window.cordova.callHandler(
+                'getUserInfo'
+                , {'param': 'userInfo'}
+                , function(responseData) {
+                    alert(responseData)
+                    document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+                }
+            );
+        }
+        /**
+        拨打电话
+        **/
+        function dial(phone) {
+            //call native method
+            window.cordova.callHandler(
+                'dial'
+                , {'param': phone}
+                , function(responseData) {
                     document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
                 }
             );
@@ -221,25 +267,25 @@
         **/
         function exit() {
         	// body...
-        	window.WebViewJavascriptBridge.callHandler(
+        	window.cordova.callHandler(
         		'exit');
         }
 
-        function connectWebViewJavascriptBridge(callback) {
-            if (window.WebViewJavascriptBridge) {
-                callback(WebViewJavascriptBridge)
+        function connectcordova(callback) {
+            if (window.cordova) {
+                callback(cordova)
             } else {
                 document.addEventListener(
-                    'WebViewJavascriptBridgeReady'
+                    'cordovaReady'
                     , function() {
-                        callback(WebViewJavascriptBridge)
+                        callback(cordova)
                     },
                     false
                 );
             }
         }
 
-        connectWebViewJavascriptBridge(function(bridge) {
+        connectcordova(function(bridge) {
             bridge.init(function(message, responseCallback) {
                 console.log('JS got a message', message);
                 var data = {
@@ -263,4 +309,3 @@
     </script>
 
 </html>
-

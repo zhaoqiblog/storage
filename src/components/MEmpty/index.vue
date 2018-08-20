@@ -11,20 +11,9 @@
 export default {
   name: 'm-empty',
   props: {refresh:[Function]},
-  computed: {
-
-  },
   created(){
   },
   methods: {
-    onClickBack() {
-      let path = this.$route.path
-      if (path === '/') {
-        factory.exit()
-      } else {
-        this.$router.back()
-      }
-    },
     refreshs(){
     	if(this.refresh){
     		this.refresh()
