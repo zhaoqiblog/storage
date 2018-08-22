@@ -99,12 +99,12 @@ export default {
 //  const _this=this;
     var promise = new Promise((resolve, reject) => {
       if (window.cordova) {
-        try {       	
+        try {
           cordova.callHandler(name,params || null,function(msg) {
-          	alert(typeof(msg))
-            let jsonRes = JSON.parse(msg);
-            alert(msg)
-            resolve(jsonRes)
+//        	alert(JSON.stringify(msg))
+//          let jsonRes = JSON.parse(msg);
+//          alert(msg)
+            resolve(msg)
           }, function(msg) {
           	console.log('失败的捕捉的错误')
             reject("ERROR factory:"+msg)
@@ -124,9 +124,32 @@ export default {
    * 365print
    */
  print(data){
- 	console.log(data)
- 	return this.callApi("print",{"param":data});
+// 	alert(JSON.stringify({"param":data}))
+// 	alert(JSON.stringify(data))
+   	return this.callApi("print",data);
+// 	return this.callApi("print",{"param":data});
  },
+  /**
+   * 获取用户信息
+   * 
+   * @return {*|promise}
+   */
+  getUser: function() {
+    return this.callApi('getUserInfo', null)
+  },
+  getAccessToken:function(){
+  	return this.callApi('getAccessToken',null)
+  },
+  /**
+   * 启动扫码
+   * @return {*|promise}
+   */
+  scan: function() {
+    return this.callApi('scan')
+  },
+  hideNav:function(){
+  	return this.callApi('hideNav')
+  },
   /**
    * 开启蓝牙
    */
@@ -192,24 +215,7 @@ export default {
   exit: function() {
     return this.callApi('exit', null)
   },
-  /**
-   * 获取用户信息
-   * 
-   * @return {*|promise}
-   */
-  getUser: function() {
-    return this.callApi('getUserInfo', null)
-  },
-  getAccessToken:function(){
-  	return this.callApi('getAccessToken',{'param': 'Token'})
-  },
-  /**
-   * 启动扫码
-   * @return {*|promise}
-   */
-  scan: function() {
-    return this.callApi('scan')
-  },
+ 
   /**
    * 获取webview信息
    * @return {*|promise}

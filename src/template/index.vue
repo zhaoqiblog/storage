@@ -372,11 +372,11 @@ export default {
   	
   },
   mounted() {
-  	console.log("index")
   	let _this=this;
 	setTimeout(()=>{
   		_this.init();
-	},1000)
+		factory.hideNav();
+	},500)
   	
   },
   methods: {
@@ -389,6 +389,7 @@ export default {
 		    	costName:target.name,
 		    	costNumber:target.value,
 		    });
+		    localStorage.setItem("costNumber",target.value)
 		    this.curr=this.currentStore;
 		    //将状态保存到本地，下次进来还是当前的状态，选中的小店，上次操作的是卖场还是前置仓
     		localStorage.setItem("currentStore",this.currentStore)
@@ -396,15 +397,9 @@ export default {
       }
     },
     init () {
-      if(window.cordova) {
-//    	alert(Object.keys(this.commonInfo).length)
+     if(window.cordova) {
         if(Object.keys(this.commonInfo).length == 0) {
-        	factory.getAccessToken().then((res)=>{
-        		
-        	})
          factory.getUser().then(result => {
-          	console.log(result.info)
-          	alert(JSON.stringify(result.info))
           	if(result.info.userNo){
 	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.info.userNo).then(res => {
 	              if(res.success) {
@@ -413,21 +408,26 @@ export default {
 	                this.$store.commit("updateCommonInfo", res.data);
 	               	let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
 	               	let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
-									this.currentStore.push(aaa)
 	          			const target = this.commonInfo.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
 									//更新成本中心，成本中心要一起修改
+									if(target){
+										this.currentStore.push(aaa)
 								    this.$store.dispatch("changeCommonInfo", {
 								    	costName:target.storeName,
 								    	costNumber:target.storeCode,
-//								    	isAndroid:func.isOs
 								    });
+								    localStorage.setItem("costNumber",target.storeCode)
+								   }else{
+								   	this.currentStore.push(this.commonInfo.stores[0].storeCode)
+								   	localStorage.setItem("costNumber",this.commonInfo.stores[0].storeCode)
+								   }
 //								    console.log(target,this.commonInfo)
 	                //获取用户所在小店
-	                $request.get("/api/shop-goods/v1/protected/query/className",{className:res.data.costName,costCenterNum:res.data.costNumber})
+	                /*$request.get("/api/shop-goods/v1/protected/query/className",{className:res.data.costName,costCenterNum:res.data.costNumber})
 	                	.then(response=>{
 	                		let storeInfos= response.data==null ? {} : response.data 
 	                		this.$store.dispatch("changetoreInfo",storeInfos)
-	                })
+	                })*/
 	              } else {
 	                this.$vux.toast.show({
 	                  type: 'text',
@@ -460,10 +460,6 @@ export default {
           })
         }
       } else {
-      	alert("非手机环境")
-      	 factory.scan().then(res=>{
-	      		
-	      	}) 
         $request.get($conf.upmUrl + "/api/v1/public/user/" + $conf.userTest.uid).then(res => {
           if(res.success) {
             let userInfo = Object.assign(res.data);
@@ -472,22 +468,18 @@ export default {
             let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
             let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
 						this.currentStore.push(aaa)
-//						console.log(res.data.stores)
 	          let target = res.data.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
-//	          console.log(target)
 					//更新成本中心，成本中心要一起修改
 					    this.$store.dispatch("changeCommonInfo", {
 					    	costName:target.storeName,
 					    	costNumber:target.storeCode,
-//					    	isAndroid:func.isOs()
 					    });
-//					    console.log(target,this.commonInfo)
             //获取用户所在小店 .//res.data.costNumber
-            $request.get("/api/shop-goods/v1/protected/query/className",{className:className,costCenterNum:'0094281202'})
+            /*$request.get("/api/shop-goods/v1/protected/query/className",{className:className,costCenterNum:'0094281202'})
             	.then(response=>{
             		let storeInfos= response.data==null ? {}: response.data
             		this.$store.dispatch("changetoreInfo",storeInfos)
-            })
+            })*/
           	
           } else {
             this.$vux.toast.show({

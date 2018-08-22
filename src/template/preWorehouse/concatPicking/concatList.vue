@@ -245,38 +245,18 @@ export default {
   		this.printId=id;
 		//获取蓝牙连接列表，判断是否之前连接过蓝牙
 //		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
-		if(sessionStorage.getItem("bluedata")){  //session中有蓝牙连接记录，说明当前蓝牙蓝牙已经在连接中，不用重复连接
-			console.log(sessionStorage.getItem("bluedata"))
+//		if(sessionStorage.getItem("bluedata")){  //session中有蓝牙连接记录，说明当前蓝牙蓝牙已经在连接中，不用重复连接
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
 				if(res.success==true){
-					this.data.history.forEach((r)=>{
-						if(r.id==id){
-							r.printCount = res.data[0].printCount
-						}
-					})
-					func.printInfo(res.data[0],this,()=>{
-						this.$vux.toast.show({
-	            type: 'text',
-	            text: '打印成功',
-	          })
-					},(err)=>{
-						//打印失败，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-						if(this.commonInfo.blueList[0].length>0){
-							this.showSelectBlue=true;
-						}else{
-							factory.getBlueList().then((res)=>{
-								let arrays = res.map((e)=>{
-									return {name:e.split("=>")[0],value:e.split("=>")[1]}
-								})
-								this.$store.commit("updateCommonInfo", {
-						    	blueList:[arrays],
-						    });
-						    this.showSelectBlue=true;
-							},(err)=>{
-								alert(err);
+					func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
+						func.printAdd(res.data[0],this,(count)=>{
+							this.data.history.forEach((r)=>{
+								if(r.id==res.data[0].id){
+									r.printCount = count.data
+								}
 							})
-						}
+						})
 					})
 				}else{
 					this.$vux.toast.show({
@@ -285,7 +265,7 @@ export default {
           })
 				}
 			})
-		}else{
+	/*	}else{
 			//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
 				factory.getBlueList().then((res)=>{
 					let arrays = res.map((e)=>{
@@ -298,7 +278,7 @@ export default {
 				},(err)=>{
 						alert(err);
 				})
-		}
+		}*/
 	},
   	/**
   	 * 默认四个订单拣货的点击事件

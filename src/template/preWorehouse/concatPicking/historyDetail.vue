@@ -88,15 +88,6 @@
     	</pre-item-pic>
     	<m-empty v-if="data.content && data.goodsInfoDTOS.length == 0"></m-empty>
     </div>
-    <popup-picker 
-    	v-if="commonInfo.blueList" 
-    	:show-cell="false" class="showposdiffer"  
-    	:data="commonInfo.blueList" 
-    	:show="showSelectBlue" 
-    	v-model="slectBlue" 
-    	@on-change="changeBlue" 
-    	show-name 
-    	@on-hide="showSelectBlue=false"></popup-picker>
   </div>
 </template>
 
@@ -117,59 +108,16 @@ import { mapState } from 'vuex';
   }),
 		data() {
 			return {
-//				data:[
-//					{code:"BH955715041315160064",time:'2018-01-23 16:13:17',status:'已完成',total:15,complete:12},
-//					{code:"Bertert715041315160064",time:'2018-01-23 16:13:17',status:'已完成',total:22,complete:22},
-//				],
 				data:{goodsInfoDTOS:[]},
-				showSelectBlue:false, //选择蓝牙
-	    	slectBlue:[], //选中的蓝牙设备号
 	    	isConnectDevice:false,
 	    	isAndroid:false,
-	    	printData:{},
 			}
 		},
 		created(){
   	  this.isAndroid =localStorage.getItem("isAndroid");
 			this.getDetail();
-//$request.post("/api/online-order/v1/protected/batchpickdetail",['1204950830081010']).then((res)=>{
-//	
-//})
-			//判断之前是否连结果蓝牙，如果连接过蓝牙，有列表的话，直接连接
-//			if(localStorage.getItem("bluedata")&&this.isAndroid){
-			/*if(localStorage.getItem("bluedata")){
-				var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
-					//连接打印机
-					if(window.cordova){factory.connectBlue(param1).then(res=>{
-//						alert("连接打印机")
-						this.isConnectDevice=true;
-					},(err)=>{
-						alert("error:打印机 "+err+'， 请点击打印小票按钮重新选择打印机')
-						this.isConnectDevice=false
-					})
-				}
-			}*/
 		},
 		methods:{
-				/**
-			 * 修改蓝牙连接设备
-			 */
-			changeBlue(){
-				localStorage.setItem("bluedata",this.slectBlue[0]);
-				sessionStorage.setItem("bluedata",this.slectBlue[0]);
-		//		连接打印机
-				if(window.cordova){
-					var param1 = { btAddress:sessionStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
-					factory.connectBlue(param1).then(res=>{
-								this.isConnectDevice=true;
-								this.printOrder(this.printId)
-							},(err)=>{
-								alert("连接打印机失败："+err+'\n'+"请回到首页设置模块修改打印设备")}
-							).then(()=>{
-								this.printOrder()
-							})
-					}
-			},
 			/**
 			 * 获取订单信息
 			 */
@@ -197,61 +145,30 @@ import { mapState } from 'vuex';
 	printOrder(id){
 		//开启蓝牙
   		const _this =this;
-  		this.printId=id;
-		//获取蓝牙连接列表，判断是否之前连接过蓝牙
-//		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
-//		if(sessionStorage.getItem("bluedata")){
 			//获取打印小票信息
-			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
-				console.log(res)
-				if(res.success==true){
-					this.printData=res.data[0];
-					this.data.printCount=res.data[0].printCount
-					func.printInfo(res.data[0],this,()=>{
-						this.$vux.toast.show({
-			            type: 'text',
-			            text: '打印成功',
-			          })
-					},(err)=>{
-						//打印失败，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-						if(this.commonInfo.blueList[0].length>0){
-							this.showSelectBlue=true;
-						}else{
-							factory.getBlueList().then((res)=>{
-								let arrays = res.map((e)=>{
-									return {name:e.split("=>")[0],value:e.split("=>")[1]}
+//			if(window.cordova){
+				$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
+					if(res.success==true){
+						func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
+							func.printAdd(res.data[0],this,(count)=>{
+								this.data.history.forEach((r)=>{
+									if(r.id==res.data[0].id){
+										r.printCount = count.data
+									}
 								})
-								this.$store.commit("updateCommonInfo", {
-						    	blueList:[arrays],
-						    });
-						    this.showSelectBlue=true;
-							},(err)=>{
-									alert(err);
 							})
-						}
-					})
-				}else{
-					this.$vux.toast.show({
-			            type: 'text',
-			            text: res.message||'获取该订单数据失败，请联系管理员',
-		          })
-				}
-			})
-//		}else{
-//			console.log("lanyaweilianjei")
-			//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-//				factory.getBlueList().then((res)=>{
-//					let arrays = res.map((e)=>{
-//						return {name:e.split("=>")[0],value:e.split("=>")[1]}
-//					})
-//					this.$store.commit("updateCommonInfo", {
-//			    	blueList:[arrays],
-//			    });
-//			    this.showSelectBlue=true;
-//				},(err)=>{
-//						alert(err);
-//				})
-//		}
+						})
+						
+					}else{
+						this.$vux.toast.show({
+		            type: 'text',
+		            text: res.message||'获取该订单数据失败，请联系管理员',
+	          })
+					}
+				})
+			/*}else{
+				alert("当前非手机环境")
+			}*/
 	},
 	
 		}

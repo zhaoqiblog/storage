@@ -177,7 +177,7 @@ export default {
   		const _this =this;
   		this.printId=id;
 		//获取蓝牙连接列表，判断是否之前连接过蓝牙
-		if(sessionStorage.getItem("bluedata")){
+//		if(sessionStorage.getItem("bluedata")){
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
 				if(res.success==true){
@@ -216,7 +216,7 @@ export default {
           })
 				}
 			})
-		}else{
+		/*}else{
 			//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
 				factory.getBlueList().then((res)=>{
 					let arrays = res.map((e)=>{
@@ -229,7 +229,7 @@ export default {
 				},(err)=>{
 						alert(err);
 				})
-		}
+		}*/
 	},
 	/**
 	 * 获取拣货单信息

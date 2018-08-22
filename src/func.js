@@ -1,4 +1,5 @@
 import factory from './factory.js'
+import $request from '@/service/request.js'
 export default {
 	//判断是否是小数
 	isDot: function(num) {
@@ -132,21 +133,40 @@ console.log(param)
 				})
 	},
 	/**
+	 * 打印记录次数
+	 */
+	printAdd(dataObj,_this,callback=null){
+		$request.post("/api/online-order/v1/protected/printcount",[dataObj.id]).then((res)=>{
+			if(res.success==true){
+				_this.$vux.toast.show({
+		            type: 'text',
+		            text: dataObj.ordersequenceno+'打印成功',
+		          })
+				callback(res)
+			}
+		},(err)=>{
+			_this.$vux.toast.show({
+	            type: 'text',
+	            text: res.message||'打印次数计数失败',
+          })
+		})
+	},
+	/**
 	 * 365打印
 	 */
-	printInfo(data,_this,callback=null,errcallback=null){
+	printInfo(data,_this,callback=null){
 		let isShort = data.goodsInfoDTOS.some((i)=>{
 			return i.diffNum>0
 		})
 		let printText='',printArray=[]
-		/*printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
+		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
 		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'')})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
 					data.id+'\n打印次数：'+data.printCount+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
 					'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
 					'收 货 人：'+data.recvinfo.name+'\n'+
 					'联系电话：'+data.recvinfo.phone+'\n'+(data.deliverType==0 ?'':'收货地址：'+data.recvinfo.address.city+'-'+data.recvinfo.address.detail)})
-		printArray.push({printSetData:{alignMode:0,charSize:1},printType:0,text:'备注：'+data.comment})
+		printArray.push({printSetData:{alignMode:0,charSize:2},printType:0,text:'备注：'+data.comment})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n购买商品'})
 		data.goodsInfoDTOS.forEach((e,index)=>{
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:(index+1)+'.'+e.goodsName+'   '+e.desc})
@@ -154,19 +174,24 @@ console.log(param)
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:e.goodsBarCode})
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'单价￥'+e.saleprice+'金额￥'+(e.saleprice*e.qty)+'\n--------------------------------'})
 		})
+		
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'商品金额：'+data.amount.goodsamount/100})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'订单运费：'+data.amount.freightamount/100})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'商品优惠：'+(data.amount.coupondiscountamount+data.amount.promotiondiscountamount)/100})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'运费优惠：'+data.amount.freightpromotionamount/100+'\n--------------------------------'})
 		printArray.push({printSetData:{alignMode:0,charSize:1},printType:0,text:'订单件数：'+data.amount.productcount/100})
 		printArray.push({printSetData:{alignMode:0,charSize:0,feedLine:1},printType:0,text:'应收金额：'+data.amount.totalamount/100+'\n--------------------------------'})
-		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'谢谢惠顾，欢迎再次光临 \n'+data.shop.address+'\n'+'配送时间:09:00 - 20:00\n联系客服：400-800-5050\n\n提货码:'+data.outerOrderId})*/
-		printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,width:100,height:150,"modelSize":5},printType:2,text:data.outerOrderId})
-//		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:"\n\n签名栏：\n\n\n--------------------------------\n\n\n"})
+		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'谢谢惠顾，欢迎再次光临 \n'+data.shop.address+'\n'+'配送时间:09:00 - 20:00\n联系客服：400-800-5050\n\n提货码:'+data.outerOrderId})
+		printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:150,"modelSize":5},printType:1,text:data.outerOrderId})
+		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n签名栏：\n\n\n--------------------------------\n\n\n"})
 		let datas = {datas:printArray}
-		console.log("dayindayi ")
 		factory.print(datas).then((res)=>{
-			console.log("pp")
+			callback();
+		},(err)=>{
+			_this.$vux.toast.show({
+	            type: 'text',
+	            text: '打印失败',
+          })
 		})
 	},
 	/*
@@ -176,7 +201,7 @@ console.log(param)
 		let isShort = data.goodsInfoDTOS.some((i)=>{
 			return i.diffNum>0
 		})
-	let test='',byteText="27 97 1 27 33 0 ";
+		let test='',byteText="27 97 1 27 33 0 ";
 		factory.string2Byte({text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------\n'}).then(res=>{
 			byteText +=res
 		}).then(()=>{

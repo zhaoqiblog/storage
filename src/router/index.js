@@ -19,7 +19,6 @@ const index = r => require.ensure([], () => r(require('@/template/index')), 'ind
 Vue.use(Router)
 
 const router = new Router({
-
   routes: [{
       path: '/',
       component: index,

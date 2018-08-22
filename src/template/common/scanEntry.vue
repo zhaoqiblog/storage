@@ -145,6 +145,7 @@ export default {
     	console.log(window.cordova)
       if(window.cordova) {
         factory.scan().then(res => {
+        	alert(res)
           this.$router.push({ name: this.data[this.key].scanButton.to, query: { scanResult: res.text }})
         })
       } else {
