@@ -6,7 +6,7 @@ let config = {
   isMock: false,
   mockPath: 'json/',
   userTest: {
-//        uid: '80467269', 
+//        uid: '80811331', 
           uid: '80733765',
 //        uid: '80000968',
 //        uid: '80723068',
@@ -38,8 +38,12 @@ let config = {
 //	upmUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/upm',
 //	baseUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/store-inventory'
 
-upmUrl: 'http://ycloud-api-test.yh-test.com:8080/upm', // 测试环境
+	upmUrl: 'http://ycloud-api-test.yh-test.com:8080/upm', // 测试环境
 	baseUrl: 'http://ycloud-api-test.yh-test.com:8080/store-inventory', // 测试环境
+	
+//	upmUrl: 'http://ycloud-api.yonghui.cn:9999/upm', // 测试环境
+//	baseUrl: 'http://ycloud-api.yonghui.cn:9999/store-inventory', // 测试环境
+	
 
 }
 
