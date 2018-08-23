@@ -202,7 +202,6 @@ name: 'pick-list',
 	    	if(this.index==0){
 	    		let e=this.page;
 	    			if(e.pageNo<e.totalPage){
-//		    		console.log("加载下一页")
 		    		this.getSupplyList(0)
 		    	}else{
 		    		this.page.isEnd=true;
@@ -210,7 +209,6 @@ name: 'pick-list',
 	    	}else{
 	    		let e=this.page1;
 	    			if(e.pageNo<e.totalPage){
-//		    		console.log("加载下一页333")
 		    		this.getSupplyList(2)
 		    	}else{
 		    		this.page1.isEnd=true;

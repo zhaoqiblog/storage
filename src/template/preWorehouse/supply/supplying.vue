@@ -87,14 +87,7 @@ import { mapState,mapActions } from 'vuex';
 			getDetail(){
 				$request.get("/api/supplement-invoices/v1/protected/query/"+this.$route.query.id).then(res=>{
 					if(res.success==true){
-//						this.data=res.data;
-//						let lists = res.data.supplyItemDTOS.map((e)=>{
-//							return {...e,supplyNum:''}
-//						})
 						let data = Object.assign({},res.data)
-						console.log(data,res.data.supplyItemDTOS)
-//						let data = res.data;
-//						data.supplyItemDTOS =lists
 						this.$store.dispatch("setPreSupplyInfo",data)
 					}else{
 						this.$vux.toast.show({

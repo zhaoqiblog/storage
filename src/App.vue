@@ -34,12 +34,9 @@ export default {
   },
   watch:{
   	$route(to,from){
-//		console.log(to.meta.index,from.path,from.meta.index)
   	}
   },
   created() {
-  	console.log("app1")
-//		localStorage.setItem("isAndroid",func.isOs())
 		factory.getDeviceInfo().then((res)=>{
 			alert(JSON.stringify(res))
   		let plats = res.platform ? true : func.isOs()
@@ -55,10 +52,6 @@ export default {
 		   document.activeElement.scrollIntoViewIfNeeded();  
 		 }, 100); 
 		} });
-		
-
-		
-		
   },
   mounted() {
     factory.changeColor([255, 255, 255]);

@@ -120,7 +120,6 @@ export default {
   created() {
   	let isBack = this.$route.query.isBack;
   	if(isBack){
-  		console.log("上一页返回过来的");
   		this.initData=this.directReceiveAddGoods;
   		this.disableds=false;
   	}else{
@@ -216,7 +215,6 @@ export default {
 						this.notScanGoods.push(e);
 					}
 				})
-//				console.log(JSON.stringify(this.directReceiveShowList))
 				this.showNotEnough = true;
 //				this.notScanGoods = this.directReceiveShowList.filter(e=>{return e.goodsBarCode!==})
 			}else{
@@ -229,7 +227,6 @@ export default {
     confirmToNext(){
     	this.$store.commit("setReceiveAddGoods",this.initData)  //当前页面上的数据，使返回按钮返回到当前页数据不丢失
 			this.$store.commit("setdirectReceiveConfirm",this.initData)  //去下一个页面的数据（确认收货清单的数据）
-//			console.log(this.directReceiveConfirm)
     	this.$router.push({path:'receiptListConfirm',query:{orderDate:this.$route.query.orderDate,purchaseOrderNo:this.$route.query.orderCode}})
     },
     /**
@@ -265,7 +262,6 @@ export default {
 //  		}else{
 //	    		if(todayDate>=expirationDate){
 //		    		this.delIndex=index
-//		    		console.log(this.delIndex)
 //		    		this.disableds = true;
 //		    	}else{
 //	//	    		this.disableds = false;
@@ -303,7 +299,6 @@ export default {
     	}
     },
     changeDate(val,index){
-//  	console.log(this.initData[index])
 //  	 （生产日期的毫秒数+保质期天数*12*60*60*1000)-当前日期的毫秒数/（生产日期的毫秒数+保质期天数*12*60*60*1000)  不能小于1/3
     	if(val){
     	this.initData[index].timeSel=val;
@@ -321,7 +316,6 @@ export default {
     		this.passText='生产日期不能超过今天'
     		this.showPassOver=true;
     		this.disableds=true;
-//  		console.log("生产日期不能超过今天！")
     	}else{
     	//根据需要可以将">"改成">=";
 	    	if(todayDate>=expirationDate){
@@ -342,10 +336,8 @@ export default {
 	    		}else{
 	    			console.log("OK！没问题");
 	    			this.disableds=! (this.initData.every(e=>{
-//	    				console.log(e.actualVal,e.timeSel)
 		    			return e.actualVal<=e.sysNum&&e.timeSel
 		    		}))
-//						console.log(this.initData[index].sysNum>=this.initData[index].actualVal,this.disableds)
 //	    			this.disableds = (this.initData[index].sysNum>=this.initData[index].actualVal)&&isOverdate
 	    		}
 	    	}
@@ -362,7 +354,6 @@ export default {
      */
     goodsInfoItemDelete (index, i){
     	this.initData.splice(index,1)
-    	console.log(this.initData)
     	this.showDialog=false;
     },
     /**

@@ -44,7 +44,7 @@
        <span @click="toInfo()">扫描商品</span>
       </div>
       <div class="btn-submit">
-        <button type="button" @click="toConfirmApply">盘点完毕</button>
+        <button type="button" @click="toConfirmApply" :disabled="isdisabled">盘点完毕</button>
       </div>
     </div>
   </div>
@@ -68,6 +68,7 @@ export default {
     	titleInfo:{goodsNum:'',sumAvailableNum:''},
 //  	tmpDatas:[]
 			showEmpty:false,
+			isdisabled:false,
     }
   },
   computed: {
@@ -133,10 +134,13 @@ export default {
 					"warehouseCode":e.warehouseCode
 				}
 			})
+			this.isdisabled=true;
 			$request.post("/api/goods-warehouse/v1/protected/warehouse/check",submitList).then(res=>{
 				if(res.success==true){
+					this.isdisabled=false;
 					this.$router.push({path:"inventoryResult",query:{id:res.data}})
 				}else{
+					this.isdisabled=false;
 					this.$router.push({path:'/fail',query:{text: res.message||'服务器错误,库位盘点失败,请重试!',title: '库位盘点', path:'/scanEntry?key=inventory'}})
 				}
 			},err=>{

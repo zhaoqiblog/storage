@@ -132,7 +132,6 @@
 				}
 			},
 			changeVal(){
-				console.log(this.openBlueTooth)
 			},
 			back(){
 				this.$router.back()

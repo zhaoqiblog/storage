@@ -120,7 +120,6 @@ export default {
      */
     scrollListen () {
       const _this = this
-//    console.log(this.getSupplyList)
       let anchor = this.$refs.scrollWrap
       anchor.addEventListener('scroll', function() {
         var scrollTop = document.body.scrollTop;
@@ -129,9 +128,7 @@ export default {
             ch=anchor.clientHeight;
         if(sh==top+ch) {
           // 触发加载数据
-
           if(_this.page.pageNo < _this.page.totalPage) {
-          	console.log("加载第二页")
             _this.getSupplyList()
           } else {
             _this.showEnd = true

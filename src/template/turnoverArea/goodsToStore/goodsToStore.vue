@@ -93,7 +93,6 @@ export default {
      		 this.submitList.goodsWarehouseDetailDTOList.splice(index,1)
      	}
      })
-//   console.log(this.submitList)
      
      $request.post("/api/goods-warehouse/v1/protected/pallet/palletMoveWarehouse",this.submitList).then(e=>{
      	if(e.success==true){

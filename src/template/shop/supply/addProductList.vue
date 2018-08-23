@@ -83,19 +83,15 @@ export default {
       let supplementInvoicesDetailsDTO = []
       this.data.forEach(function(arr) {
         arr.forEach(function(item) {
-//      	console.log(arr)
           supplementInvoicesDetailsDTO.push({
             goodsCode: item.goodsCode,
             goodsBarCode:item.goodsBarCode,
             goodsName: item.goodsName,
             supplyNum: item.realityNum,
             warehousePlaceId: item.warehouseId,
-//          targetPlaceId :,
-//          id:item.id,
           })
         })
       })
-//    console.log(supplementInvoicesDetailsDTO)
       if(supplementInvoicesDetailsDTO.filter(function(item) {
         return (item.supplyNum == 0) || (isNaN(item.supplyNum))
       }).length > 0) {

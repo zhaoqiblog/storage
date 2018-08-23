@@ -1,6 +1,6 @@
 <template>
   <div class="shop">
-    <keep-alive  :include="['shopReturnList', 'backorder', 'supply']">
+    <keep-alive  :include="['shopReturnList', 'supply']">
       <router-view></router-view>
     </keep-alive>
   </div>

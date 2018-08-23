@@ -68,7 +68,6 @@
 			 this.$nextTick(function () {
 			 	const e=this.page;
 		        func.scrollListen(this,this.$refs.scrollWrap,()=>{
-//		        	console.log(this.page.pageNo)
 		        	if(e.pageNo<e.totalPage){
 		        		this.getPreList()
 		        	}else{

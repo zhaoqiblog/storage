@@ -71,7 +71,6 @@ export default {
 		})
   },
   created() {
-//	console.log(this.directReceiveShowList)
   	//4031193610    4031193609
 		let obj ={orderNo:this.$route.query.scanResult,costCenterNum:this.commonInfo.costNumber}
 		$request.get("/api/receive-goods/v1/protected/queryOrderInfo",obj).then(res=>{

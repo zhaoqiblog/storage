@@ -25,13 +25,13 @@
 	    			<dl>
 	    				<dt class="pick-success-print">
 	    					<span v-if="datas.mergeId">合单号&nbsp;{{datas.mergeId}}</span>
-	    					<!--<span @click="printAll"><button>一键打印</button></span>-->
+	    					<span @click="printAll(null)"><button>一键打印</button></span>
 	    					<!--<span v-if="!datas.mergeId">小票分单打印</span>-->
 	    				</dt>
 	    				<dd class="print-list" v-for="e in datas.orderInfos">
 	    					<span>{{e.ordersequenceno}}&nbsp;&nbsp;{{e.id}}</span>
 	    					<!--v-if="isAndroid=='true'"-->
-	    					<button  @click="printOrder(e.id)">打印 X{{e.printCount}}</button>
+	    					<button  @click="printAll(e.id)">打印 X{{e.printCount}}</button>
 	    				</dd>
 	    			</dl>
 	    		</div>
@@ -66,15 +66,17 @@
       		<router-link :to="{name: 'concatPickList'}">
         		<button type="button">继续拣货</button>
         	</router-link>
-       </div>       
+        </div>
+       
+      
     </div>
     <popup-picker 
-    	v-if="commonInfo.blueList" 
+    	v-if="commonInfo.blueList"
     	:show-cell="false" class="showposdiffer"  
-    	:data="commonInfo.blueList" 
-    	:show="showSelectBlue" 
-    	v-model="slectBlue" 
-    	@on-change="changeBlue" 
+    	:data="commonInfo.blueList"
+    	:show="showSelectBlue"
+    	v-model="slectBlue"
+    	@on-change="changeBlue"
     	show-name 
     	@on-hide="showSelectBlue=false"></popup-picker>
   </div>
@@ -117,25 +119,9 @@ export default {
   },
   created() {
   	this.isAndroid=localStorage.getItem("isAndroid");
-	this.getPickingInfo();
-	//判断之前是否连接过蓝牙
-//	if(localStorage.getItem("bluedata")&&this.isAndroid){
-	/*if(localStorage.getItem("bluedata")){
-		//如果之前连结果蓝牙，直接连接
-		let param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
-		//连接打印机
-		if(window.cordova){
-			factory.connectBlue(param1).then(res=>{
-				this.isConnectDevice=true;
-			},(err)=>{
-				alert("error:打印机 "+err)
-				this.isConnectDevice=false
-			})
-		}
-	}*/
+		this.getPickingInfo();
   },
   destory(){
-  	console.log("dis")
   	clearInterval(this.int)
   },
   methods: {
@@ -150,92 +136,111 @@ export default {
 			var param1 = { btAddress:sessionStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
 			factory.connectBlue(param1).then(res=>{
 				this.isConnectDevice=true;  //连接打印机之后打印，调用打印方法
-				this.printOrder(this.printId)
-//				this.printOrders(this.printId.length,this.printId)
+				this.printOrders(this.printId.length,this.printId)
 			},(err)=>{
 				alert("连接打印机失败："+err+'\n'+"请回到首页设置模块修改打印设备")}
 			)
 		}
 	},
 	//一键打印
-	printAll(){
-		let i = 0;		
-		let ids = this.$route.query.id
+	printAll(id){
+		let i = 0;	
 		let _this = this;
-    for(let i = 0;i < ids.length ; i ++){
-		  setTimeout(function(){
-		     _this.printOrder(ids[i])
-		  }, 10 * i);
-		  }
+		let ids = _this.$route.query.id.split("|")
+		if(id){
+				_this.printId=[id];
+//			 _this.printOrders(1,[id])
+			 _this.printOrders([id])
+		}else{
+			_this.printId=ids;
+//	     _this.printOrders(ids.length,ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
+	     _this.printOrders(ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
+		}
+		
 	},
-	
-  /**
-	 * 打印小票
-	 */
-	printOrder(id,callback=null){
-		//开启蓝牙
-  		const _this =this;
-  		this.printId=id;
-		//获取蓝牙连接列表，判断是否之前连接过蓝牙
-//		if(sessionStorage.getItem("bluedata")){
-			//获取打印小票信息
-			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
+	printOrders(ids,callback=null){		
+		$request.post("/api/online-order/v1/protected/batchpickdetail",ids).then((res)=>{
+				if(res.success==true){
+					func.setPrintData(res.data,(callData)=>{
+						factory.print(callData).then((res)=>{
+							$request.post("/api/online-order/v1/protected/printcount",ids).then((res)=>{
+								if(res.success==true){
+									this.$vux.toast.show({
+				            type: 'text',
+				            text: '打印成功',
+				          })
+								}
+							},(err)=>{
+								this.$vux.toast.show({
+				            type: 'text',
+				            text: res.message||'打印次数计数失败',
+			          })
+							})
+						},(err)=>{
+							this.$vux.toast.show({
+		            type: 'text',
+		            text: '打印失败',
+		          })
+						})
+					})
+				}
+			})
+	},
+	printOrders1(length,ids,callback=null){
+	//开启蓝牙
+	const _this =this;
+	let ind=0;  //默认为0
+	//获取蓝牙连接列表，判断是否之前连接过蓝牙
+//	if(sessionStorage.getItem("bluedata")){
+		//获取打印小票信息
+		if(length==1){ //这里直接一个for循环不好吗 ，异步执行的函数，佛如循环不会等待
+			$request.post("/api/online-order/v1/protected/batchpickdetail",ids).then((res)=>{
 				if(res.success==true){
 					this.datas.orderInfos.forEach((r)=>{
-						if(r.id==id){
+						if(r.id==ids[0]){
 							r.printCount = res.data[0].printCount
 						}
 					})
-					func.printInfo(res.data[0],this,()=>{
-						this.$vux.toast.show({
-			            type: 'text',
-			            text: res.data[0].ordersequenceno+'打印成功',
-			          })
-					},(err)=>{
-						alert(err)
-						if(this.commonInfo.blueList[0].length>0){
-							this.showSelectBlue=true;
-						}else{
-							factory.getBlueList().then((res)=>{
-								let arrays = res.map((e)=>{
-									return {name:e.split("=>")[0],value:e.split("=>")[1]}
-								})
-								this.$store.commit("updateCommonInfo", {
-						    	blueList:[arrays],
-						    });
-						    this.showSelectBlue=true;
-							},(err)=>{
-									alert(err);
-							})
-						}
-					})
-				}else{
-					this.$vux.toast.show({
-	          type: 'text',
-	          text: res.message||'获取该订单数据失败，请联系管理员',
-          })
+					func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
+						func.printAdd(res.data[0],this,(count)=>{
+							callback()
+						})
+					})					
 				}
 			})
-		/*}else{
-			//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-				factory.getBlueList().then((res)=>{
-					let arrays = res.map((e)=>{
-						return {name:e.split("=>")[0],value:e.split("=>")[1]}
-					})
-					this.$store.commit("updateCommonInfo", {
-			    	blueList:[arrays],
-			    });
-			    this.showSelectBlue=true;
-				},(err)=>{
-						alert(err);
+		}else{		  //进来函数之后length>1，执行else内容
+			let _thiss= this
+			var callbacks=function(){
+				ind++;
+				if(ind>=length){  //11.进来这里，退出循环
+					return;
+				}else{ //4.进来这里
+					_thiss.printOrders(1,[ids[ind]],callbacks) //5.执行这个，完成之后执行回调函数  //8，再一次执行，完成回调
+				}
+			}
+			_thiss.printOrders(1,[ids[0]],callbacks)  //1，首先执行这里，传入回掉函数callbacks，第一遍执行完，执行回掉函数
+		}
+/*	}else{
+		//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
+			factory.getBlueList().then((res)=>{
+				let arrays = res.map((e)=>{
+					return {name:e.split("=>")[0],value:e.split("=>")[1]}
 				})
-		}*/
-	},
+				this.$store.commit("updateCommonInfo", {
+		    	blueList:[arrays],
+		    });
+		    this.showSelectBlue=true;
+			},(err)=>{
+					alert(err);
+			})
+	}*/
+},
 	/**
 	 * 获取拣货单信息
 	 */
 	getPickingInfo(){
-		$request.post("/api/online-order/v1/protected/mergepickdetail",this.$route.query.id).then((res)=>{
+		let ids = this.$route.query.id.split("|")
+		$request.post("/api/online-order/v1/protected/mergepickdetail",ids).then((res)=>{
 			if(res.success==true){
 				this.datas=res.data
 				this.datas.orderInfos=res.data.orderInfos.map((e)=>{

@@ -137,7 +137,6 @@ export default {
      */
     complete () {
       let supplementInvoicesDetailsDTO = [], opWarehouseDetailDTOList = []
-      console.log(this.data.supplementInvoicesDetails)
       this.data && this.data.supplementInvoicesDetails && (this.data.supplementInvoicesDetails.length > 0) && this.data.supplementInvoicesDetails.forEach(function(item) {
         supplementInvoicesDetailsDTO.push({
           goodsCode: item.goodsCode,

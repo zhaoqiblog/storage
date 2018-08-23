@@ -83,7 +83,6 @@ export default {
       let goodsDetailDTOList = []
       this.data.forEach(function(arr) {
         arr.forEach(function(item) {
-        	console.log(item)
           goodsDetailDTOList.push({
             goodsBarCode: item.goodsBarCode,
             goodsCode: item.goodsCode,
@@ -102,7 +101,6 @@ export default {
           text: '列表中有商品数量未填写或为零'
         })
       } else {
-      	console.log(goodsDetailDTOList)
 //      $request.post('/api/goods-warehouse/v1/protected/shopToOriginWarehouse', {
 //	 		costCenterNum: this.commonInfo.costNumber,
 //        toWarehouseGoodsDTOList: goodsDetailDTOList,
@@ -140,7 +138,6 @@ export default {
      */
     listChange () {
       let num = 0
-      console.log(this.data)
       this.data.forEach(function(pro) {
         pro.forEach(function(item){
           if(item.realityNum > 0) {

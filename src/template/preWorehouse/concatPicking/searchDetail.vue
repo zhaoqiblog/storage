@@ -168,7 +168,6 @@
 	    	slectBlue:[], //选中的蓝牙设备号
 	    	isConnectDevice:false,
 	    	isAndroid:false,
-	    	printData:{},
 			}
 		},
 		created(){
@@ -180,8 +179,6 @@
 			 * 修改蓝牙连接设备
 			 */
 			changeBlue(){
-				localStorage.setItem("bluedata",this.slectBlue[0]);
-				sessionStorage.setItem("bluedata",this.slectBlue[0]);
 		//		连接打印机
 				if(window.cordova){
 					var param1 = { btAddress:sessionStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
@@ -225,57 +222,21 @@
   		const _this =this;
   		this.printId=id;
 		//获取蓝牙连接列表，判断是否之前连接过蓝牙
-//		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
-		if(sessionStorage.getItem("bluedata")){
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
 				if(res.success==true){
-					this.printData=res.data[0];
-					this.data.printCount=res.data[0].printCount
-					func.printInfo(res.data[0],this,()=>{
-						this.$vux.toast.show({
-			            type: 'text',
-			            text: '打印成功',
-			          })
-					},(err)=>{
-						//打印失败，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-						if(this.commonInfo.blueList[0].length>0){
-							this.showSelectBlue=true;
-						}else{
-							factory.getBlueList().then((res)=>{
-								let arrays = res.map((e)=>{
-									return {name:e.split("=>")[0],value:e.split("=>")[1]}
-								})
-								this.$store.commit("updateCommonInfo", {
-						    	blueList:[arrays],
-						    });
-						    this.showSelectBlue=true;
-							},(err)=>{
-									alert(err);
+					func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
+							func.printAdd(res.data[0],this,(count)=>{
+								this.data.printCount=count.data
 							})
-						}
-					})
+					})					
 				}else{
 					this.$vux.toast.show({
-			            type: 'text',
-			            text: res.message||'获取该订单数据失败，请联系管理员',
-		          })
+            type: 'text',
+            text: res.message||'获取该订单数据失败，请联系管理员',
+          })
 				}
 			})
-		}else{
-			//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-				factory.getBlueList().then((res)=>{
-					let arrays = res.map((e)=>{
-						return {name:e.split("=>")[0],value:e.split("=>")[1]}
-					})
-					this.$store.commit("updateCommonInfo", {
-			    	blueList:[arrays],
-			    });
-			    this.showSelectBlue=true;
-				},(err)=>{
-						alert(err);
-				})
-		}
 	},
 	
 		}

@@ -84,7 +84,6 @@ import { XHeader } from 'vux'
 				this.confirmShopList.forEach((e,inde)=>{
 					this.allNumber += parseInt(e.num);
 				})
-				console.log(this.allNumber)
 		},
 		methods:{
 			back(){

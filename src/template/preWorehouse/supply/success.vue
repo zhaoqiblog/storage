@@ -34,7 +34,6 @@ export default {
   },
   created() {
   	this.obj=this.$route.query
-//	console.log(this.obj)
   },
   mounted(){
   },
@@ -43,7 +42,6 @@ export default {
 //  	this.showPlaceCode=true;
 //  },
     back(){
-//  	console.log()
     	this.$router.push(this.obj.backpath)
     },
     seeList(){

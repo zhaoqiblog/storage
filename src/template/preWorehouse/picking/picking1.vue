@@ -163,7 +163,6 @@ export default {
 			if(e.itemid==id){
 				e.init=false;
 				e.halfPickNum=num;
-//				console.log(e,e.halfPickNum)
 			}
 		})
   		this.alreadyPick=this.alreadyPick+1
@@ -186,7 +185,6 @@ export default {
 				})
 				this.popItem=data[0]
 			}
-//			console.log(this.popItem)
   	},
   	/**
   	 * 全部拣货按钮点击事件
@@ -281,8 +279,6 @@ export default {
 						listpage:"/preWorehouse/pickList",
 						path:"/"
 				}}
-//		    console.log(obje)
-//		    this.$router.push(obje)
 		    
 			    $request.post("/api/online-order/v1/protected/finishpick",obj).then(res=>{
 			    	if(res.success&&res.success==true){

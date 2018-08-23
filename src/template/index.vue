@@ -72,15 +72,6 @@
                     <img src="../assets/home/ico12.png">
                   </div>
                 </grid-item>
-                <!--<grid-item :link="{name: 'scanEntry', query: {key: 'shopBackOrder'}}">
-                  <div class="text">
-                    <h2>卖场返配</h2>
-                    <p>将卖场的返配商品转移至返配库位</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/ico11.png">
-                  </div>
-                </grid-item>-->
               </grid>
             </div>
           </div>
@@ -138,63 +129,9 @@
                     <img src="../assets/home/ico8.png">
                   </div>
                 </grid-item>
-                <!-- <grid-item :link="{name: 'scanEntry', query: {key: 'backMatck'}}">
-                <div class="text">
-                  <h2>后场返配</h2>
-                  <p>将仓库的返配商品转移至返配库位</p>
-                </div>
-                <div class="img">
-                  <img src="../assets/home/ico9.png">
-                </div>
-              </grid-item> -->
               </grid>
             </div>
           </div>
-          
-          <!--<div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex === 4}">
-            <group-title @click.native="toggle(4)"><i class="i-line"></i>返配仓库<i class="i-arrow"></i></group-title>
-            <div class="content">
-              <grid :cols="2">
-                <grid-item :link="{name: 'scanEntry', query: {key: 'backLogistics'}}">
-                  <div class="text">
-                    <h2>物流返配</h2>
-                    <p>将返配库位的商品返配至物流</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/ico13.png">
-                  </div>
-                </grid-item>
-              </grid>
-            </div>
-          </div>-->
-          <!--<div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex === 5}">-->
-            <!--<group-title @click.native="toggle(5)"><i class="i-line"></i>直送<i class="i-arrow"></i></group-title>-->
-            <!--<div class="content">-->
-              <!--<grid :cols="2">-->
-                <!-- <grid-item :link="{name: 'scanEntry', query: {key: 'directAddGoods'}}">
-                <div class="text">
-                  <h2>直送上架</h2>
-                  <p>将直送的商品直接上卖场</p>
-                </div>
-                <div class="img">
-                  <img src="../assets/home/ico11.png">
-                </div>
-              </grid-item> -->
-              <!--</grid>-->
-              <!-- <grid :cols="2">
-              <grid-item :link="{name: 'scanEntry', query: {key: 'directAddToStore'}}">
-                <div class="text">
-                  <h2>直送入库</h2>
-                  <p>将直送商品送至目标库位并完成入库</p>
-                </div>
-                <div class="img">
-                  <img src="../assets/home/ico12.png">
-                </div>
-              </grid-item>
-            </grid> -->
-            <!--</div>-->
-          <!--</div>-->
-          
           <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 3}">
             <group-title @click.native="toggle(3)"><i class="i-line"></i>前置仓<i class="i-arrow"></i></group-title>
             <div class="content">
@@ -249,15 +186,6 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
-              	<!--<grid-item :link="{name: 'concatPickList'}">
-                  <div class="text">
-                    <h2>合单拣货</h2>
-                    <p>前置仓订单合并拣货</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/icon9.png">
-                  </div>
-                </grid-item>-->
                 <grid-item :link="{name: 'setPrinter'}">
                   <div class="text">
                     <h2>设置打印机</h2>
@@ -269,24 +197,6 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
-              	<!--<grid-item :link="{name: 'test',query:{id:'1202840630069000|1205100470016021|1205100170026011'}}">
-                  <div class="text">
-                    <h2>测试单据</h2>
-                    <p>前置仓订单合并拣货</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/icon9.png">
-                  </div>
-                </grid-item>-->
-                <!--<grid-item :link="{name: 'setPrinter'}">
-                  <div class="text">
-                    <h2>设置打印机</h2>
-                    <p>前置仓拣货前，优先设置打印设备</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/icon9.png">
-                  </div>
-                </grid-item>-->
               </grid>
             </div>
           </div>
@@ -319,18 +229,6 @@ export default {
   },
   name: 'home',
   computed: {
-    /*currentStore: {
-      get: function() {
-        let store = []
-        store.push(this.commonInfo.costNumber)
-        return store
-      },
-      set: function(newVal) {
-//    	console.log("ppp",newVal)
-				this.selectstore=newVal
-      	return newVal
-      }
-    },*/
     storeList: function() {
       let store = [], stores = [];
       if(this.commonInfo.stores && this.commonInfo.stores.length >= 1) {
@@ -421,7 +319,6 @@ export default {
 								   	this.currentStore.push(this.commonInfo.stores[0].storeCode)
 								   	localStorage.setItem("costNumber",this.commonInfo.stores[0].storeCode)
 								   }
-//								    console.log(target,this.commonInfo)
 	                //获取用户所在小店
 	                /*$request.get("/api/shop-goods/v1/protected/query/className",{className:res.data.costName,costCenterNum:res.data.costNumber})
 	                	.then(response=>{

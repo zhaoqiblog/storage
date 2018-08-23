@@ -74,7 +74,6 @@ export default{
 		}
 	},
 	created(){
-//		console.log(objInfo.orders)
 	},
 	props:{
 		objInfo:[Object],  //当前传过来的对象

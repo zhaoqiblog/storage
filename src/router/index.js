@@ -5,7 +5,7 @@ import store from '../vuex/store'
 import receivingPort from './receivingPort'
 import turnoverPort from './turnoverArea'
 import shop from './shop'
-import backStorage from './backStorage'
+//import backStorage from './backStorage'
 import preWorehouse from './preWorehouse'
 
 import $request from '@/service/request.js'
@@ -39,7 +39,7 @@ const router = new Router({
     ...receivingPort,
     ...turnoverPort,
     ...shop,
-    ...backStorage,
+//  ...backStorage,
     ...preWorehouse
   ]
 })

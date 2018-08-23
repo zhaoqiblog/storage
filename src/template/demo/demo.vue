@@ -206,8 +206,6 @@ export default {
 			this.checked = val;
 		},
 		selectChange(filterDatas,value){
-			console.log(filterDatas);
-			console.log(value);
 		},
 		goodsInfoItemChange(value,index){
 			console.log(value);

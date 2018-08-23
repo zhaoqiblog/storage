@@ -134,7 +134,6 @@ import {XInput} from 'vux';
 			 * 提交捕获信息
 			 */
 			submitSupply(){
-//				console.log(this.preSupplyInfo)
 				let obj ={
 				  "creatTime": this.preSupplyConfirm.creatTime,
 				  "id": this.preSupplyConfirm.id,
@@ -199,7 +198,6 @@ import {XInput} from 'vux';
 				})
 				
 				obj.supplyItemRequestDTOS=list1
-//				console.log(list1)
 				$request.post("/api/supplement-invoices/v1/protected/confirm_front_supply",obj).then(res=>{
 					if(res.success==true){
 						this.$router.push({path:"preSupSuccess",query:{

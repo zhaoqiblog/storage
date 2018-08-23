@@ -99,8 +99,6 @@
 			}
 		},
 		created(){
-			console.log("pp")
-//			console.log(this.backConfirmList)
 			this.backConfirmList.forEach((e,i)=>{
 				this.totalNum += parseInt(e.count)
 			})
@@ -159,7 +157,6 @@
 				      ]
 					}
 				})
-				console.log(subObj)
 				$request.post("/api/supplement-invoices/v1/protected/to_pre_from_back_place",subObj).then(res=>{
 					if(res.success==true){
 //						//提交成功之后把列表上数据删除

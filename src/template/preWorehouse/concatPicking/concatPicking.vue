@@ -230,6 +230,7 @@ export default {
 						}
 					})
 				})
+				console.log(pushid)
 				this.$router.push({name:"concatSuccessDetail",query:{id:pushid}})
   		}else{
 			this.$router.back()  //全部订单都有问题
@@ -267,7 +268,6 @@ export default {
 				this.listData.picked = [];
 			}
 		},(err)=>{
-//			console.log(err);
 		})
 	},
   	/**
@@ -400,7 +400,6 @@ export default {
 					})
 					return obj
 				})
-				console.log(lists)
 		    $request.post("/api/online-order/v1/protected/mergefinishpick",lists).then(res=>{
 		    	if(res.success&&res.success==true){
 						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})			    		

@@ -46,8 +46,6 @@
 				<m-empty v-if="searchList.content&&searchList.content.length==0&&isSe"></m-empty>
 				<div class="bottom-txt" v-if="page.isEnd">{{'没有更多数据了'}}</div>
 			</div>
-			
-			
 		</div>
 		 <popup-picker 
     	v-if="commonInfo.blueList" 
@@ -163,11 +161,11 @@
 		//开启蓝牙
   		const _this =this;
 		//获取蓝牙连接列表，判断是否之前连接过蓝牙
-		if(sessionStorage.getItem("bluedata")){
+//		if(sessionStorage.getItem("bluedata")){
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
 				if(res.success==true){
-					this.searchList.content.forEach((r)=>{
+					/*this.searchList.content.forEach((r)=>{
 						if(r.id==id){
 							r.printCount = res.data[0].printCount
 						}
@@ -194,6 +192,15 @@
 									alert(err);
 							})
 						}
+					})*/
+					func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
+						func.printAdd(res.data[0],this,(count)=>{
+							this.searchList.content.forEach((r)=>{
+								if(r.id==res.data[0].id){
+									r.printCount = count.data
+								}
+							})
+						})
 					})
 				}else{
 					this.$vux.toast.show({
@@ -202,7 +209,7 @@
 			          })
 				}
 			})
-		}else{
+		/*}else{
 			factory.getBlueList().then((res)=>{
 				let arrays = res.map((e)=>{
 					return {name:e.split("=>")[0],value:e.split("=>")[1]}
@@ -214,7 +221,7 @@
 				},(err)=>{
 						alert(err);
 				})
-		}
+		}*/
 	},
 			
 			toDetailPage(id){

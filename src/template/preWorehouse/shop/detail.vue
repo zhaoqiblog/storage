@@ -79,7 +79,6 @@ import { mapState } from 'vuex';
 //				$request.get("protected/query_page"+this.$route.query.id,{supplementBillNo:this.$route.query.id}).then(res=>{
 					if(res.success==true){
 						this.data=res.data;
-//						console.log(new Date(this.data.creatTime).format("yyyy-MM-dd"))
 					}else{
 						this.$vux.toast.show({
 	            type: 'text',

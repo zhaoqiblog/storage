@@ -56,22 +56,9 @@ export default {
           scanButton: { name: '商品二维码', to: 'addProduct',icons: require('../../assets/scan/pic_scanshangpin1.png') }
           // linkButton: [{ name: '我的补货', to: 'shop/supply' }]
         },
-        shopBackOrder: {
-          header: { title: '卖场返配', headerRt: { name: '我的返配', to: 'shop/backorder' }},
-          scanButton: { name: '商品二维码', to: 'backorderList',icons: require('../../assets/scan/pic_scanshangpin1.png') }
-          // linkButton: [{ name: '我的返配', to: 'shop/backorder' }]
-        },
         shopReturnWarehouse: {
           header: { title: '卖场还货', headerRt: { name: '我的还货', to: 'shop/shopReturnList' }},
           scanButton: { name: '商品二维码', to: 'shopReturnAdd',icons: require('../../assets/scan/pic_scanshangpin1.png') }
-        },
-        /**
-         * 返配仓库
-         */
-        backLogistics: {
-          header: { title: '物流返配', headerRt: { name: '我的返配', to: 'backStorage/backLogistics' }},
-          scanButton: { name: '返配库位二维码', to: 'backLogisticsAddList',icons: require('../../assets/scan/pic_scankuwei.png') }
-          // linkButton: [{ name: '我的返配', to: 'backStorage/backLogistics' }]
         },
         /*
          * 周转区
@@ -87,10 +74,6 @@ export default {
         /*
          * 后场
          */
-         backMatck:{  //后场反配
-        	 header: { title: '后场反配' },
-          scanButton: { name: '库位二维码', to: 'backMatch',icons: require('../../assets/scan/pic_scankuwei.png') }
-        },
          inventory:{  //库位盘点
         	 header: { title: '库位盘点' },
           scanButton: { name: '库位二维码', to: 'inventory',icons: require('../../assets/scan/pic_scankuwei.png') }
@@ -109,14 +92,6 @@ export default {
         directOrderInfo:{
         	header:{title:'直送收货'},
           scanButton: { name: '订单编号', to: 'directOrderInfo',icons: require('../../assets/scan/pic_scanshangpin1.png') }
-        },
-        directAddGoods:{
-        	header:{title:'直送商品上架'},
-          scanButton: { name: '商品二维码', to: 'directAddGoods',icons: require('../../assets/scan/pic_scanshangpin1.png') }
-        },
-        directAddToStore:{
-        	header:{title:'直送商品入库'},
-          scanButton: { name: '商品二维码', to: 'directAddToStore',icons: require('../../assets/scan/pic_scanshangpin1.png') }
         },
         /**
          * 前置仓
@@ -142,7 +117,6 @@ export default {
      * 手机扫描
      */
     scan () {
-    	console.log(window.cordova)
       if(window.cordova) {
         factory.scan().then(res => {
         	alert(res)

@@ -152,7 +152,6 @@ import { mapState } from 'vuex';
 			 */
 			changeBlue(){
 				localStorage.setItem("bluedata",this.slectBlue[0]);
-		//		console.log("pop")
 		//		连接打印机
 				if(window.cordova){
 					var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
@@ -349,14 +348,12 @@ import { mapState } from 'vuex';
 				    	blueList:[arrays],
 				    });
 				    this.showSelectBlue=true;
-				    console.log(this.commonInfo,this.showSelectBlue,this.commonInfo.blueList)
 					})
 				/*let arrays =[{name:'测试设备1',value:"b0:f0:gg：h：er"},{name:'测试设备2',value:"b0:f0:33：hd：68"}]
 				this.$store.commit("updateCommonInfo", {
 			    	blueList:[arrays],
 			    });
-				this.showSelectBlue=true;
-				console.log(this.showSelectBlue)*/
+				this.showSelectBlue=true;*/
 					
 			
   			}

@@ -142,7 +142,6 @@ name: 'pick-list',
      * 监听滚动事件触发下拉加载
      */
     scrollListen () {
-    	console.log("pp")
       const _this = this
       let anchor = this.$refs.scrollWrap
       anchor.addEventListener('scroll', function() {
@@ -153,7 +152,6 @@ name: 'pick-list',
         if(sh==top+ch) {
           // 触发加载数据
           if(_this.page.pageNo < _this.page.totalPage) {
-          	console.log("加载第二页")
             _this.getSupplyList()
           } else {
             _this.showEnd = true
@@ -166,9 +164,7 @@ name: 'pick-list',
     this.$nextTick(function () {
       const e=this.page;
         func.scrollListen(this,this.$refs.scrollWrap,()=>{
-        	console.log(this.page.pageNo)
         	if(e.pageNo<e.totalPage){
-        		console.log("加载下一页")
         		this.getSupplyList()
         	}else{
         		this.showEnd=true;

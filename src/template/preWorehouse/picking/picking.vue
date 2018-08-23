@@ -196,7 +196,6 @@ export default {
 	 */
 	changeBlue(){
 		localStorage.setItem("bluedata",this.slectBlue[0]);
-//		console.log("pop")
 //		连接打印机
 		if(window.cordova){
 			var param1 = { btAddress:localStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
@@ -370,7 +369,6 @@ export default {
 				    	blueList:[arrays],
 				    });
 				    this.showSelectBlue=true;
-//				    console.log(this.commonInfo,this.showSelectBlue)
 					})
   			}
 	},
@@ -420,7 +418,6 @@ export default {
 			if(e.itemid==id){
 				e.init=false;
 				e.halfPickNum=num;
-//				console.log(e,e.halfPickNum)
 			}
 		})
   		this.alreadyPick=this.alreadyPick+1
@@ -443,7 +440,6 @@ export default {
 				})
 				this.popItem=data[0]
 			}
-//			console.log(this.popItem)
   	},
   	/**
   	 * 全部拣货按钮点击事件

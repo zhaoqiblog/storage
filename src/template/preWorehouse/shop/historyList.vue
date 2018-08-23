@@ -118,7 +118,6 @@ name: 'supply-list-history',
       const e=this.page;
         func.scrollListen(this,this.$refs.scrollWrap,()=>{
         	if(e.pageNo<e.totalPage){
-        		console.log("加载下一页")
         		this.getSupplyList()
         	}else{
         		this.showEnd=true;

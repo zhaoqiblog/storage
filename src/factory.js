@@ -56,26 +56,22 @@
 
     connectcordova(function(bridge) {
         bridge.init(function(message, responseCallback) {
-            console.log('JS got a message', message);
             var data = {
                 'Javascript Responds': '测试中文!'
             };
 
             if (responseCallback) {
-                console.log('JS responding with', data);
                 responseCallback(data);
             }
         });
 
         bridge.registerHandler("functionInJs", function(data, responseCallback) {
-//          document.getElementById("show").innerHTML = ("data from Java: = " + data);
             if (responseCallback) {
                 var responseData = "Javascript Says Right back aka!";
                 responseCallback(responseData);
             }
         });
     })
-//alert(window.cordova)
 const
   _MIDEA_COMMON = 'MideaCommon',
   _MIDEA_USER = 'MideaUser',
@@ -101,17 +97,12 @@ export default {
       if (window.cordova) {
         try {
           cordova.callHandler(name,params || null,function(msg) {
-//        	alert(JSON.stringify(msg))
-//          let jsonRes = JSON.parse(msg);
-//          alert(msg)
             resolve(msg)
           }, function(msg) {
-          	console.log('失败的捕捉的错误')
             reject("ERROR factory:"+msg)
           })
         } catch (e) {
         	alert("factory "+ e)
-          console.log('_error', 'widget error:', e)
           reject(e)
         }
       } else {

@@ -218,7 +218,7 @@ export default {
   destroyed(){
   	clearInterval(this.timer)
   },
-  methods: { 	
+  methods: {
   	/**
 	 * 修改蓝牙连接设备
 	 */
@@ -237,6 +237,7 @@ export default {
 		}
 	},
   /**
+   * 
 	 * 打印小票
 	 */
 	printOrder(id){
@@ -301,7 +302,6 @@ export default {
   	 * 手动选择单据事件
   	 */
   	changeSeleList(val){
-//		console.log(val)
   		if(this.selectLists.length!==8){
   			this.selectDefault=false;
   		}else{

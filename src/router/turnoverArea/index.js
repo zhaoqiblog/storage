@@ -31,8 +31,6 @@ import selectMergeGoods from "../../template/backCourt/warehouseMerge/selectMerg
 import mergeGoodsAmount from "../../template/backCourt/warehouseMerge/mergeGoodsAmount.vue"   //库位合并-输入合并数量
 import mergeGoodsConfirm from "../../template/backCourt/warehouseMerge/mergeGoodsConfirm.vue"   //库位合并-输入合并数量
 
-import backMatch from "../../template/backCourt/backMatch/matchInfo.vue"	//后场反配
-
 /*
  *直送界面
  * */
@@ -42,15 +40,6 @@ import direct from "../../template/direct/index.vue"
 import directOrderInfo from "../../template/direct/receive/orderInfo.vue"  //直送收货订单信息
 import receiptList from "../../template/direct/receive/receiptList.vue"  //直送收货添加商品订单信息
 import receiptListConfirm from "../../template/direct/receive/receiptListConfirm.vue"  //直送收货添加商品订单信息
-
-
-import directAddGoods from "../../template/direct/directShelves/addGoods.vue"  //直送上架
-import confirmGoods from "../../template/direct/directShelves/confirmGoods.vue"	//直送商品上架确认
-
-import directAddToStore from "../../template/direct/toStore/addGoods.vue" //直送入库添加商品
-import directToStoreConfirm from "../../template/direct/toStore/confirmGoods.vue" //直送入库添加商品确认
-import placeConfirm from "../../template/direct/toStore/placeConfirm.vue" //直送入库添加商品确认
-
 
 export default [
 //周转区界面
@@ -86,8 +75,6 @@ export default [
         {path:'mergeGoodsAmount',name:"mergeGoodsAmount",component:mergeGoodsAmount}, //合并数量填写
         {path:'mergeGoodsConfirm',name:"mergeGoodsConfirm",component:mergeGoodsConfirm}, //目标库位合并后情况
         
-        //后场反配
-        {path:'backMatch',name:'backMatch',component:backMatch}  //后场反配
     ]
 },
 /**
@@ -99,14 +86,6 @@ export default [
 		{path:'directOrderInfo',name:'directOrderInfo',component:directOrderInfo},
 		{path:'receiptList',name:'receiptList',component:receiptList},
 		{path:'receiptListConfirm',name:'receiptListConfirm',component:receiptListConfirm},
-		
-	//直送商品上架
-		{path:'directAddGoods',name:'directAddGoods',component:directAddGoods},
-		{path:'confirmGoods',name:'confirmGoods',component:confirmGoods},
-		//直送商品入库
-		{path:'directAddToStore',name:'directAddToStore',component:directAddToStore},
-		{path:'directToStoreConfirm',name:'directToStoreConfirm',component:directToStoreConfirm},
-		{path:'placeConfirm',name:'placeConfirm',component:placeConfirm},
 	]
 }
 

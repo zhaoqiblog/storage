@@ -128,7 +128,6 @@ export default {
             type: 'addReturn',
             data: list
           })
-          console.log(list)
         }
         this.$router.push({path: '/shop/shopReturnAddList'})
 //    } else {
