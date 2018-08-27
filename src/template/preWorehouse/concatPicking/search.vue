@@ -9,9 +9,6 @@
 						<i class="iconfonts"></i>
 						<i class="del" @click="delect"></i>
 					</div>
-					<!--<div class="search-order-type">
-						<button>永辉</button> <button>京东</button>
-					</div>-->
 					<div class="checkers">
 						<checker
 						    v-model="searchList.outerOrderType"
@@ -26,6 +23,7 @@
 				</group>
 			</div>
 			<div class="list-search">
+				<!--:status="a.status"-->
 				<p v-if="searchList.totalElements&&searchList.content.length>0" class="total-searchnumber">共{{searchList.totalElements}}个结果</p>
 				<pre-search-item v-for="(a,ai) in searchList.content" :key="ai"
 					:id="a.id"
@@ -47,15 +45,6 @@
 				<div class="bottom-txt" v-if="page.isEnd">{{'没有更多数据了'}}</div>
 			</div>
 		</div>
-		 <popup-picker 
-    	v-if="commonInfo.blueList" 
-    	:show-cell="false" class="showposdiffer"  
-    	:data="commonInfo.blueList" 
-    	:show="showSelectBlue" 
-    	v-model="slectBlue" 
-    	@on-change="changeBlue" 
-    	show-name 
-    	@on-hide="showSelectBlue=false"></popup-picker>
 	</div>
 </template>
 
@@ -71,13 +60,11 @@
 		components:{XHeader,Group,Checker, CheckerItem,MEmpty},
 		data(){
 			return {
-				showSelectBlue:false, //选择蓝牙
 				searchObj:{
 					searchKey:'',outerOrderType:'0',shopId:'',content:[],totalElements:''
 				},
 				page:{page:0,size:20,totalPages:0,isEnd:false},
 				searchData:[],
-				slectBlue:[], //选中的蓝牙设备号
 				isSe:false,
 			}
 		},
@@ -136,96 +123,42 @@
 					}
 				})
 			},
-			
-	/**
-	 * 修改蓝牙连接设备
-	 */
-	changeBlue(){
-		localStorage.setItem("bluedata",this.slectBlue[0]);
-		sessionStorage.setItem("bluedata",this.slectBlue[0]);
-//		连接打印机
-		if(window.cordova){
-			var param1 = { btAddress:sessionStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
-			factory.connectBlue(param1).then(res=>{
-				this.isConnectDevice=true;
-				this.printOrder(this.printId)
-			},(err)=>{
-				alert("连接打印机失败："+err+'\n'+"请回到首页设置模块修改打印设备")}
-			)
-		}
-	},
-			  /**
-	 * 打印小票
-	 */
-	printOrder(id){
-		//开启蓝牙
-  		const _this =this;
-		//获取蓝牙连接列表，判断是否之前连接过蓝牙
-//		if(sessionStorage.getItem("bluedata")){
-			//获取打印小票信息
-			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
-				if(res.success==true){
-					/*this.searchList.content.forEach((r)=>{
-						if(r.id==id){
-							r.printCount = res.data[0].printCount
-						}
-					})
-					func.printInfo(res.data[0],this,()=>{
-						this.$vux.toast.show({
-			            type: 'text',
-			            text: res.data[0].ordersequenceno+'打印成功',
-			          })
-					},(err)=>{
-						alert(err)
-						if(this.commonInfo.blueList[0].length>0){
-							this.showSelectBlue=true;
-						}else{
-							factory.getBlueList().then((res)=>{
-							let arrays = res.map((e)=>{
-								return {name:e.split("=>")[0],value:e.split("=>")[1]}
-							})
-							this.$store.commit("updateCommonInfo", {
-						    	blueList:[arrays],
-						    });
-						    this.showSelectBlue=true;
-							},(err)=>{
-									alert(err);
-							})
-						}
-					})*/
-					func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
-						func.printAdd(res.data[0],this,(count)=>{
-							this.searchList.content.forEach((r)=>{
-								if(r.id==res.data[0].id){
-									r.printCount = count.data
-								}
+			/**
+			 * 打印小票
+			 */
+			printOrder(id){
+				//开启蓝牙
+		  		const _this =this;
+				//获取打印小票信息
+				$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
+					if(res.success==true){
+						func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
+							func.printAdd(res.data[0],this,(count)=>{
+								let arrobj = Object.keys(count.data[0])
+								this.searchList.content.forEach((r)=>{
+									if(r.id==res.data[0].id){
+										r.printCount = count.data[0][arrobj]
+									}
+								})
 							})
 						})
-					})
-				}else{
-					this.$vux.toast.show({
+					}else{
+						this.$vux.toast.show({
 				          type: 'text',
 				          text: res.message||'获取该订单数据失败，请联系管理员',
-			          })
-				}
-			})
-		/*}else{
-			factory.getBlueList().then((res)=>{
-				let arrays = res.map((e)=>{
-					return {name:e.split("=>")[0],value:e.split("=>")[1]}
+			          	})
+					}
 				})
-				this.$store.commit("updateCommonInfo", {
-			    	blueList:[arrays],
-			    });
-			    this.showSelectBlue=true;
-				},(err)=>{
-						alert(err);
-				})
-		}*/
-	},
-			
+			},
 			toDetailPage(id){
-				this.$router.push({name:'searchDetail',query:{id:id}})
+				searchList.content.forEach((i)=>{
+					if(i.id==id&&i.status==1){
+						this.$router.push({name:'searchDetail',query:{id:id}})
+					}else{
+						return;
+					}
+				})
+				
 			},
 			back(){
 				this.$router.push("concatPickList")

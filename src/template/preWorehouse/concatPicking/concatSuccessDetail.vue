@@ -30,7 +30,6 @@
 	    				</dt>
 	    				<dd class="print-list" v-for="e in datas.orderInfos">
 	    					<span>{{e.ordersequenceno}}&nbsp;&nbsp;{{e.id}}</span>
-	    					<!--v-if="isAndroid=='true'"-->
 	    					<button  @click="printAll(e.id)">打印 X{{e.printCount}}</button>
 	    				</dd>
 	    			</dl>
@@ -70,15 +69,6 @@
        
       
     </div>
-    <popup-picker 
-    	v-if="commonInfo.blueList"
-    	:show-cell="false" class="showposdiffer"  
-    	:data="commonInfo.blueList"
-    	:show="showSelectBlue"
-    	v-model="slectBlue"
-    	@on-change="changeBlue"
-    	show-name 
-    	@on-hide="showSelectBlue=false"></popup-picker>
   </div>
 </template>
 
@@ -103,16 +93,9 @@ export default {
   }),
   data() {
     return {
-    	showSelectBlue:false, //选择蓝牙
-    	slectBlue:[], //选中的蓝牙设备号
-    	isConnectDevice:false,
-      data: {
-      },
+      data: {},
       datas:[],
       isAndroid:false,
-      isConnectDevice:false,  //打印机是否连接成功
-      slectBlue:[], //选中的蓝牙设备号
-      showSelectBlue:false, //选择蓝牙弹框显示与否
       printId:'',
       int:null,
     }
@@ -125,34 +108,17 @@ export default {
   	clearInterval(this.int)
   },
   methods: {
-  	/**
-	 * 修改蓝牙连接设备
-	 */
-	changeBlue(){
-		localStorage.setItem("bluedata",this.slectBlue[0]);
-		sessionStorage.setItem("bluedata",this.slectBlue[0]);
-//		连接打印机
-		if(window.cordova){
-			var param1 = { btAddress:sessionStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
-			factory.connectBlue(param1).then(res=>{
-				this.isConnectDevice=true;  //连接打印机之后打印，调用打印方法
-				this.printOrders(this.printId.length,this.printId)
-			},(err)=>{
-				alert("连接打印机失败："+err+'\n'+"请回到首页设置模块修改打印设备")}
-			)
-		}
-	},
 	//一键打印
 	printAll(id){
 		let i = 0;	
 		let _this = this;
 		let ids = _this.$route.query.id.split("|")
 		if(id){
-				_this.printId=[id];
+//				_this.printId=[id];
 //			 _this.printOrders(1,[id])
 			 _this.printOrders([id])
 		}else{
-			_this.printId=ids;
+//			_this.printId=ids;
 //	     _this.printOrders(ids.length,ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
 	     _this.printOrders(ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
 		}
@@ -162,13 +128,29 @@ export default {
 		$request.post("/api/online-order/v1/protected/batchpickdetail",ids).then((res)=>{
 				if(res.success==true){
 					func.setPrintData(res.data,(callData)=>{
-						factory.print(callData).then((res)=>{
-							$request.post("/api/online-order/v1/protected/printcount",ids).then((res)=>{
-								if(res.success==true){
-									this.$vux.toast.show({
-				            type: 'text',
-				            text: '打印成功',
-				          })
+						factory.print(callData).then((printdata)=>{
+							$request.post("/api/online-order/v1/protected/printcount",ids).then((res2)=>{
+								if(res2.success==true){
+									this.datas.orderInfos.forEach((r)=>{
+										for(var i=0;i<res2.data.length;i++){
+											let arrobj = Object.keys(res2.data[i])
+											if(r.id==arrobj){
+												r.printCount = res2.data[i][arrobj]
+											}
+										}
+									})
+									if(ids.length<2){
+										this.$vux.toast.show({
+					            type: 'text',
+					            text: res.data[0].ordersequenceno+'打印成功',
+					          })
+									}else{
+										this.$vux.toast.show({
+					            type: 'text',
+					            text: '打印成功',
+					          })
+									}
+									
 								}
 							},(err)=>{
 								this.$vux.toast.show({
@@ -190,10 +172,8 @@ export default {
 	//开启蓝牙
 	const _this =this;
 	let ind=0;  //默认为0
-	//获取蓝牙连接列表，判断是否之前连接过蓝牙
-//	if(sessionStorage.getItem("bluedata")){
 		//获取打印小票信息
-		if(length==1){ //这里直接一个for循环不好吗 ，异步执行的函数，佛如循环不会等待
+		if(length==1){
 			$request.post("/api/online-order/v1/protected/batchpickdetail",ids).then((res)=>{
 				if(res.success==true){
 					this.datas.orderInfos.forEach((r)=>{
@@ -220,20 +200,7 @@ export default {
 			}
 			_thiss.printOrders(1,[ids[0]],callbacks)  //1，首先执行这里，传入回掉函数callbacks，第一遍执行完，执行回掉函数
 		}
-/*	}else{
-		//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
-			factory.getBlueList().then((res)=>{
-				let arrays = res.map((e)=>{
-					return {name:e.split("=>")[0],value:e.split("=>")[1]}
-				})
-				this.$store.commit("updateCommonInfo", {
-		    	blueList:[arrays],
-		    });
-		    this.showSelectBlue=true;
-			},(err)=>{
-					alert(err);
-			})
-	}*/
+
 },
 	/**
 	 * 获取拣货单信息

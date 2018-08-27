@@ -37,11 +37,6 @@ export default {
   	}
   },
   created() {
-		factory.getDeviceInfo().then((res)=>{
-			alert(JSON.stringify(res))
-  		let plats = res.platform ? true : func.isOs()
-  		localStorage.setItem("isAndroid",plats)
-  	})
 		/**
   	 * 解决android输入框键盘弹起时挡住界面的问题
   	 */

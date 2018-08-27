@@ -151,7 +151,8 @@ import { mapState } from 'vuex';
 					if(res.success==true){
 						func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
 							func.printAdd(res.data[0],this,(count)=>{
-								this.data.printCount=count.data
+								let arrobj = Object.keys(count.data[0])
+								this.data.printCount=count.data[0][arrobj]
 							})
 						})
 						

@@ -220,35 +220,55 @@ export default {
   		clearInterval(this.timeIntever)
   		if(this.datas.ordersequencenos.length-this.errInfo.message.length>0){
   			//部分订单成功
-			let ids = this.$route.query.id.split("|")
-			let pushid=[]
-				this.errInfo.message.forEach((e,index)=>{					
-					let errid = Object.keys(this.errInfo.message[index])[0]
-					ids.forEach((a)=>{
-						if(a!=errid){
-							pushid.push(a)
+				let ids = this.$route.query.id.split("|")
+				let pushid=[]
+				let pushids=ids.concat([])
+				/*this.errInfo.message.forEach((e,index)=>{
+					let errid = e.id.slice(0,-1)
+					console.log(errid)
+					ids.forEach((a,index)=>{
+						let ispush=false;
+						if(a==errid){
+							ispush=true;
+							pushids.splice(index,1)
 						}
 					})
-				})
-				console.log(pushid)
-				this.$router.push({name:"concatSuccessDetail",query:{id:pushid}})
+				})*/
+//				for((a,index)=>{
+	for(let i=0;i<ids.length;i++){
+					let ispush=false;
+					this.errInfo.message.forEach((e,indexx)=>{
+						if(ids[i]==e.id.slice(0,-1)){
+							console.log(ids[i])
+							ispush=true;
+							ids.splice(i,1)
+						}
+					})
+					/*if(ispush){
+						pushids.splice(index,1)
+					}*/
+//				})
+				}
+	console.log(ids,pushids)
+				this.$router.push({name:"concatSuccessDetail",query:{id:ids.join("|")}})
   		}else{
-			this.$router.back()  //全部订单都有问题
-				
+  			console.log('all')
+//				this.$router.back()  //全部订单都有问题
   		}
   	},
 	/**
 	 * 获取拣货单信息
 	 */
 	getPickingInfo(){
-		$request.post("/api/online-order/v1/protected/mergeorderdetails",this.$route.query.id.split("|")).then((res)=>{
+		let lists = this.$route.query.id.split("|")
+		$request.post("/api/online-order/v1/protected/mergeorderdetails",lists).then((res)=>{
 //		$request.post("https://zsyh.yonghui.cn/mas-api/restful/inventory/store-inventory/api/online-order/v1/protected/mergeorderdetails",this.$route.query.id.split("|")).then((res)=>{
 			if(res.success==true){
 				this.datas=Object.assign({},res.data)
 				let listTmp = []
 				let tempObj={}
 				this.datas.products.forEach((e,index)=>{
-					tempObj[e.barcode]=e;
+					tempObj[e.id]=e; //对象，利用：对象的键是唯一的
 					e.init=true;  //初始状态：缺货和全部拣货按钮显示与否
 					e.pickStatus = '0';
 				})
@@ -256,7 +276,7 @@ export default {
 					let oj=Object.assign({},tempObj[n]);
 					oj.orders=[Object.assign({},oj)];   //orders 是原始的数据
 					this.datas.products.filter((an,ain)=>{
-						if(n==an.barcode&&oj.itemid!==an.itemid){
+						if(n==an.id&&oj.itemid!==an.itemid){
 							oj.num +=an.num;
 							oj.orders.push(Object.assign({},an))
 						}
@@ -344,6 +364,7 @@ export default {
   	 * 一键拣货
   	 */
   	pickAllGoods(id){
+//		console.log(this.datas.products)
   		this.datas.products.forEach(e=>{
   			if(e.itemid==id){
   				e.init=false;
@@ -374,8 +395,11 @@ export default {
 						allList.push(n)
 					})
 				})
-				let lists = this.datas.orderInfos.map((item)=>{
+				let lists = this.datas.orderInfos.map((item,indexs)=>{
 					let obj = {orderid:item.id,goodsInfoDTOS:[]}
+					/*if(indexs==1||indexs==2){
+						obj.orderid=item.id+'5'
+					}*/
 					allList.forEach((e)=>{
 						if(e.orderid==item.id){
 								let objs ={
@@ -405,11 +429,14 @@ export default {
 						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})			    		
 		    	}else{
 		    		this.errInfo=res;
-		    		this.errInfo.message = JSON.parse(this.errInfo.message);
-		    		this.errInfo.message.forEach((e)=>{
+		    		let errMsg = res.message
+		    		this.errInfo.message = JSON.parse(errMsg);
+		    		this.errInfo.message.forEach((e,indexss)=>{
 		    			let key = Object.keys(e)[0]
-		    			e.name = key+':'+e[key]
+		    				e.name = key+':'+e[key]
+		    				e.id=key
 		    		})
+		    		console.log(this.errInfo.message)
 		    	}
 		  	})
    		}

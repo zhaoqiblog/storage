@@ -91,16 +91,16 @@ export default {
 	 */
 	getBlueList(factory){
 		factory.getBlueList().then((res)=>{
-					let arrays = res.map((e)=>{
-						return {name:e.split("=>")[0],value:e.split("=>")[1]}
-					})
-					this.$store.commit("updateCommonInfo", {
-			    	blueList:[arrays],
-			    });
-			    this.showSelectBlue=true;
-				},(err)=>{
-						alert(err);
-				})
+			let arrays = res.map((e)=>{
+				return {name:e.split("=>")[0],value:e.split("=>")[1]}
+			})
+			this.$store.commit("updateCommonInfo", {
+	    	blueList:[arrays],
+	    });
+	    this.showSelectBlue=true;
+		},(err)=>{
+				alert(err);
+		})
 	},
 	/**
 	 * 打印记录次数

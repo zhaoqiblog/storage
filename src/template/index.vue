@@ -267,7 +267,6 @@ export default {
   	
   },
   created(){
-  	
   },
   mounted() {
   	let _this=this;

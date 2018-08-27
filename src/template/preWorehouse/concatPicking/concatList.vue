@@ -6,8 +6,10 @@
     </x-header>
     <tab v-model="index" active-color="#3DA5FE">
 	      <tab-item v-for="(i,ins) in ['待拣货 刷新','拣货中','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
+	     
 	    </tab>
     <div class="scroll-content pre-pick-list pre-concat-list" ref="scrollWrap">
+    	 {{page1.totalElements}}
         <div v-if="index==0">
           	<div class="container-list" >
           		<pre-list-concats v-for="e,index in data.noPick" :key='index'
@@ -68,7 +70,6 @@
 			        </Group>
 			    </div>
 			    <div v-if="page1.isEnd" class="theEnd">已经到底啦</div>
-			    <!--<m-empty v-if="data.noPick && data.noPick.length == 0"></m-empty>-->
 			    <m-empty v-if="data.picking && data.picking.length == 0"></m-empty>
         </div>
         <div v-if="index==2">
@@ -252,9 +253,10 @@ export default {
 				if(res.success==true){
 					func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
 						func.printAdd(res.data[0],this,(count)=>{
+							let arrobj = Object.keys(count.data[0])
 							this.data.history.forEach((r)=>{
 								if(r.id==res.data[0].id){
-									r.printCount = count.data
+									r.printCount = count.data[0][arrobj]
 								}
 							})
 						})

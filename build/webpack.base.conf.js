@@ -6,7 +6,8 @@ var vueLoaderConfig = require('./vue-loader.conf')
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
-
+var publicPath='';
+//if(process.env.NODE_ENV=='')
 const webpackConfig = {
   entry: {
     app: ["babel-polyfill", "./src/main.js"]
