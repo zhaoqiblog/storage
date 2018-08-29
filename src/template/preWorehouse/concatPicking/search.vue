@@ -73,7 +73,7 @@
 			searchList:state=>state.prePick.searchList,
 		}),
 		created(){
-			this.searchObj.shopId=this.commonInfo.costNumber
+			this.searchObj.shopId=localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber;
 			if(!this.$route.query.isBack){
 				this.$store.commit("setSearchList",Object.assign({},this.searchObj))
 			}
@@ -130,7 +130,7 @@
 				//开启蓝牙
 		  		const _this =this;
 				//获取打印小票信息
-				$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
+				$request.post("/api/online-order/v1/protected/batchquery/pickdetail",[id]).then((res)=>{
 					if(res.success==true){
 						func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
 							func.printAdd(res.data[0],this,(count)=>{
@@ -151,7 +151,8 @@
 				})
 			},
 			toDetailPage(id){
-				searchList.content.forEach((i)=>{
+				this.searchList.content.forEach((i)=>{
+					console.log(i.id,id,i.status)
 					if(i.id==id&&i.status==1){
 						this.$router.push({name:'searchDetail',query:{id:id}})
 					}else{

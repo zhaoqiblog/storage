@@ -11,8 +11,7 @@
    			</span>
    			<span class="search-time">
    				<span >{{slotType=='expectTime'?'预约送达':'极速送达'}}</span>
-   				<span class="order-type">{{new Date(creatTime).format('yyyy-MM-dd hh:mm:ss')}}</span>
-   				
+   				<span class="order-type">{{new Date(creatTime).format('yyyy-MM-dd hh:mm:ss')}} <span v-if="status=='1'"> > </span> </span>  				
    			</span>
    		</div>			       		
    		<div class="pre-list-item-content">

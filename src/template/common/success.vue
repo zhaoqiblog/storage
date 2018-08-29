@@ -55,8 +55,6 @@ export default {
 	.self-process{height: 100%;background: #FFFFFF;}
 </style>
 <style lang="less">
-/*.vux-header{border-bottom: 1px solid #D5D9DE;}*/
-/*.self-process{height: 100%;background: #FFFFFF;}*/
 	.preWrap{
 		.title{color: #333333;font-size: 22px;max-width: 71%;margin: 0 auto;font-weight: 600;}
 		.infos{

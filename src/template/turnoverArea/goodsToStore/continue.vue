@@ -63,8 +63,6 @@ export default {
 	.self-process{height: 100%;background: #FFFFFF;}
 </style>
 <style lang="less">
-/*.vux-header{border-bottom: 1px solid #D5D9DE;}*/
-/*.self-process{height: 100%;background: #FFFFFF;}*/
 	.contentWrap{
 		/*background: #FFFFFF;*/
 		/*height:*/

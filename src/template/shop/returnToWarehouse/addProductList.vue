@@ -101,11 +101,6 @@ export default {
           text: '列表中有商品数量未填写或为零'
         })
       } else {
-//      $request.post('/api/goods-warehouse/v1/protected/shopToOriginWarehouse', {
-//	 		costCenterNum: this.commonInfo.costNumber,
-//        toWarehouseGoodsDTOList: goodsDetailDTOList,
-
-//      }).then(res => {
         $request.post('/api/goods-warehouse/v1/protected/shop_to_origin_warehouse',goodsDetailDTOList).then(res => {
           if(res.success) {
             // 提交成功清除还货清单

@@ -131,10 +131,10 @@ export default {
 		const dataToStore={...this.$route.query}
 			if(window.cordova){
 		  	factory.scan().then(res => {
-		  		this.$router.push({path:'/turnover/goodsToStore',query:{costCenterNum:this.commonInfo.costNumber,palletCode:dataToStore.palletCode,warehousePlaceCode:res.text}})
+		  		this.$router.push({path:'/turnover/goodsToStore',query:{costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,palletCode:dataToStore.palletCode,warehousePlaceCode:res.text}})
 		  	})
 	  	}else{
-	  		this.$router.push({path:'/turnover/goodsToStore',query:{costCenterNum:this.commonInfo.costNumber,palletCode:dataToStore.palletCode,warehousePlaceCode:'101'}})
+	  		this.$router.push({path:'/turnover/goodsToStore',query:{costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,palletCode:dataToStore.palletCode,warehousePlaceCode:'101'}})
 	  	}
   },
   /**
@@ -161,7 +161,7 @@ export default {
         return item.count >0
     })
     		const dataToStore={...this.$route.query}
-    		this.$router.push({path:'/turnover/goodsToStore',query:{costCenterNum:this.commonInfo.costNumber,palletCode:dataToStore.palletCode,warehousePlaceCode:this.warehousecode}})
+    		this.$router.push({path:'/turnover/goodsToStore',query:{costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,palletCode:dataToStore.palletCode,warehousePlaceCode:this.warehousecode}})
     	}else{
     		
     	}

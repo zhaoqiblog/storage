@@ -78,7 +78,7 @@ export default {
 	 **/
     submit(){
     	let obj = {
-		  "costCenterNum": this.commonInfo.costNumber,
+		  "costCenterNum": localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
 		  "orderDate": this.$route.query.orderDate,
 		  "purchaseOrderNo": this.$route.query.purchaseOrderNo,
 		  "receiveGoodsList": []

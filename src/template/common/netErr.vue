@@ -60,7 +60,6 @@ export default {
 
 </script>
 <style lang="less" scoped>
-/*.vux-header{border-bottom: 1px solid #D5D9DE;}*/
 .self-process{height: 100%;background: #FFFFFF;}
 	.contentWrap{
 		background: #FFFFFF;

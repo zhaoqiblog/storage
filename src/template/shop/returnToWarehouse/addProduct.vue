@@ -87,7 +87,7 @@ export default {
 //    $request.get('/api/goods-warehouse/v1/protected/queryPlaceByGoodsBarCode', {
       $request.get('/api/goods-warehouse/v1/protected/back_place_of_goods/market_to_origin', {
         goodsBarCode: this.$route.query.scanResult,
-        costCenterNum: this.commonInfo.costNumber,
+        costCenterNum: localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
         isMarketToOrigin: 1,
         isShowLastOperate: 1
       }).then(res => {
@@ -162,7 +162,7 @@ export default {
         } else {
           $request.get('/api/sys-warehouse/v1/protected/query_warehouses', {
             warehousePlaceCode: code,
-            costCenterNum: this.commonInfo.costNumber,
+            costCenterNum: localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
             warehouseType: 0
           }).then(res => {
             if(res.success) {

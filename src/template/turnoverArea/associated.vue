@@ -86,7 +86,7 @@ export default {
   methods: {
 //	获取托盘信息
 		getTrayInfo(){
-			let obj = {palletCode:this.palletCode,costCenterNum:this.commonInfo.costNumber}
+			let obj = {palletCode:this.palletCode,costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber}
 				$request.get("/api/goods-warehouse/v1/protected/queryPalletGoods",obj).then((re)=>{
 					if(re.success==true){
 						this.palletCode=re.data.palletCode
@@ -141,7 +141,7 @@ export default {
     gotosuccess(){  //确认关联
     	const obj={
     		palletCode:this.palletCode,
-    		costCenterNum:this.commonInfo.costNumber,
+    		costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
     		warehousePlaceCode:this.warehousePlaceCode
     	}
     	$request.get("/api/goods-warehouse/v1/protected/palletToWarehouse",obj).then(res=>{

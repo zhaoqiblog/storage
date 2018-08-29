@@ -144,7 +144,7 @@ export default {
             text: goodBarCode+' 商品已经在列表中',
           })
 			}else{
-	  		let obj ={goodsBarCode:goodBarCode,costCenterNum:this.commonInfo.costNumber,orderNo:this.$route.query.orderCode}
+	  		let obj ={goodsBarCode:goodBarCode,costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,orderNo:this.$route.query.orderCode}
 		  	$request.get("/api/product-query/v1/protected/queryNoRceiveProductInfo",obj).then(res=>{		  		
 		  		if(res.success==true){
 		  			if(res.data){

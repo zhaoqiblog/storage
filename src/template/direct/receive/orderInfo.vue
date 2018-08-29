@@ -72,7 +72,7 @@ export default {
   },
   created() {
   	//4031193610    4031193609
-		let obj ={orderNo:this.$route.query.scanResult,costCenterNum:this.commonInfo.costNumber}
+		let obj ={orderNo:this.$route.query.scanResult,costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber}
 		$request.get("/api/receive-goods/v1/protected/queryOrderInfo",obj).then(res=>{
 			if(res.success==true){
 				this.orderDetails={...res.data}

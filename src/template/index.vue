@@ -23,7 +23,7 @@
                     <p>抽检门店贵重商品，检查物流配送质量</p>
                   </div>
                   <div class="img">
-                    <img src="../assets/home/ico2.png">
+                    <img src="../assets/home/ico2.png" @click.prevent>
                   </div>
                 </grid-item>
                 <grid-item :link="{name: 'scanEntry', query: {key: 'receive'}}">
@@ -186,7 +186,7 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
-                <grid-item :link="{name: 'setPrinter'}">
+                <!--<grid-item :link="{name: 'setPrinter'}">
                   <div class="text">
                     <h2>设置打印机</h2>
                     <p>前置仓拣货前，优先设置打印设备</p>
@@ -194,7 +194,7 @@
                   <div class="img">
                     <img src="../assets/home/icon9.png">
                   </div>
-                </grid-item>
+                </grid-item>-->
               </grid>
               <grid :cols="2">
               </grid>
@@ -273,7 +273,7 @@ export default {
 	setTimeout(()=>{
   		_this.init();
 		factory.hideNav();
-	},500)
+	},1000)
   	
   },
   methods: {
@@ -309,7 +309,7 @@ export default {
 									//更新成本中心，成本中心要一起修改
 									if(target){
 										this.currentStore.push(aaa)
-								    this.$store.dispatch("changeCommonInfo", {
+								    this.$store.commit("updateCommonInfo", {
 								    	costName:target.storeName,
 								    	costNumber:target.storeCode,
 								    });
@@ -318,12 +318,6 @@ export default {
 								   	this.currentStore.push(this.commonInfo.stores[0].storeCode)
 								   	localStorage.setItem("costNumber",this.commonInfo.stores[0].storeCode)
 								   }
-	                //获取用户所在小店
-	                /*$request.get("/api/shop-goods/v1/protected/query/className",{className:res.data.costName,costCenterNum:res.data.costNumber})
-	                	.then(response=>{
-	                		let storeInfos= response.data==null ? {} : response.data 
-	                		this.$store.dispatch("changetoreInfo",storeInfos)
-	                })*/
 	              } else {
 	                this.$vux.toast.show({
 	                  type: 'text',
@@ -345,7 +339,7 @@ export default {
             }else{
             	this.$vux.toast.show({
 	                type: 'text',
-	                text: '获取用户信息失败',
+	                text: '获取底座用户信息失败',
 	                onHide: () => {
 	                  factory.exit()
 	                }
@@ -366,34 +360,11 @@ export default {
 						this.currentStore.push(aaa)
 	          let target = res.data.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
 					//更新成本中心，成本中心要一起修改
-					    this.$store.dispatch("changeCommonInfo", {
+					    this.$store.commit("updateCommonInfo", {
 					    	costName:target.storeName,
 					    	costNumber:target.storeCode,
 					    });
-            //获取用户所在小店 .//res.data.costNumber
-            /*$request.get("/api/shop-goods/v1/protected/query/className",{className:className,costCenterNum:'0094281202'})
-            	.then(response=>{
-            		let storeInfos= response.data==null ? {}: response.data
-            		this.$store.dispatch("changetoreInfo",storeInfos)
-            })*/
-          	
-          } else {
-            this.$vux.toast.show({
-              type: 'text',
-              text: res.message || '获取用户信息失败',
-              onHide: () => {
-                factory.exit()
-              }
-            })
           }
-        }, error => {
-          this.$vux.toast.show({
-            type: 'text',
-            text: '获取用户信息失败',
-            onHide: () => {
-              factory.exit()
-            }
-          })
         })
       }
     },

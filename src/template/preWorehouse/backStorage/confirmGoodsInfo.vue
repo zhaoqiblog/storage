@@ -1,27 +1,6 @@
 <template>
 	<div class="shop-supply">
 		<x-header class="difer-header">确认补货清单</x-header>
-		 <!--<div class="vux-header vux-1px-b pre-picking-header clearfix">
-	    		<span class="icons fl" @click="$router.back"></span>
-	    	<span class="txt">确认补货清单</span>
-	    </div>-->
-		<!--<div class="header-wrap pre-header-wrap">
-			<div class="shopName vux-1px-tb"><i></i>{{this.commonInfo.costName}}</div>
-				<div class="totalNums">
-					<dl>
-						<dt>{{$route.query.scanResult}}</dt>
-						<dd>库位码</dd>
-					</dl>
-					<dl>
-						<dt >{{$route.query.goodsSize}}</dt>
-						<dd>SKU数量</dd>
-					</dl>
-					<dl>
-						<dt>{{$route.query.sumAvailableNum}}</dt>
-						<dd>库存数量</dd>
-					</dl>
-				</div>
-		</div>-->
 		 <div class="pre-content-title pre-detail-title">
     	<div class="picking-title">
     		<div class="counting-time">

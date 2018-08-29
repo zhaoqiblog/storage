@@ -83,7 +83,7 @@ export default {
   methods: {
   //获取托盘上的商品信息
   getTrayInfo(){
-			let obj = {palletCode:this.palletCode,costCenterNum:this.commonInfo.costNumber}
+			let obj = {palletCode:this.palletCode,costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber}
 				$request.get("/api/goods-warehouse/v1/protected/queryPalletGoods",obj).then((re)=>{
 					if(re.success==true){
 						this.palletCode=re.data.palletCode

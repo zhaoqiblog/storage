@@ -125,10 +125,11 @@ export default {
 		
 	},
 	printOrders(ids,callback=null){		
-		$request.post("/api/online-order/v1/protected/batchpickdetail",ids).then((res)=>{
+		$request.post("/api/online-order/v1/protected/batchquery/pickdetail",ids).then((res)=>{
 				if(res.success==true){
 					func.setPrintData(res.data,(callData)=>{
 						factory.print(callData).then((printdata)=>{
+							alert(printdata)
 							$request.post("/api/online-order/v1/protected/printcount",ids).then((res2)=>{
 								if(res2.success==true){
 									this.datas.orderInfos.forEach((r)=>{
@@ -174,7 +175,7 @@ export default {
 	let ind=0;  //默认为0
 		//获取打印小票信息
 		if(length==1){
-			$request.post("/api/online-order/v1/protected/batchpickdetail",ids).then((res)=>{
+			$request.post("/api/online-order/v1/protected/batchquery/pickdetail",ids).then((res)=>{
 				if(res.success==true){
 					this.datas.orderInfos.forEach((r)=>{
 						if(r.id==ids[0]){
@@ -188,7 +189,8 @@ export default {
 					})					
 				}
 			})
-		}else{		  //进来函数之后length>1，执行else内容
+		}else{
+			//进来函数之后length>1，执行else内容
 			let _thiss= this
 			var callbacks=function(){
 				ind++;
@@ -200,7 +202,6 @@ export default {
 			}
 			_thiss.printOrders(1,[ids[0]],callbacks)  //1，首先执行这里，传入回掉函数callbacks，第一遍执行完，执行回掉函数
 		}
-
 },
 	/**
 	 * 获取拣货单信息

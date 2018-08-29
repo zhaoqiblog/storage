@@ -147,7 +147,7 @@ import { mapState } from 'vuex';
   		const _this =this;
 			//获取打印小票信息
 //			if(window.cordova){
-				$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
+				$request.post("/api/online-order/v1/protected/batchquery/pickdetail",[id]).then((res)=>{
 					if(res.success==true){
 						func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
 							func.printAdd(res.data[0],this,(count)=>{

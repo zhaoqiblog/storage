@@ -69,7 +69,7 @@ export default {
       let orderId = this.$route.query.orderId
       $request.get('/api/warehouse-operate-main/v1/protected/query/', {
         toOriginBillNo: orderId,
-        costCenterNum: this.commonInfo.costNumber
+        costCenterNum: localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber
       }).then(res => {
         if(res.success) {
           this.data = res.data

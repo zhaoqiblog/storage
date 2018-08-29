@@ -29,14 +29,6 @@ const mutations = {
    	...state.commonInfo,
    	...data,
    }
-    
-  /*  if(state.commonInfo.stores.length>=0){//梁军改的
-    	state.commonInfo = {
-    		...state.commonInfo,
-    		costName:state.commonInfo.stores[0].storeName,
-    		costNumber:state.commonInfo.stores[0].storeCode,
-    	}
-    }*/
   },
   updatestoreInfo (state, data) {
     state.storeInfo = data

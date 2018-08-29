@@ -105,9 +105,8 @@
 			getGoodsInCode(){
 				const obj = {
 				warehousePlaceCode: this.$route.query.scanResult,
-				costCenterNum: this.commonInfo.costNumber,
+				costCenterNum: localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
 				warehouseType: 0,
-				//			costCenterNum:'0090120001'
 			}
 				$request.get("/api/goods-warehouse/v1/protected/query_warehouse/back_to_pre", {warehousePlaceCode:this.$route.query.scanResult}).then(res => {
 				if(res.success == true) {

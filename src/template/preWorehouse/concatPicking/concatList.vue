@@ -6,10 +6,10 @@
     </x-header>
     <tab v-model="index" active-color="#3DA5FE">
 	      <tab-item v-for="(i,ins) in ['待拣货 刷新','拣货中','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
-	     
+	      <span v-if="page.totalElements" style="position: absolute;top: 15%;background: red; border-radius: 50%;padding: 0 5px;color:#FFFFFF;left: 26%;">{{page.totalElements}}</span>
 	    </tab>
     <div class="scroll-content pre-pick-list pre-concat-list" ref="scrollWrap">
-    	 {{page1.totalElements}}
+    	 
         <div v-if="index==0">
           	<div class="container-list" >
           		<pre-list-concats v-for="e,index in data.noPick" :key='index'
@@ -151,12 +151,14 @@ export default {
         pageSize: 20,
         totalPage: 1,
         isEnd:false,
+        totalElements:0,
       },
       page1:{
       	pageNo: 0,
         pageSize: 20,
         totalPage: 1,
         isEnd:false,
+        totalElements:0,
       },
       page2:{  //历史拣货分页
       	pageNo: 0,
@@ -249,7 +251,7 @@ export default {
 //		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
 //		if(sessionStorage.getItem("bluedata")){  //session中有蓝牙连接记录，说明当前蓝牙蓝牙已经在连接中，不用重复连接
 			//获取打印小票信息
-			$request.post("/api/online-order/v1/protected/batchpickdetail",[id]).then((res)=>{
+			$request.post("/api/online-order/v1/protected/batchquery/pickdetail",[id]).then((res)=>{
 				if(res.success==true){
 					func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
 						func.printAdd(res.data[0],this,(count)=>{
@@ -412,17 +414,19 @@ export default {
     		}
     	}
     	let obj;
-//  	let obj={shopId:this.commonInfo.costNumber,status:status,page:pageNow,size: this.page.pageSize}
-//  	||status==1
     	if(status==0){
-    		obj={shopId:this.commonInfo.costNumber,status:status,page:pageNow,size: this.page.pageSize}
+    		obj={
+    			shopId:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
+    			status:status,page:pageNow,size: this.page.pageSize,
+//  			isTimeOut:1,
+    		}
     	}else{
     		obj={
     			operatorNo:this.commonInfo.userNo,
-    			shopId:this.commonInfo.costNumber,
+    			shopId:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
     			status:status,
     			page: pageNow,
-    			size: this.page1.pageSize
+    			size: this.page1.pageSize,
     		}
     	}
       $request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
@@ -443,8 +447,8 @@ export default {
 			            }
 	          })
 	         this.data.noPick =this.data.noPick.concat(res.data.content)
-		          //
         		this.page.totalPage=res.data.totalPages
+        		this.page.totalElements=res.data.totalElements
         	}else if(status==2){ //拣货中
 	          res.data.content.forEach(function(item) {
 	            let supplyNum = 0, products = []

@@ -92,7 +92,7 @@ export default {
   	
 		const obj={
 			warehousePlaceCode:this.$route.query.scanResult,
-			costCenterNum:this.commonInfo.costNumber,
+			costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
 			warehouseType:0,
 		}
    $request.get("/api/goods-warehouse/v1/protected/queryWarehouseGoods",obj).then(res=>{
@@ -127,7 +127,7 @@ export default {
 			this.$store.dispatch("chaninventoryToConfirm",this.inventoryList)
 			let submitList=this.inventoryList.map(e=>{
 				return {
-					"costCenterNum": this.commonInfo.costNumber,
+					"costCenterNum": localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
 			    "goodsBarCode": e.goodsBarCode,
 			    "goodsWarehouseId": e.id,
 			    "realityNum": e.count,
@@ -172,7 +172,7 @@ export default {
         	if(isWareCode.length>0){
 							this.positionGoods(res.text)
         	}else{
-        		$request.get("/api/product-query/v1/protected/queryGoodsWarehouseInfo",{goodsBarCode:res.text,costCenterNum:this.commonInfo.costNumber}).then(res=>{
+        		$request.get("/api/product-query/v1/protected/queryGoodsWarehouseInfo",{goodsBarCode:res.text,costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber}).then(res=>{
         			if(res.success==true){
 	        			this.showEmpty=false;
 	        			let obj = {...res.data,id:res.data.goodsWarehouseId,type:'input',count:"",warehouseCode:this.$route.query.scanResult}
@@ -210,7 +210,7 @@ export default {
       	if(isWareCode.length>0){
       		this.positionGoods('6930210788662')
       	}else{
-      		$request.get("api/product-query/v1/protected/queryGoodsWarehouseInfo",{goodsBarCode:'319233',costCenterNum:this.commonInfo.costNumber}).then(res=>{
+      		$request.get("api/product-query/v1/protected/queryGoodsWarehouseInfo",{goodsBarCode:'319233',costCenterNum:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber}).then(res=>{
         		if(res.success==true){
         			this.showEmpty=false;
         			let obj = {...res.data,id:res.data.goodsWarehouseId,type:'input',count:0,warehouseCode:this.$route.query.scanResult}

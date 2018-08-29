@@ -20,15 +20,9 @@ Axios.interceptors.request.use((config) => {
   })
 	timeouts = setTimeout(()=>{Vue.$vux.loading.hide()},8000)
 if(window.cordova){
-//	alert("手机端")
   if(store.getters.getCommonInfo.id) {
     config.headers['userName'] = store.getters.getCommonInfo.id
     config.headers['costNumber'] = store.getters.getCommonInfo.costNumber
-  }else{
-//		Vue.$vux.toast.show({
-//    type: 'text',
-//    text: '获取用户信息失败，请查看网络后重试！'
-//  })
   }
   }else{
   	config.headers['userName'] = CONFIG.userTest.uid

@@ -223,37 +223,20 @@ export default {
 				let ids = this.$route.query.id.split("|")
 				let pushid=[]
 				let pushids=ids.concat([])
-				/*this.errInfo.message.forEach((e,index)=>{
-					let errid = e.id.slice(0,-1)
-					console.log(errid)
-					ids.forEach((a,index)=>{
-						let ispush=false;
-						if(a==errid){
-							ispush=true;
-							pushids.splice(index,1)
-						}
-					})
-				})*/
-//				for((a,index)=>{
-	for(let i=0;i<ids.length;i++){
+				for(let i=0;i<ids.length;i++){
 					let ispush=false;
 					this.errInfo.message.forEach((e,indexx)=>{
 						if(ids[i]==e.id.slice(0,-1)){
-							console.log(ids[i])
 							ispush=true;
 							ids.splice(i,1)
 						}
 					})
-					/*if(ispush){
-						pushids.splice(index,1)
-					}*/
-//				})
 				}
-	console.log(ids,pushids)
+				console.log(ids,pushids)
 				this.$router.push({name:"concatSuccessDetail",query:{id:ids.join("|")}})
   		}else{
   			console.log('all')
-//				this.$router.back()  //全部订单都有问题
+				this.$router.back()  //全部订单都有问题
   		}
   	},
 	/**
@@ -262,7 +245,6 @@ export default {
 	getPickingInfo(){
 		let lists = this.$route.query.id.split("|")
 		$request.post("/api/online-order/v1/protected/mergeorderdetails",lists).then((res)=>{
-//		$request.post("https://zsyh.yonghui.cn/mas-api/restful/inventory/store-inventory/api/online-order/v1/protected/mergeorderdetails",this.$route.query.id.split("|")).then((res)=>{
 			if(res.success==true){
 				this.datas=Object.assign({},res.data)
 				let listTmp = []
