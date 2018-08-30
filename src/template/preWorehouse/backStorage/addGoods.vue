@@ -188,6 +188,9 @@
 		color: #FFFFFF !important;
 		letter-spacing: 1px;font-weight: 600;
 	}
+	.picking-right{
+		a{color: #FFFFFF !important;}
+	}
 	.vux-header-left .left-arrow{
 		background: url(../../../assets/white-arrow.png) center center no-repeat;
 	}

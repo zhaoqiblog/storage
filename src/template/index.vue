@@ -195,6 +195,15 @@
                     <img src="../assets/home/icon9.png">
                   </div>
                 </grid-item>-->
+                <grid-item :link="{name: 'concatPickList1'}">
+                  <div class="text">
+                    <h2>测试超时列表</h2>
+                    <p>前置仓拣货前，优先设置打印设备</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon9.png">
+                  </div>
+                </grid-item>
               </grid>
               <grid :cols="2">
               </grid>

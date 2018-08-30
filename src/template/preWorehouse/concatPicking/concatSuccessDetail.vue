@@ -129,7 +129,6 @@ export default {
 				if(res.success==true){
 					func.setPrintData(res.data,(callData)=>{
 						factory.print(callData).then((printdata)=>{
-							alert(printdata)
 							$request.post("/api/online-order/v1/protected/printcount",ids).then((res2)=>{
 								if(res2.success==true){
 									this.datas.orderInfos.forEach((r)=>{

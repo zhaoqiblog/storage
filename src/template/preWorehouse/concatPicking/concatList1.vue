@@ -5,9 +5,8 @@
     	<a slot="right"><router-link to='searchOrder'>搜索</router-link></a>
     </x-header>
     <tab v-model="index" active-color="#3DA5FE">
-	      <tab-item v-for="(i,ins) in ['待拣货 刷新','已超时','拣货中','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
-	      <span v-if="page.totalElements" style="position: absolute;font-size:10px;top: 15%;background: red; border-radius: 50%;padding: 0 5px;color:#FFFFFF;left: 22%;">{{page.totalElements}}</span>
-	      <span v-if="pageOver.totalElements" style="position: absolute;font-size:10px;top: 15%;background: red; border-radius: 50%;padding: 0 5px;color:#FFFFFF;left: 43%;">{{pageOver.totalElements}}</span>
+	      <tab-item v-for="(i,ins) in ['待拣货 刷新','拣货中','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
+	      <span v-if="page.totalElements" style="position: absolute;top: 15%;background: red; border-radius: 50%;padding: 0 5px;color:#FFFFFF;left: 26%;">{{page.totalElements}}</span>
 	    </tab>
     <div class="scroll-content pre-pick-list pre-concat-list" ref="scrollWrap">
     	 
@@ -30,26 +29,7 @@
 			    <m-empty v-if="data.noPick && data.noPick.length == 0"></m-empty>
 			    <div v-if="page.isEnd" class="theEnd">已经到底啦</div>
         </div>
-         <div v-if="index==1">
-          	<div class="container-list" >
-          		<pre-list-concats v-for="e,index in data.overTime" :key='index'
-          			:id="e.id"
-          			:classInfo="e.classInfo"
-          			:isOver="e.isOver"
-          			:outerOrderType="e.outerOrderType"
-          			:creatTime="e.creatTime"
-          			:OverText="e.OverText"
-          			:skuNum="e.skuNum"
-          			:orderSequenceNo="e.orderSequenceNo"
-          			:deliverType="e.deliverType"
-          			:slotType="e.slotType"
-          			:receiveOrder="receiveOrder"
-          			></pre-list-concats>
-			    </div>
-			    <m-empty v-if="data.pageOver && data.pageOver.length == 0"></m-empty>
-			    <div v-if="pageOver.isEnd" class="theEnd">已经到底啦</div>
-        </div>
-        <div v-if="index==2">
+        <div v-if="index==1">
           	<div class="container-list" >
 			        <Group class="list-pre-item" v-for="e,index in data.picking" :key="index">
 			       		<div class="item-top vux-1px-b">
@@ -92,7 +72,7 @@
 			    <div v-if="page1.isEnd" class="theEnd">已经到底啦</div>
 			    <m-empty v-if="data.picking && data.picking.length == 0"></m-empty>
         </div>
-        <div v-if="index==3">
+        <div v-if="index==2">
           	<div class="container-list" >
 			        <Group class="list-pre-item" v-for="e,index in data.history" :key="index">
 				       		<router-link :to="{path:'conHistoryDetail',query:{id:e.id}}">
@@ -124,7 +104,7 @@
 			    <m-empty v-if="data.history && data.history.length == 0"></m-empty>
         </div>
     </div>
-     <div class="pre-footer" v-if="index==2">
+     <div class="pre-footer" v-if="index==1">
       <div class="btn-add btn-tips">
        		<input type="checkbox" name="selectDefault" id="selectDefault" v-model="selectDefault" @change="changeDefault()"/>
        		<label for="selectDefault">&nbsp;&nbsp;默认8单，可多选</label>      		
@@ -133,6 +113,16 @@
         <button type="button" :disabled="selectLists.length==0" @click="startPick">开始拣货</button>
       </div>
     </div>
+    <popup-picker 
+    	v-if="showSelectBlue" 
+    	:show-cell="false" class="showposdiffer"  
+    	:data="commonInfo.blueList" 
+    	:show="showSelectBlue" 
+    	v-model="slectBlue" 
+    	@on-change="changeBlue" 
+    	show-name 
+    	@on-hide="showSelectBlue=false">
+    </popup-picker>
   </div>
 </template>
 <script>
@@ -155,7 +145,7 @@ export default {
   data() {
     return {
     	index:0,
-      // 分页 page:未拣货，page1：拣货中，pageOver：已超时
+      // 分页 page:未拣货，page1：拣货中
       page: {
         pageNo: 0,
         pageSize: 20,
@@ -175,24 +165,21 @@ export default {
         pageSize: 20,
         totalPage: 1,
         isEnd:false,
-        totalElements:0,
-      },
-      pageOver:{
-      	pageNo: 0,
-        pageSize: 20,
-        totalPage: 1,
-        isEnd:false,
-        totalElements:0,
       },
       data: {
       	'noPick':[],
       	'picking':[],
       	'history':[],
-      	'overTime':[],
       },
+      showEnd: false, // 最后一页
       timer:null,
       selectDefault:'',//默认拣货数据
       selectLists:[], //选择的列表
+      status:'nopick',
+      isConnectDevice:false,  //打印机是否连接成功
+      slectBlue:[], //选中的蓝牙设备号
+      showSelectBlue:false, //选择蓝牙弹框显示与否
+      printId:'',
     }
   },
     mounted() {
@@ -205,11 +192,7 @@ export default {
 		    	}else{
 		    		this.page.isEnd=true;
 		    	}
-	    	}
-	    	else if(this.index==1){
-	    		this.getOverList();
-	    	}
-	    	else if(this.index==2){
+	    	}else if(this.index==1){
 	    		let e=this.page1;
 	    			if(e.pageNo<e.totalPage){
 		    		this.getSupplyList(2)
@@ -226,19 +209,11 @@ export default {
 	    	}
 	    })
 	    this.timer = setInterval(()=>{
-	    	if(this.index==0){
-					this.page.pageNo=1;
-					this.$refs.scrollWrap.scrollTop=0
-		    	this.getSupplyList(0,this.page.pageNo)  
-	    	}else if(this.index==1){
-	    		this.pageOver.pageNo=0;
-	    		this.$refs.scrollWrap.scrollTop=0
-		    	this.getOverList()
-	    	}
-	    },15000)
-	    
+			this.page.pageNo=1;
+			this.$refs.scrollWrap.scrollTop=0
+    	this.getSupplyList(0,this.page.pageNo)  
+    },15000)
     })
-    
   },
   created() {
     this.getSupplyList(0);
@@ -248,38 +223,22 @@ export default {
   },
   methods: {
   	/**
-  	 * 获取超时订单列表
-  	 */
-  	getOverList(){
-  		this.pageOver.pageNo++
-  		let obj={
-    			shopId:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
-    			status:0,page:this.pageOver.pageNo,size: this.pageOver.pageSize,
-    			isTimeOut:1,
-    		}
-  		 $request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
-  		 	if(res.success==true){
-  		 		if(this.pageOver.pageNo==1){
-	         		this.data.overTime=[];
-	         	}
-	          res.data.content.map((item,ins)=>{
-	            let supplyNum = 0, products = []
-	            item.classInfo=JSON.parse(item.classInfo)
-	            let a = parseInt(item.toTime-new Date().getTime())
-	            item.OverText=Math.abs(parseInt(a/(1000*60)));
-	            if(a>0){
-	            	item.isOver=false;
-	            }else{
-	            	item.isOver=true;
-	            }
-	          })
-	         this.data.overTime =this.data.overTime.concat(res.data.content)
-//	         console.log(this.data.overTime.length)
-	    		this.pageOver.totalPage=res.data.totalPages
-	    		this.pageOver.totalElements=res.data.totalElements
-  		 	}
-  		 })
-  	},
+	 * 修改蓝牙连接设备
+	 */
+	changeBlue(){
+		localStorage.setItem("bluedata",this.slectBlue[0]);
+		sessionStorage.setItem("bluedata",this.slectBlue[0]);
+//		连接打印机
+		if(window.cordova){
+			var param1 = { btAddress:sessionStorage.getItem("bluedata") };//这里传入用户点击的目标蓝牙设备地址
+			factory.connectBlue(param1).then(res=>{
+				this.isConnectDevice=true;
+				this.printOrder(this.printId)
+			},(err)=>{
+				alert("连接打印机失败："+err+'\n'+"请回到首页设置模块修改打印设备")}
+			)
+		}
+	},
   /**
    * 
 	 * 打印小票
@@ -287,6 +246,10 @@ export default {
 	printOrder(id){
 		//开启蓝牙
   		const _this =this;
+  		this.printId=id;
+		//获取蓝牙连接列表，判断是否之前连接过蓝牙
+//		if(localStorage.getItem("bluedata")&&this.isConnectDevice){
+//		if(sessionStorage.getItem("bluedata")){  //session中有蓝牙连接记录，说明当前蓝牙蓝牙已经在连接中，不用重复连接
 			//获取打印小票信息
 			$request.post("/api/online-order/v1/protected/batchquery/pickdetail",[id]).then((res)=>{
 				if(res.success==true){
@@ -307,6 +270,20 @@ export default {
           })
 				}
 			})
+	/*	}else{
+			//蓝牙未连接，提示选择连接哪个蓝牙,获取已配对的蓝牙设备列表
+				factory.getBlueList().then((res)=>{
+					let arrays = res.map((e)=>{
+						return {name:e.split("=>")[0],value:e.split("=>")[1]}
+					})
+					this.$store.commit("updateCommonInfo", {
+			    	blueList:[arrays],
+			    });
+			    this.showSelectBlue=true;
+				},(err)=>{
+						alert(err);
+				})
+		}*/
 	},
   	/**
   	 * 默认四个订单拣货的点击事件
@@ -314,7 +291,7 @@ export default {
   	changeDefault(){
   		this.selectLists=[]
   		if(this.selectDefault){
-	  		if(this.index==2){ //拣货中
+	  		if(this.index==1){ //拣货中
 	  			this.data.picking.forEach((a,index)=>{
 	  				if(index<8){
 		  				this.selectLists.push(a.id)
@@ -346,13 +323,7 @@ export default {
 	            type: 'text',
 	            text: '接单成功'
 	          })
-	  				if(this.index==1){
-	  					this.pageOver.pageNo=0;
-	  					this.getOverList()
-	  				}else{
-	  					this.getSupplyList(0,1)
-	  				}
-	  				
+	  				this.getSupplyList(0,1)
 	  			}else{
 	  				//接单操作失败
 	  				this.$vux.toast.show({
@@ -373,13 +344,11 @@ export default {
   		if(index==0){  //待拣货
   			this.data.noPick=[];
   			this.getSupplyList(0,1)
+  			this.status='nopick'
   		}else if(index==1){  //拣货中
-  			this.data.overTime=[]
-  			this.pageOver.pageNo=0;
-  			this.getOverList();
-  		}else if(index==2){  //拣货中
   			this.data.picking=[];
   			this.getSupplyList(2,1);
+  			this.status='picking'
   		}else{  //拣货历史
   			this.data.history=[];
   			
@@ -407,6 +376,12 @@ export default {
   			}
   		})
 		this.$router.push({path:'concatPicking',query:{'id':ids,toTime:toTime,creatTime:creatTime}})
+  	},
+  	/**
+  	 * 查看改该货单详情
+  	 */
+  	ToPickLook(id){
+  		
   	},
     /**
      * 获取前置仓拣货列表
@@ -443,7 +418,7 @@ export default {
     		obj={
     			shopId:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
     			status:status,page:pageNow,size: this.page.pageSize,
-    			isTimeOut:0,
+//  			isTimeOut:1,
     		}
     	}else{
     		obj={
@@ -510,6 +485,7 @@ export default {
         totalPage: 1
       }
       this.data = {}
+      this.showEnd = false
       this.getSupplyList(0)
     }
   }

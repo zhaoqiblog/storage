@@ -1,6 +1,9 @@
 <template>
   <div class="shop-supply pick-supply" v-if="datas.toTime">
-  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="showbackTip=true">合单拣货详情</x-header>
+  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="showbackTip=true">
+  		合单拣货详情
+  		<a slot="right" class="picking-right" @click="tmpSave">暂存</a>
+  	</x-header>
     <div class="pre-content-title">
     	<div class="picking-title">
     		<div class="counting-time-pic" v-if="datas.toTime">
@@ -36,16 +39,16 @@
 				</div>
 				<div class="tab-wrap">
 					<tab v-model="index" active-color="#3DA5FE">
-			      <tab-item v-for="(i,ins) in ['待拣货('+(datas.products.length-listData.picked.length)+')','已拣货('+(listData.picked.length)+')']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
+			      <tab-item v-for="(i,ins) in ['待拣货('+(datas.products.length-listData.picked.length)+')','已拣货('+(listData.picked.length)+')']" :key="ins">{{i}}</tab-item>
 			    </tab>
 					<div v-show="index==0" class="noPicks">
-			    	<pre-item-pic class="uuuuiuiu" v-if="item.pickStatus=='0'" v-for="(item,index) in datas.products"
+			    	<pre-pic-all class="uuuuiuiu" v-if="item.pickStatus=='0'" v-for="(item,index) in datas.products"
 			    		:objInfo='item'
 			    		:preCode="item.warehouseCode"
 			    		:itemid="item.itemid"
 							:nowNum="item.nowNum"
 							:code="'商品编码  '+(item.barcode)"
-							:name="item.subtitle+(item.itemid)+(item.num)"
+							:name="item.subtitle+' '"
 							:imgurl="item.imgurl"
 							:unit="item.spec?item.spec.desc:''"
 							:unitq="item.price.value"
@@ -55,16 +58,17 @@
 							:halfPickNum="item.halfPickNum"
 							:topicksum="topicksum"
 							:toallpick="toallpick"
+							:pickAllGoods="pickAllGoods"
 							:status="0"
 							type="concat"
 			    		:phone="item.phone"
 			    		:ordersequencenos="item.ordersequenceno"
 							:key="index">
-			    	</pre-item-pic>
+			    	</pre-pic-all>
 			    	<m-empty class="datas" v-if="listData.picked.length == datas.products.length"></m-empty>
 		    	</div>
 		    	<div v-show="index==1" class="pickeds">
-			    	<pre-item-pic class="popopo" v-if="item.pickStatus=='1'" v-for="(item,index) in datas.products"
+			    	<pre-pic-all class="popopo" v-if="item.pickStatus=='1'" v-for="(item,index) in datas.products"
 			    		:objInfo='item'
 			    		:preCode="item.warehouseCode"
 			    		:itemid="item.itemid"
@@ -85,7 +89,7 @@
 			    		:phone="item.phone"
 			    		:ordersequencenos="item.ordersequenceno"
 							:key="index">
-			    	</pre-item-pic>
+			    	</pre-pic-all>
 			    	<m-empty class="popo" v-if="listData.picked.length==0"></m-empty>
 		    	</div>
 	    	</div>
@@ -110,7 +114,7 @@
       <confirm v-model="showbackTip"
       title="确定退出拣货？"
       @on-cancel="showbackTip==true"
-      @on-confirm="$router.back()"
+      @on-confirm="confirmExit"
       confirm-text="退出拣货">
         <p style="text-align:center;">退出拣货页后，此订单商品的已拣货数据将不保留。建议完成此单拣货任务后，再提交离开。</p>
       </confirm>
@@ -212,6 +216,13 @@ export default {
 			clearInterval(this.timeIntever)
 		},
   methods: {
+  	//暂存
+  	tmpSave(){
+  		
+  	},
+  	confirmExit(){
+  		this.$router.back()
+  	},
   	/*
   	 * 提交成功回调异常函数
   	 */
@@ -219,41 +230,57 @@ export default {
   		clearInterval(this.timeIntever)
   		if(this.datas.ordersequencenos.length-this.errInfo.message.length>0){
   			//部分订单成功
-			let ids = this.$route.query.id.split("|")
-			let pushid=[]
-				this.errInfo.message.forEach((e,index)=>{					
-					let errid = Object.keys(this.errInfo.message[index])[0]
-					ids.forEach((a)=>{
-						if(a!=errid){
-							pushid.push(a)
+				let ids = this.$route.query.id.split("|")
+				let pushid=[]
+				let pushids=ids.concat([])
+				for(let i=0;i<ids.length;i++){
+					let ispush=false;
+					this.errInfo.message.forEach((e,indexx)=>{
+						if(ids[i]==e.id.slice(0,-1)){
+							ispush=true;
+							ids.splice(i,1)
 						}
 					})
-				})
-				this.$router.push({name:"concatSuccessDetail",query:{id:pushid}})
+				}
+				console.log(ids,pushids)
+				this.$router.push({name:"concatSuccessDetail",query:{id:ids.join("|")}})
   		}else{
-			this.$router.back()  //全部订单都有问题
-				
+  			console.log('all')
+				this.$router.back()  //全部订单都有问题
   		}
   	},
 	/**
 	 * 获取拣货单信息
 	 */
 	getPickingInfo(){
-		$request.post("/api/online-order/v1/protected/mergeorderdetails",this.$route.query.id.split("|")).then((res)=>{
+		let lists = this.$route.query.id.split("|")
+		$request.post("/api/online-order/v1/protected/mergeorderdetails",lists).then((res)=>{
 			if(res.success==true){
 				this.datas=Object.assign({},res.data)
+				let listTmp = []
+				let tempObj={}
 				this.datas.products.forEach((e,index)=>{
-					e.init=true;
+					tempObj[e.id]=e; //对象，利用：对象的键是唯一的
+					e.init=true;  //初始状态：缺货和全部拣货按钮显示与否
 					e.pickStatus = '0';
 				})
+				Object.keys(tempObj).forEach((n)=>{
+					let oj=Object.assign({},tempObj[n]);
+					oj.orders=[Object.assign({},oj)];   //orders 是原始的数据
+					this.datas.products.filter((an,ain)=>{
+						if(n==an.id&&oj.itemid!==an.itemid){
+							oj.num +=an.num;
+							oj.orders.push(Object.assign({},an))
+						}
+					})
+					listTmp.push(oj)
+				})
+				this.datas.products = listTmp;
 				this.listData.noPick = this.datas.products.concat([]);
 				this.listData.picked = [];
 			}
 		},(err)=>{
 		})
-	},
-	//tab切换
-	clickItem(){
 	},
   	/**
   	 * 缺货弹窗取消函数
@@ -264,66 +291,109 @@ export default {
   	/**
   	 * 缺货弹窗确认按钮
   	 */
-  	confirm(num,id){
+  	confirm(num,pid,id){
   		this.showPop=false;
+  		let isExitPicked = this.listData.picked.some((item)=>{return item.itemid==pid})  //判断已拣货的列表里是否有改商品
   		this.datas.products.forEach((e,index)=>{
-			if(e.itemid==id){
+			if(e.itemid==pid){
 				e.init=false;
-				e.halfPickNum=num;
-				e.pickStatus=1;				
-				if(this.listData.picked.some((item)=>{return item.itemid==id})){				
-				}else{
+				e.orders = e.orders.map((n)=>{
+					let obj = n
+					if(obj.itemid==id){
+						obj.halfPickNum=num;   //halfPickNum : 拣货的数量
+						obj.init=false;
+						obj = Object.assign({},n)
+					}
+					return obj
+				})
+				
+				if(e.orders.filter((item)=>{return item.init==false}).length==e.orders.length&&!isExitPicked){
+					//列表全部拣过货之后
+					e.pickStatus=1;
 					this.listData.picked.push(e)
 				}
 			}
 		})
-  		this.alreadyPick=this.alreadyPick+1
-  		
   	},
   	/**
   	 * 缺货按钮点击事件,将输入的值回调给当前点击的halfPickNum
   	 */
-  	topicksum(id){
+  	topicksum(pid,id){
 			this.showPop=true;
-			const data = this.datas.products.filter((e,index)=>{
-				return e.itemid==id
+			let seleItem= null;
+			this.datas.products.forEach((e,index)=>{
+				if(e.itemid==pid){
+					seleItem = e.orders.filter((n)=>{
+						return n.itemid == id
+					})
+				}
 			})
-			this.popItem=data[0]
+			this.popItem=seleItem[0];
+			this.popItem.pid = pid;
   	},
   	/**
   	 * 全部拣货按钮点击事件
   	 */
-  	toallpick(id){
+  	toallpick(pid,id){
 	  		this.datas.products.forEach((e,index)=>{
-					if(e.itemid==id){
+					if(e.itemid==pid){
 						e.init=false;
-						e.allpick=true;
-						e.halfPickNum=e.num
-						e.pickStatus=1;
-//						this.listData.picked.push(e)
-						if(this.listData.picked.some((item)=>{return item.itemid==id})){				
-							}else{
-								this.listData.picked.push(e)
+						e.orders.forEach((n)=>{
+							if(n.itemid==id){
+								n.halfPickNum=n.num;
+								n.init=false;
 							}
+						})
+						if(e.orders.filter((item)=>{return item.init==false}).length==e.orders.length){
+							e.pickStatus=1;
+							this.listData.picked.push(e)
+						}
 					}
 				})
 	  		this.alreadyPick=this.alreadyPick+1
+  	},
+  	/**
+  	 * 一键拣货
+  	 */
+  	pickAllGoods(id){
+//		console.log(this.datas.products)
+  		this.datas.products.forEach(e=>{
+  			if(e.itemid==id){
+  				e.init=false;
+  				e.pickStatus=1;
+  				e.orders.forEach((n)=>{
+  					n.allpick=true
+  					n.halfPickNum=n.num
+  					n.init=false;
+  				})
+  				this.listData.picked.push(e)  // 将一键拣货拣过的合并订单放到已拣货中
+  			}
+  		})
   	},
     /**
      * 完成拣货
      */
     completeOrder(){
     	//判断是否有未拣货的的商品
-//  	if(this.datas.products.length-this.listData.picked.length>0){
-//  		this.$vux.toast.show({
-//        type: 'text',
-//        text:'需对商品“拣货”确认'
-//      })
-//  	}else{
-				let list = this.datas.orderInfos.map((item)=>{
+    	if(this.datas.products.length-this.listData.picked.length>0){
+    		this.$vux.toast.show({
+          type: 'text',
+          text:'需对商品“拣货”确认'
+        })
+    	}else{
+				let allList = [];
+				this.datas.products.forEach((e)=>{
+					e.orders.forEach((n)=>{
+						allList.push(n)
+					})
+				})
+				let lists = this.datas.orderInfos.map((item,indexs)=>{
 					let obj = {orderid:item.id,goodsInfoDTOS:[]}
-						this.datas.products.forEach((e)=>{
-							if(e.orderid==item.id){
+					/*if(indexs==1||indexs==2){
+						obj.orderid=item.id+'5'
+					}*/
+					allList.forEach((e)=>{
+						if(e.orderid==item.id){
 								let objs ={
 						      "desc": e.spec ?e.spec.desc:"",
 						      "diffNum": e.num-e.halfPickNum,  //缺货数量
@@ -343,22 +413,25 @@ export default {
 					    	}
 								obj.goodsInfoDTOS.push(objs)
 							}
-						})
-						return obj
+					})
+					return obj
 				})
-//		    $request.post("/api/online-order/v1/protected/mergefinishpick",list).then(res=>{
-//		    	if(res.success&&res.success==true){
-//						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id.split("|")}})			    		
-//		    	}else{
-//		    		this.errInfo=res;
-//		    		this.errInfo.message = JSON.parse(this.errInfo.message);
-//		    		this.errInfo.message.forEach((e)=>{
-//		    			let key = Object.keys(e)[0]
-//		    			e.name = key+':'+e[key]
-//		    		})
-//		    	}
-//		  	})
-// 		}
+		    $request.post("/api/online-order/v1/protected/mergefinishpick",lists).then(res=>{
+		    	if(res.success&&res.success==true){
+						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})			    		
+		    	}else{
+		    		this.errInfo=res;
+		    		let errMsg = res.message
+		    		this.errInfo.message = JSON.parse(errMsg);
+		    		this.errInfo.message.forEach((e,indexss)=>{
+		    			let key = Object.keys(e)[0]
+		    				e.name = key+':'+e[key]
+		    				e.id=key
+		    		})
+		    		console.log(this.errInfo.message)
+		    	}
+		  	})
+   		}
     }
   },
 }

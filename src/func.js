@@ -154,7 +154,10 @@ export default {
 		printArray.push({printSetData:{alignMode:0,charSize:0,feedLine:1},printType:0,text:'应收金额：'+data.amount.totalamount/100+'\n--------------------------------'})
 		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'谢谢惠顾，欢迎再次光临 \n'+data.shop.address+'\n'+'配送时间:09:00 - 20:00\n联系客服：400-800-5050\n\n提货码:'+data.outerOrderId})
 		printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:150,"modelSize":5},printType:1,text:data.outerOrderId})
-		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n签名栏：\n\n\n--------------------------------\n\n\n"})
+		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n签名栏：\n\n\n--------------------------------\n\n"})
+		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"开票码:\n"})
+		printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:150,"modelSize":5},printType:2,text:data.obtaininvoiceurl})
+		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n--------------------------------\n\n"})
 		let datas = {datas:printArray}
 		factory.print(datas).then((res)=>{
 			callback();

@@ -11,11 +11,11 @@ import historyDetail from '../../template/preWorehouse/picking/historyDetail.vue
  * 合并拣货
  */
 import concatPickList from '../../template/preWorehouse/concatPicking/concatList.vue'  //前置仓拣货列表
-import concatPicking from '../../template/preWorehouse/concatPicking/concatPicking.vue'  //前置仓拣货列表
+import concatPicking from '../../template/preWorehouse/concatPicking/concatPicking1.vue'  //前置仓拣货列表
 import conHistoryDetail from '../../template/preWorehouse/concatPicking/historyDetail.vue'  //前置仓拣货列表
+import concatPickList1 from '../../template/preWorehouse/concatPicking/concatList1.vue'  //前置仓拣货列表
+import concatSuccessDetail from '../../template/preWorehouse/concatPicking/concatSuccessDetail.vue'  //前置合并拣货成功、
 
-//import concatPicking1 from '../../template/preWorehouse/concatPicking/concatPicking2.vue'  //前置仓拣货列表
-import concatSuccessDetail from '../../template/preWorehouse/concatPicking/concatSuccessDetail.vue'  //前置合并拣货成功
 /*
  * 设置打印机
  */
@@ -75,14 +75,13 @@ import wareHouseConfirm from '../../template/preWorehouse/backStorage/confirmGoo
  			 {path:'concatPicking',name:'concatPicking',component:concatPicking,meta:{index:2.1}},
  			 {path:'conHistoryDetail',name:'conHistoryDetail',component:conHistoryDetail,meta:{index:2.1}},
  			 {path:'concatSuccessDetail',name:'concatSuccessDetail',component:concatSuccessDetail,meta:{index:2.1}},
- 			 
+ 			 //设置打印机
  			 {path:'setPrinter',name:'setPrinter',component:setPrinter,meta:{index:2.1}},
- 			
+ 			//搜索
  			 {path:'searchOrder',name:'searchOrder',component:searchOrder},
  			 {path:'searchDetail',name:'searchDetail',component: searchDetail},
-// 			 {path:'concatPicking1',name:'concatPicking1',component:concatPicking1,meta:{index:2.1}},
- 			 
- 			 
+ 			//
+ 			 {path:'concatPickList1',name:'concatPickList1',component:concatPickList1}
  		]
  	},
  	{path:"/preSuccess",component:preSuccess,name:'preSuccess'},
