@@ -207,6 +207,7 @@ export default {
 	 */
 	getPickingInfo(){
 		let ids = this.$route.query.id.split("|")
+//		let ids = ['1204210270074031','1204210470064071']
 		$request.post("/api/online-order/v1/protected/mergepickdetail",ids).then((res)=>{
 			if(res.success==true){
 				this.datas=res.data

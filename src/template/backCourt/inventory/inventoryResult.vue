@@ -57,7 +57,6 @@
 <script>
 import { XHeader,Scroller} from 'vux'
 import factory from '@/factory'
-import service from '@/service'
 import func from '@/func'
 import $request from '@/service/request.js'
 import { mapGetters,mapState } from 'vuex'

@@ -1,8 +1,8 @@
 <template>
   <div class="shop-supply pick-supply" v-if="datas.toTime">
-  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="showbackTip=true">
+  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="backToList">
   		合单拣货详情
-  		<a slot="right" class="picking-right" @click="tmpSave">暂存</a>
+  		<a slot="right" class="picking-right"> <span @click="cancelSave" v-if="isTmp">取消暂存</span><span @click="tmpSave" v-if="!isTmp">&nbsp;&nbsp;&nbsp;暂存</span></a>
   	</x-header>
     <div class="pre-content-title">
     	<div class="picking-title">
@@ -42,12 +42,12 @@
 			      <tab-item v-for="(i,ins) in ['待拣货('+(datas.products.length-listData.picked.length)+')','已拣货('+(listData.picked.length)+')']" :key="ins">{{i}}</tab-item>
 			    </tab>
 					<div v-show="index==0" class="noPicks">
-			    	<pre-pic-all class="uuuuiuiu" v-if="item.pickStatus=='0'" v-for="(item,index) in datas.products"
+			    	<pre-pic-all v-if="item.pickStatus=='0'" v-for="(item,index) in datas.products"
 			    		:objInfo='item'
 			    		:preCode="item.warehouseCode"
 			    		:itemid="item.itemid"
 							:nowNum="item.nowNum"
-							:code="'商品编码  '+(item.barcode)"
+							:code="'商品条码  '+(item.barcode)"
 							:name="item.subtitle+' '"
 							:imgurl="item.imgurl"
 							:unit="item.spec?item.spec.desc:''"
@@ -68,12 +68,12 @@
 			    	<m-empty class="datas" v-if="listData.picked.length == datas.products.length"></m-empty>
 		    	</div>
 		    	<div v-show="index==1" class="pickeds">
-			    	<pre-pic-all class="popopo" v-if="item.pickStatus=='1'" v-for="(item,index) in datas.products"
+			    	<pre-pic-all v-if="item.pickStatus=='1'" v-for="(item,index) in datas.products"
 			    		:objInfo='item'
 			    		:preCode="item.warehouseCode"
 			    		:itemid="item.itemid"
 							:nowNum="item.nowNum"
-							:code="'商品编码  '+(item.barcode)"
+							:code="'商品条码  '+(item.barcode)"
 							:name="item.subtitle"
 							:imgurl="item.imgurl"
 							:unit="item.spec?item.spec.desc:''"
@@ -188,18 +188,16 @@ export default {
     	index:0, // tab切换index
     	showPop:false, //弹窗显示与否按钮
     	popItem:{},  //显示的弹窗的对象信息
-//  	picNum:0,	//弹窗绑定的输入框值
     	now:new Date().getTime(),  //倒计时开始时间
     	alreadyPick:0,		//已拣货的商品的种类
     	timeIntever:null,  //倒计时定时器
     	showbackTip:false,  //退出弹框提示
-    	showSelectBlue:false, //选择蓝牙
-    	slectBlue:[], //选中的蓝牙设备号
-    	isConnectDevice:false,
       datas:[],
       showConcatOrder:true,  //合单订单备注信息显示与否
       errInfo:{success:true},   //合并拣货的提示信息
-      listData:{'noPick':[],'picked':[]}
+      listData:{'noPick':[],'picked':[]},
+      listIds:[],
+      isTmp:true,
     }
   },
   created() {
@@ -209,16 +207,52 @@ export default {
 			self.now = new Date().getTime();
 		}, 1000);
   },
-  mounted(){
-  	
-  },
   destroyed(){
 			clearInterval(this.timeIntever)
 		},
   methods: {
+  	backToList(){
+  			this.$router.back()
+  	},
   	//暂存
   	tmpSave(){
-  		
+  		let obj = JSON.stringify(this.datas)
+  		let obj1 ={dataJson:'',ids:[]}
+  		obj1.dataJson = obj
+	  	this.datas.orderInfos.forEach((n)=>{
+	  		obj1.ids.push(n.id)
+	  	})
+  		$request.post("/api/online-order/v1/protected/mergetemp",obj1).then(res=>{
+  			if(res.success==true){
+  				this.$vux.toast.show({
+	          type: 'text',
+	          text:res.message
+	        })
+  			}else{
+  				this.$vux.toast.show({
+	          type: 'text',
+	          text:res.message
+	        })
+  			}
+  		})
+  	},
+  	
+  	//取消暂存
+  	cancelSave(){
+  		$request.get('/api/online-order/v1/protected/mergetemp/cancel').then((res)=>{
+  			if(res.success){
+  				this.isTmp=false;
+  				this.$vux.toast.show({
+	          type: 'text',
+	          text:res.message
+	        })
+  			}else{
+  				this.$vux.toast.show({
+	          type: 'text',
+	          text:res.message
+	        })
+  			}
+  		})
   	},
   	confirmExit(){
   		this.$router.back()
@@ -230,22 +264,19 @@ export default {
   		clearInterval(this.timeIntever)
   		if(this.datas.ordersequencenos.length-this.errInfo.message.length>0){
   			//部分订单成功
-				let ids = this.$route.query.id.split("|")
-				let pushid=[]
+				let ids = this.listIds
 				let pushids=ids.concat([])
-				for(let i=0;i<ids.length;i++){
+				for(let i=0;i<pushids.length;i++){
 					let ispush=false;
 					this.errInfo.message.forEach((e,indexx)=>{
-						if(ids[i]==e.id.slice(0,-1)){
+						if(ids[i]==e.id){  //匹配ids中errmessage的错误订单号，将错误的订单号排除
 							ispush=true;
 							ids.splice(i,1)
 						}
 					})
 				}
-				console.log(ids,pushids)
 				this.$router.push({name:"concatSuccessDetail",query:{id:ids.join("|")}})
   		}else{
-  			console.log('all')
 				this.$router.back()  //全部订单都有问题
   		}
   	},
@@ -253,33 +284,27 @@ export default {
 	 * 获取拣货单信息
 	 */
 	getPickingInfo(){
-		let lists = this.$route.query.id.split("|")
-		$request.post("/api/online-order/v1/protected/mergeorderdetails",lists).then((res)=>{
-			if(res.success==true){
-				this.datas=Object.assign({},res.data)
+		$request.get("/api/online-order/v1/protected/mergetemp").then((res)=>{
+			if(res.success==true&&res.data){
+				this.datas=Object.assign({},JSON.parse(res.data))				
 				let listTmp = []
-				let tempObj={}
 				this.datas.products.forEach((e,index)=>{
-					tempObj[e.id]=e; //对象，利用：对象的键是唯一的
-					e.init=true;  //初始状态：缺货和全部拣货按钮显示与否
-					e.pickStatus = '0';
+					  //初始状态：缺货和全部拣货按钮显示与否
+					if(e.pickStatus==0){
+						e.init=true;
+						this.listData.noPick.push(e)
+					}else{
+						e.init=false;
+						this.listData.picked.push(e)
+					}
 				})
-				Object.keys(tempObj).forEach((n)=>{
-					let oj=Object.assign({},tempObj[n]);
-					oj.orders=[Object.assign({},oj)];   //orders 是原始的数据
-					this.datas.products.filter((an,ain)=>{
-						if(n==an.id&&oj.itemid!==an.itemid){
-							oj.num +=an.num;
-							oj.orders.push(Object.assign({},an))
-						}
-					})
-					listTmp.push(oj)
+				this.datas.orderInfos.forEach((e)=>{
+					this.listIds.push(e.id)
+					console.log("poopo")
 				})
-				this.datas.products = listTmp;
-				this.listData.noPick = this.datas.products.concat([]);
-				this.listData.picked = [];
+			}else{
+				this.$router.push({path:'/fail',query:{text: res.data ? res.message:'查询合单暂存失败',title: '合单暂存拣货拣货',info: '', path: {name: 'concatPickList'}}})
 			}
-		},(err)=>{
 		})
 	},
   	/**
@@ -356,7 +381,6 @@ export default {
   	 * 一键拣货
   	 */
   	pickAllGoods(id){
-//		console.log(this.datas.products)
   		this.datas.products.forEach(e=>{
   			if(e.itemid==id){
   				e.init=false;
@@ -387,11 +411,13 @@ export default {
 						allList.push(n)
 					})
 				})
+				let ids=[]
 				let lists = this.datas.orderInfos.map((item,indexs)=>{
 					let obj = {orderid:item.id,goodsInfoDTOS:[]}
-					/*if(indexs==1||indexs==2){
+					ids.push(item.id)
+					if(indexs==1||indexs==2){
 						obj.orderid=item.id+'5'
-					}*/
+					}
 					allList.forEach((e)=>{
 						if(e.orderid==item.id){
 								let objs ={
@@ -416,19 +442,23 @@ export default {
 					})
 					return obj
 				})
-		    $request.post("/api/online-order/v1/protected/mergefinishpick",lists).then(res=>{
-		    	if(res.success&&res.success==true){
-						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})			    		
+		    $request.post("/api/online-order/v1/protected/merge/finishpick",lists).then(res=>{
+		    	if(res.success&&res.success==true){						
+						if(res.data){
+							this.errInfo=res;
+			    		let errMsg = res.data
+			    		this.errInfo.message = JSON.parse(errMsg);
+			    		this.errInfo.success=false;
+			    		this.errInfo.message.forEach((e,indexss)=>{
+			    			let key = Object.keys(e)[0]
+			    				e.name = key+':'+e[key]
+			    				e.id=key
+			    		})
+						}else{
+							this.$router.push({name:"concatSuccessDetail",query:{id:ids.join('|')}})
+						}
 		    	}else{
-		    		this.errInfo=res;
-		    		let errMsg = res.message
-		    		this.errInfo.message = JSON.parse(errMsg);
-		    		this.errInfo.message.forEach((e,indexss)=>{
-		    			let key = Object.keys(e)[0]
-		    				e.name = key+':'+e[key]
-		    				e.id=key
-		    		})
-		    		console.log(this.errInfo.message)
+		    		
 		    	}
 		  	})
    		}
@@ -437,122 +467,4 @@ export default {
 }
 
 </script>
-<style lang="less">
-	.pic-item-info{
-		dl{font-size: 13px;}
-	}
-	.tipsOverflow{max-height: 400px;overflow-y: scroll;}
-	.tab-wrap{
-		margin-top: 20px;
-		position: relative;
-		/*z-index: 3;*/
-		.vux-tab{
-			z-index: 3;
-		}
-		.empty{
-			top:150px;
-			margin-top: 0;z-index: 0;
-			.text{
-				margin-top: 20px;
-			}
-		}
-	}
-	.comment-wrap{
-		
-		.weui-dialog{
-			padding: 0 10px 20px;
-			border-radius: 3px;
-		}
-		.commen-box{
-			.comment-head{
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				h5{
-					font-size: 18px;
-					color: #303030;
-					line-height: 50px;
-				}
-				span{
-					font-size: 12px;
-					color: #999999;
-				}
-			}
-			ul{
-				li{
-					margin-top: 12px;text-align: left;text-decoration: none;
-					dt{
-						i{
-							font-style: normal;
-						}
-						
-					}
-				}
-				padding:0 10px 20px;
-				margin-bottom:20px;
-				
-			}
-		}
-		.comment-yes{
-			text-align: center;
-			button{
-				border: none;
-		    background: #3DA5FE;
-		    color: #FFFFFF;
-		    border-radius: 2px;
-		    width: 100%;
-		    height: 40px;font-size: 16px;
-			}
-		}
-	}
-	.concat-list-wrap{
-		.list-title-concat{
-				li{
-					width: 33%;
-					height: 50px;
-					text-align: center;
-					>span{
-						display: block; width: 100%;
-						font-size: 16px;
-						color: #999999;
-						height: 100%;
-						&.list-concat-conlist{
-							display: flex;
-							justify-content: center;
-							align-items: center;
-						}
-						>i{
-							padding: 0px 5px;
-							background: #FE833D;
-							color: #FFFFFF;
-							border-radius: 50%;
-							 font-style:normal;
-							 font-size: 12px;
-							 margin-top: -3px;
-						}
-					}
-				}
-			
-		}
-	}
-.pick-result{
-	h5{
-		font-size: 18px;
-		color: #333333;
-		line-height: 3.5;
-	}
-	p{
-		padding:0 15px;
-		text-align: left;
-	}
-	.err-info{
-		margin: 15px 0 5px;
-	}
-	ul{
-		padding:0 15px;
-		li{
-			line-height: 1.5;text-align: left;margin-bottom: 10px;
-		}
-	}
-}
-</style>
+<style lang="less"></style>

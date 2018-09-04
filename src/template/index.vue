@@ -22,8 +22,8 @@
                     <h2>商品抽检</h2>
                     <p>抽检门店贵重商品，检查物流配送质量</p>
                   </div>
-                  <div class="img">
-                    <img src="../assets/home/ico2.png" @click.prevent>
+                  <div class="img" style="background: url(../assets/home/ico2.png) center center no-repeat; background-size: cover;">
+                    <!--<img src="../assets/home/ico2.png" @click.stop>-->
                   </div>
                 </grid-item>
                 <grid-item :link="{name: 'scanEntry', query: {key: 'receive'}}">
@@ -307,6 +307,7 @@ export default {
         if(Object.keys(this.commonInfo).length == 0) {
          factory.getUser().then(result => {
           	if(result.info.userNo){
+//        		alert($conf.upmUrl + "/api/v1/public/user/" + result.info.userNo)
 	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.info.userNo).then(res => {
 	              if(res.success) {
 	                let userInfo = Object.assign(res.data);
@@ -314,10 +315,10 @@ export default {
 	                this.$store.commit("updateCommonInfo", res.data);
 	               	let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
 	               	let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
+	               	this.currentStore.push(aaa)
 	          			const target = this.commonInfo.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
 									//更新成本中心，成本中心要一起修改
-									if(target){
-										this.currentStore.push(aaa)
+									if(target){									
 								    this.$store.commit("updateCommonInfo", {
 								    	costName:target.storeName,
 								    	costNumber:target.storeCode,
@@ -330,16 +331,17 @@ export default {
 	              } else {
 	                this.$vux.toast.show({
 	                  type: 'text',
-	                  text: res.message || '获取用户信息失败',
+	                  text: res.message || '获取用户信息失败2',
 	                  onHide: () => {
 	                    factory.exit()
 	                  }
 	                })
 	              }
 	            }, error => {
+	            	alert(error)
 	              this.$vux.toast.show({
 	                type: 'text',
-	                text: '获取用户信息失败',
+	                text: '获取用户信息失败1',
 	                onHide: () => {
 	                  factory.exit()
 	                }

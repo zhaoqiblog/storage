@@ -10,7 +10,7 @@
 	      <span v-if="pageOver.totalElements" style="position: absolute;font-size:10px;top: 15%;background: red; border-radius: 50%;padding: 0 5px;color:#FFFFFF;left: 43%;">{{pageOver.totalElements}}</span>
 	    </tab>
     <div class="scroll-content pre-pick-list pre-concat-list" ref="scrollWrap">
-    	 
+    	<p class="tempConcat-tips" @click="goToTempList" v-if="isTmpNumber">您有一个订单已暂存,点击此处继续拣货，完成即可继续合单</p>
         <div v-if="index==0">
           	<div class="container-list" >
           		<pre-list-concats v-for="e,index in data.noPick" :key='index'
@@ -80,7 +80,8 @@
 			       				</dl>
 			       			</div>
 			       			<label :for="'radios'+index" class="radisLabel" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;">
-			       			<div class="button-to-pick">			       				
+			       			<div class="button-to-pick">	
+			       				<!--:disabled="isTmpNumber"-->
 			       					<input type="checkbox" name="radios" 
 			       						:id="'radios'+index" v-model="selectLists" 
 			       						:value="e.id"  @change="changeSeleList('picking')" style="position: absolute;top: 80px;right: 20px;"/>
@@ -126,7 +127,7 @@
     </div>
      <div class="pre-footer" v-if="index==2">
       <div class="btn-add btn-tips">
-       		<input type="checkbox" name="selectDefault" id="selectDefault" v-model="selectDefault" @change="changeDefault()"/>
+       		<input type="checkbox" name="selectDefault" id="selectDefault" v-model="selectDefault" @change="changeDefault()" :disabled="isTmpNumber"/>
        		<label for="selectDefault">&nbsp;&nbsp;默认8单，可多选</label>      		
       </div>
       <div class="btn-submit concat-pre">
@@ -193,6 +194,7 @@ export default {
       timer:null,
       selectDefault:'',//默认拣货数据
       selectLists:[], //选择的列表
+      isTmpNumber:false, //是否存在暂存
     }
   },
     mounted() {
@@ -346,13 +348,13 @@ export default {
 	            type: 'text',
 	            text: '接单成功'
 	          })
+	  				this.$refs.scrollWrap.scrollTop=0
 	  				if(this.index==1){
 	  					this.pageOver.pageNo=0;
 	  					this.getOverList()
 	  				}else{
 	  					this.getSupplyList(0,1)
 	  				}
-	  				
 	  			}else{
 	  				//接单操作失败
 	  				this.$vux.toast.show({
@@ -426,8 +428,7 @@ export default {
     		}else{	//已完成
     			this.page2.pageNo++;
     			pageNow = this.page2.pageNo
-    		}
-    		
+    		}    		
     	}else{//pageNo存在 : 重新加载，从第一页开始，此时传入的页码是第一页
     		pageNow = pageNo;
     		if(status==0){
@@ -456,6 +457,9 @@ export default {
     	}
       $request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
         if(res.success) {
+        	if(res.data.mergetemp=='yes'){
+        			this.isTmpNumber = true
+        		}
         	if(status==0){  //未拣货
 	          if(pageNow==1){
 	         		this.data.noPick=[];
@@ -500,6 +504,9 @@ export default {
         }
       })
     },
+    goToTempList(){
+    	this.$router.push({name:'tempPicking'})
+    },  
   },
 
   activated () {
@@ -519,6 +526,13 @@ export default {
 <style lang="less">
 	.pre-concat-list{
 		padding-bottom: 48px;
+		.tempConcat-tips{
+			background: #FFFAD2;
+			font-size: 10px;
+			color: #1C1C1C;
+			line-height: 35px;
+			padding-left: 16px;
+		}
 	}
 	.pre-picking .pre-pick-list .list-pre-item .pre-list-item-content .button-to-pick button{
 		&.print-btn{

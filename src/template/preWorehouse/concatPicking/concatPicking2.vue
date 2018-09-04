@@ -1,9 +1,6 @@
 <template>
   <div class="shop-supply pick-supply" v-if="datas.toTime">
-  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="backToList">
-  		合单拣货详情
-  		<a slot="right" class="picking-right" > <span @click="cancelSave" v-if='isTmpexit'>取消暂存</span><span@click="tmpSave" v-if='!isTmpexit'>&nbsp;&nbsp;&nbsp;暂存</span></a>
-  	</x-header>
+  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="showbackTip=true">合单拣货详情</x-header>
     <div class="pre-content-title">
     	<div class="picking-title">
     		<div class="counting-time-pic" v-if="datas.toTime">
@@ -42,12 +39,12 @@
 			      <tab-item v-for="(i,ins) in ['待拣货('+(datas.products.length-listData.picked.length)+')','已拣货('+(listData.picked.length)+')']" :key="ins">{{i}}</tab-item>
 			    </tab>
 					<div v-show="index==0" class="noPicks">
-			    	<pre-pic-all v-if="item.pickStatus=='0'" v-for="(item,index) in datas.products"
+			    	<pre-pic-all class="uuuuiuiu" v-if="item.pickStatus=='0'" v-for="(item,index) in datas.products"
 			    		:objInfo='item'
 			    		:preCode="item.warehouseCode"
 			    		:itemid="item.itemid"
 							:nowNum="item.nowNum"
-							:code="'商品条码  '+(item.barcode)"
+							:code="'商品编码  '+(item.barcode)"
 							:name="item.subtitle+' '"
 							:imgurl="item.imgurl"
 							:unit="item.spec?item.spec.desc:''"
@@ -68,12 +65,12 @@
 			    	<m-empty class="datas" v-if="listData.picked.length == datas.products.length"></m-empty>
 		    	</div>
 		    	<div v-show="index==1" class="pickeds">
-			    	<pre-pic-all v-if="item.pickStatus=='1'" v-for="(item,index) in datas.products"
+			    	<pre-pic-all class="popopo" v-if="item.pickStatus=='1'" v-for="(item,index) in datas.products"
 			    		:objInfo='item'
 			    		:preCode="item.warehouseCode"
 			    		:itemid="item.itemid"
 							:nowNum="item.nowNum"
-							:code="'商品条码  '+(item.barcode)"
+							:code="'商品编码  '+(item.barcode)"
 							:name="item.subtitle"
 							:imgurl="item.imgurl"
 							:unit="item.spec?item.spec.desc:''"
@@ -114,7 +111,7 @@
       <confirm v-model="showbackTip"
       title="确定退出拣货？"
       @on-cancel="showbackTip==true"
-      @on-confirm="confirmExit"
+      @on-confirm="$router.back()"
       confirm-text="退出拣货">
         <p style="text-align:center;">退出拣货页后，此订单商品的已拣货数据将不保留。建议完成此单拣货任务后，再提交离开。</p>
       </confirm>
@@ -165,7 +162,6 @@
 import MEmpty from '@/components/MEmpty/index'
 import MpopInput from '@/components/MpopInput/index'
 import { XHeader,Confirm,TransferDomDirective as TransferDom,PopupPicker,XDialog,Tab, TabItem} from 'vux'
-import md5 from 'js-md5';
 import { mapState } from 'vuex';
 import factory from '@/factory.js'
 import $request from '@/service/request.js'
@@ -189,6 +185,7 @@ export default {
     	index:0, // tab切换index
     	showPop:false, //弹窗显示与否按钮
     	popItem:{},  //显示的弹窗的对象信息
+//  	picNum:0,	//弹窗绑定的输入框值
     	now:new Date().getTime(),  //倒计时开始时间
     	alreadyPick:0,		//已拣货的商品的种类
     	timeIntever:null,  //倒计时定时器
@@ -199,8 +196,7 @@ export default {
       datas:[],
       showConcatOrder:true,  //合单订单备注信息显示与否
       errInfo:{success:true},   //合并拣货的提示信息
-      listData:{'noPick':[],'picked':[]},
-      isTmpexit:false,  //当前订单是否已经被暂存
+      listData:{'noPick':[],'picked':[]}
     }
   },
   created() {
@@ -210,43 +206,13 @@ export default {
 			self.now = new Date().getTime();
 		}, 1000);
   },
+  mounted(){
+  	
+  },
   destroyed(){
 			clearInterval(this.timeIntever)
 		},
   methods: {
-  	backToList(){
-  			this.$router.back()
-  	},
-  	//暂存
-  	tmpSave(){
-  		let obj = JSON.stringify(this.datas)
-  		let obj1 ={}
-  		obj1.dataJson = obj;
-  		obj1.ids=this.$route.query.id.split("|")
-  		$request.post("/api/online-order/v1/protected/mergetemp",obj1).then(res=>{
-  			if(res.success==true){
-  				this.isTmpexit=true
-  				this.$vux.toast.show({
-	          type: 'text',
-	          text:res.message
-	        })
-  			}else{
-  				this.$vux.toast.show({
-	          type: 'text',
-	          text:res.message
-	        })
-  			}
-  		})
-  	},
-  	//取消暂存
-  	cancelSave(){
-  		$request.get('/api/online-order/v1/protected/mergetemp/cancel').then((res)=>{
-  			console.log(res)
-  		})
-  	},
-  	confirmExit(){
-  		this.$router.back()
-  	},
   	/*
   	 * 提交成功回调异常函数
   	 */
@@ -260,14 +226,16 @@ export default {
 				for(let i=0;i<ids.length;i++){
 					let ispush=false;
 					this.errInfo.message.forEach((e,indexx)=>{
-						if(ids[i]==e.id){
+						if(ids[i]==e.id.slice(0,-1)){
 							ispush=true;
 							ids.splice(i,1)
 						}
 					})
 				}
+				console.log(ids,pushids)
 				this.$router.push({name:"concatSuccessDetail",query:{id:ids.join("|")}})
   		}else{
+  			console.log('all')
 				this.$router.back()  //全部订单都有问题
   		}
   	},
@@ -300,11 +268,8 @@ export default {
 				this.datas.products = listTmp;
 				this.listData.noPick = this.datas.products.concat([]);
 				this.listData.picked = [];
-			}else{
-				this.$router.push({path:'/fail',query:{text: res.message,title: '合单拣货',info: '', path: {name: 'concatPickList'}}})
 			}
 		},(err)=>{
-			this.$router.push({path:'/fail',query:{text: '接口调用错误,请联系管理员',title: '合单拣货',info: '', path: {name: 'concatPickList'}}})
 		})
 	},
   	/**
@@ -430,8 +395,8 @@ export default {
 						      "orderid": e.orderid,  //订单id
 						      "qty": e.halfPickNum,
 						      "saleprice": e.price.value,
-						      "skucode": e.id,		//
-						      "stockout": e.num-e.halfPickNum>0 ? 1:0,		//是否缺货 1 缺货，0为 不缺货
+						      "skucode": e.id,		//？
+						      "stockout": e.num-e.halfPickNum>0 ? 1:0,		//是否缺货
 						      "warehouseId": e.warehouseId,
 						      "warehouseCode":e.warehouseCode,
 						      "imgurl":e.imgurl,
@@ -441,28 +406,19 @@ export default {
 					})
 					return obj
 				})
-		    $request.post("/api/online-order/v1/protected/merge/finishpick",lists).then(res=>{
+		    $request.post("/api/online-order/v1/protected/mergefinishpick",lists).then(res=>{
 		    	if(res.success&&res.success==true){
-						if(res.data){
-							this.errInfo=res;
-			    		let errMsg = res.data
-			    		this.errInfo.message = JSON.parse(errMsg);
-			    		this.errInfo.success=false;
-			    		this.errInfo.message.forEach((e,indexss)=>{
-			    			let key = Object.keys(e)[0]
-			    				e.name = key+':'+e[key]
-			    				e.id=key
-			    		})
-						}else{
-							this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})	
-						}
-						
+						this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})			    		
 		    	}else{
-		    		this.$vux.toast.show({
-	          type: 'text',
-	          text:res.message
-	        })
-		    		
+		    		this.errInfo=res;
+		    		let errMsg = res.message
+		    		this.errInfo.message = JSON.parse(errMsg);
+		    		this.errInfo.message.forEach((e,indexss)=>{
+		    			let key = Object.keys(e)[0]
+		    				e.name = key+':'+e[key]
+		    				e.id=key
+		    		})
+		    		console.log(this.errInfo.message)
 		    	}
 		  	})
    		}

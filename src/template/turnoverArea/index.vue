@@ -9,7 +9,6 @@
 <script>
 import MHeader from '@/components/MHeader/index'
 import factory from '@/factory'
-import service from '@/service'
 export default {
   components: {
     MHeader

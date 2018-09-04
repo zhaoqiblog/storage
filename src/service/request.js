@@ -38,6 +38,10 @@ Axios.interceptors.response.use((res) => {
   Vue.$vux.loading.hide()
   if (res.status != 200) {
     return Promise.reject(res);
+    Vue.$vux.toast.show({
+      type: 'text',
+      text: '系统开小差啦，请稍后再试哟 '
+    })
   } else if(res.data.success === null || res.data.success === undefined) {
     Vue.$vux.toast.show({
       type: 'text',

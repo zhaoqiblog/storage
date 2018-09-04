@@ -45,7 +45,9 @@ export default {
         let top=anchor.scrollTop,
             sh=anchor.scrollHeight,
             ch=anchor.clientHeight;
+//          console.log(top,sh,ch)
         if(sh==top+ch) {
+//      	console.log("cehufa")
           // 触发加载数据
 			callback()
         }
@@ -130,7 +132,11 @@ export default {
 		})
 		let printText='',printArray=[]
 		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
-		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'')})
+		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,
+			text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+
+				data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to
+				
+		})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
 					data.id+'\n打印次数：'+data.printCount+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
 					'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
@@ -178,7 +184,8 @@ export default {
 				return i.diffNum>0
 			})
 			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
-			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'')})
+			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
+			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
 						data.id+'\n打印次数：'+data.printCount+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
 						'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
@@ -204,6 +211,10 @@ export default {
 			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'谢谢惠顾，欢迎再次光临 \n'+data.shop.address+'\n'+'配送时间:09:00 - 20:00\n联系客服：400-800-5050\n\n提货码:'+data.outerOrderId})
 			printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:150,"modelSize":5},printType:1,text:data.outerOrderId})
 			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n签名栏：\n\n\n--------------------------------\n\n\n"})
+			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"开票码:\n"})
+			printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:150,"modelSize":5},printType:2,text:data.obtaininvoiceurl})
+			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n--------------------------------\n\n"})
+		
 		})	
 		let datas = {datas:printArray}
 		callback(datas)
