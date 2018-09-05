@@ -22,8 +22,8 @@
                     <h2>商品抽检</h2>
                     <p>抽检门店贵重商品，检查物流配送质量</p>
                   </div>
-                  <div class="img" style="background: url(../assets/home/ico2.png) center center no-repeat; background-size: cover;">
-                    <!--<img src="../assets/home/ico2.png" @click.stop>-->
+                  <div class="img">
+                    <img src="../assets/home/ico2.png">
                   </div>
                 </grid-item>
                 <grid-item :link="{name: 'scanEntry', query: {key: 'receive'}}">
@@ -35,7 +35,6 @@
                     <img src="../assets/home/ico1.png">
                   </div>
                 </grid-item>
-                
               </grid>
               <grid :cols="2">
               	<grid-item :link="{name: 'scanEntry', query: {key: 'directOrderInfo'}}">
@@ -186,7 +185,7 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
-                <!--<grid-item :link="{name: 'setPrinter'}">
+                <grid-item :link="{name: 'setPrinter'}">
                   <div class="text">
                     <h2>设置打印机</h2>
                     <p>前置仓拣货前，优先设置打印设备</p>
@@ -194,7 +193,7 @@
                   <div class="img">
                     <img src="../assets/home/icon9.png">
                   </div>
-                </grid-item>-->
+                </grid-item>
                 <grid-item :link="{name: 'concatPickList1'}">
                   <div class="text">
                     <h2>测试超时列表</h2>
@@ -329,7 +328,7 @@ export default {
 								   	localStorage.setItem("costNumber",this.commonInfo.stores[0].storeCode)
 								   }
 	              } else {
-	                this.$vux.toast.show({
+	               this.$vux.toast.show({
 	                  type: 'text',
 	                  text: res.message || '获取用户信息失败2',
 	                  onHide: () => {

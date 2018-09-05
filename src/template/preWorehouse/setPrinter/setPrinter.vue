@@ -51,19 +51,27 @@
 		beforeCreated(){},
 		created(){
 			this.getBoothList()
+			this.openBlooth()  //打开蓝牙
 		},
 		methods:{
 			changeBlue(){
 				this.boothList[0].forEach((e)=>{
 					if(e.value&&e.value==this.slectBlue[0]){
 						//选择完毕连接打印机
-						let param1 = { btAddress:e.value };//这里传入用户点击的目标蓝牙设备地址
+						let param1 = e.value;//这里传入用户点击的目标蓝牙设备地址
 						//连接打印机
 						factory.connectBlue(param1).then(res=>{
-							localStorage.setItem("bluedata",e.value);
-							sessionStorage.setItem("bluedata",e.value);
-							this.currentDevice = e;
-//							alert(res)
+							alert(res)
+							if(res=='连接成功'){
+								localStorage.setItem("bluedata",e.value);
+								sessionStorage.setItem("bluedata",e.value);
+								this.currentDevice = e;
+							}else{
+								 this.$vux.toast.show({
+	                  type: 'text',
+	                  text: '蓝牙设备连接失败',
+	                })
+							}
 						},(err)=>{
 							alert("error:打印机 "+err)
 							this.currentDevice ={}
@@ -71,14 +79,20 @@
 					}
 				})
 			},			
+			openBlooth(){
+				factory.openBluetooth().then(res=>{
+					alert(res)
+					this.getBoothList()
+				})
+			},
 			getBoothList(){
 				let deviceId = localStorage.getItem("bluedata");
 				let currentId =sessionStorage.getItem("bluedata")
 				if(window.cordova){
 					factory.getBlueList().then((res)=>{
-//						alert(res)
+						alert(JSON.stringify(res))
 						let list = res.map((e)=>{
-							return {name:e.split("=>")[0],value:e.split("=>")[1]}
+							return {name:e.name,value:e.address}
 						})
 						if(list.length>0){
 							this.boothList.push(list)
@@ -101,10 +115,8 @@
 						}else{
 							this.currentDevice={name:'未连接过',value:null}
 						}
-//						alert(JSON.stringify(this.blueList))
 					},(err)=>{
 						alert("获取蓝牙列表失败！"+err);
-//						alert(JSON.stringify(this.blueList))
 						this.boothList.push([{name:err,value:null}])
 					})
 				}else{

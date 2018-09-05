@@ -127,7 +127,8 @@
     </div>
      <div class="pre-footer" v-if="index==2">
       <div class="btn-add btn-tips">
-       		<input type="checkbox" name="selectDefault" id="selectDefault" v-model="selectDefault" @change="changeDefault()" :disabled="isTmpNumber"/>
+      	<!--:disabled="isTmpNumber"-->
+       		<input type="checkbox" name="selectDefault" id="selectDefault" v-model="selectDefault" @change="changeDefault()" />
        		<label for="selectDefault">&nbsp;&nbsp;默认8单，可多选</label>      		
       </div>
       <div class="btn-submit concat-pre">

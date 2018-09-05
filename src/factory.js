@@ -142,13 +142,13 @@ export default {
    * 开启蓝牙
    */
   openBluetooth: function(){
-		return this.callApi(_MIDEA_BLUE,"openBlueTooth");
+		return this.callApi('openBluetooth',null);
   },
   /**
    * 获取蓝牙配对列表
    */
   getBlueList:function(){
-  	return this.callApi(_MIDEA_BLUE,"getBondedDevices")
+  	return this.callApi('getBlueList',null)
   },
   /**
    * 连接蓝牙设备
@@ -156,7 +156,7 @@ export default {
    * var param = { btAddress: "蓝牙地址" //这里传入用户点击的目标蓝牙设备地址};
    */
   connectBlue:function(param){
-	return this.callApi(_MIDEA_BLUE,"connectDevice",[param])
+	return this.callApi('connectBlue',param)
   	
   },
   

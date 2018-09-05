@@ -244,32 +244,6 @@ export default {
     	const overNum=this.initData[index].sysNum
     	if(val){
     		this.initData[index].actualVal=val;
-//  		let day = this.initData[index].validDays;  // 过期天数
-//	    	let dateArr = this.initData[index].timeSel.split("-");
-//	    	let productionDate = new Date(dateArr[0],dateArr[1]-1,dateArr[2]).getTime();//生产日期
-//	    	let expirationDate = new Date(dateArr[0],dateArr[1]-1,parseInt(dateArr[2]) +day).getTime();//过期日期
-//	   
-//	   		let newDate =  new Date()
-//	    	let toYear  = newDate.getFullYear();
-//	    	let toMonth = newDate.getMonth();
-//	    	let toDate  = newDate.getDate();
-//	    	let todayDate = new Date(toYear,toMonth,toDate).getTime();//今天的日期
-    		
-    		
-    		
-//  		if(productionDate>todayDate){
-//  			this.disableds = true;
-//  		}else{
-//	    		if(todayDate>=expirationDate){
-//		    		this.delIndex=index
-//		    		this.disableds = true;
-//		    	}else{
-//	//	    		this.disableds = false;
-//		    		this.disableds = ! (this.initData.every(e=>{
-//			    			return e.actualVal>0&&e.timeSel
-//			    		}))
-//		    	}
-//	    	}
 			const isAllInput =this.initData.every((value)=>{
 				return value.actualVal>0
 			})

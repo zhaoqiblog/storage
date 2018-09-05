@@ -78,6 +78,20 @@
             <input type="button" id="exit" value="退出网页" onclick="exit()">
         </p>
 
+        <p>
+            <input type="button" id="openBluetooth" value="打开蓝牙" onclick="openBluetooth()">
+        </p>
+        <p>
+            <input type="button" id="getBlueList" value="获取蓝牙配对列表" onclick="getBlueList()">
+        </p>
+        <p>
+            <input type="button" id="connectBlue" value="连接蓝牙设备" onclick="connectBlue()">
+        </p>
+        <p>
+            <input type="button" id="requestPositioning" value="获取当前位置" onclick="requestPositioning()">
+        </p>
+
+
     </body>
     <script>
         function testDiv() {
@@ -126,7 +140,7 @@
                 'scan'
                 , {'param': '扫描'}
                 , function(responseData) {
-                	alert(responseData)
+                    alert("type:"+typeof(responseData)+"\ndata:"+responseData)
                     document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
                 }
             );
@@ -135,12 +149,12 @@
         打印功能
         **/
         function print(){
-            var datas="{\"datas\":[{\"printSetData\":{\"alignMode\":0,\"charSize\":0,\"feedLine\":0,\"isPrintTextCut\":true,\"modelSize\":5},\"printType\":0,\"text\":\"打印内容\"},{\"printSetData\":{\"alignMode\":1,\"charSize\":1,\"feedLine\":1,\"isPrintTextCut\":true,\"modelSize\":5},\"printType\":1,\"text\":\"AAABBB1\"},{\"printSetData\":{\"alignMode\":2,\"charSize\":2,\"feedLine\":2,\"isPrintTextCut\":true,\"modelSize\":5},\"printType\":2,\"text\":\"AAABBB2\"}]}"
+            var datas="{\"datas\":[{\"printSetData\":{\"alignMode\":\"1\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"\\n\\n欢迎光临永辉陕西西安市--唐延路店\\n--------------------------------\"},{\"printSetData\":{\"alignMode\":\"1\",\"charSize\":\"1\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"京#128-配送-已调整\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"--------------------------------\\n订 单 号：1205100000010022\\n打印次数：6\\n下单时间：2018-08-24 11:22\\n预约送达: 2018-08-20 10:16-10:46\\n收 货 人：严女士\\n联系电话：18729369064\\n收货地址：西安市-雁塔区,西安市雁塔区新西蓝高新大都荟A座7号楼1908\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"1\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"备注：【含冰品】\\n其他商品继续配送（缺货商品退款）\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"--------------------------------\\n购买商品\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"1.娃哈哈无汽苏打水 350ml\"},{\"printSetData\":{\"alignMode\":\"2\",\"charSize\":\"1\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"X7\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"6902083894443\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"单价￥3金额￥21\\n--------------------------------\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"4.芬达 300ml*12\"},{\"printSetData\":{\"alignMode\":\"2\",\"charSize\":\"1\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"X1\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"6954767449920\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"单价￥15.9金额￥15.9\\n--------------------------------\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"商品金额：36.9\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"订单运费：8\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"商品优惠：10\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"运费优惠：0\\n--------------------------------\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"1\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"订单件数：8\"},{\"printSetData\":{\"alignMode\":\"0\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"应收金额：35.4\\n--------------------------------\"},{\"printSetData\":{\"alignMode\":\"1\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"谢谢惠顾，欢迎再次光临 \\n陕西省西安市莲湖区唐延路168号永辉超市\\n配送时间:09:00 - 20:00\\n联系客服：400-800-5050\\n\\n提货码:819995302001622\"},{\"printSetData\":{\"alignMode\":\"1\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"150\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":1,\"text\":\"819995302001622\"},{\"printSetData\":{\"alignMode\":\"1\",\"charSize\":\"0\",\"feedLine\":\"1\",\"fontStyle\":\"0\",\"height\":\"200\",\"isPrintTextCut\":true,\"modelSize\":\"5\",\"width\":\"200\"},\"printType\":0,\"text\":\"\\n签名栏：\\n\\n\\n--------------------------------\\n\\n\\n\"}]\n" +
+            "\n}"
              //call native method
             window.cordova.callHandler(
                 'print'
-                , {'param':datas}
-            );
+                ,datas);
         }
         /**
         弹窗功能
@@ -148,16 +162,15 @@
         function showMessage() {
         	// body...
         	window.cordova.callHandler(
-        		'showMessage',
-        		{'param':"js调用java,发送消息"}
-        		);
+        		'showMessage'
+                ,"js调用java,发送消息");
         }
 
         //设置导航栏title
         function setNavText(text) {
             window.cordova.callHandler(
                 'setNavText',
-                {'param':text});
+                text);
         }
         /**
         显示导航栏
@@ -207,6 +220,7 @@
             window.cordova.callHandler(
                 'hideInput');
         }
+
         /**
         获取Token
         **/
@@ -216,11 +230,12 @@
                 'getAccessToken'
                 , {'param': 'Token'}
                 , function(responseData) {
-                    alert(responseData)
+                    alert("type:"+typeof(responseData)+"\ndata:"+responseData.token)
                     document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
                 }
             );
         }
+
         /**
         获取设备信息
         **/
@@ -230,11 +245,11 @@
                 'getDeviceInfo'
                 , {'param': 'deviceInfo'}
                 , function(responseData) {
-                    alert(responseData)
-                    document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+                    alert("type:"+typeof(responseData)+"\ndata:"+JSON.stringify(responseData))
                 }
             );
         }
+
         /**
         获取用户信息
         **/
@@ -244,11 +259,11 @@
                 'getUserInfo'
                 , {'param': 'userInfo'}
                 , function(responseData) {
-                    alert(responseData)
-                    document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+                    alert("type:"+typeof(responseData)+"\ndata:"+JSON.stringify(responseData))
                 }
             );
         }
+
         /**
         拨打电话
         **/
@@ -262,6 +277,7 @@
                 }
             );
         }
+
         /**
         退出网页
         **/
@@ -271,40 +287,98 @@
         		'exit');
         }
 
+        /**
+        打开蓝牙
+        **/
+        function openBluetooth() {
+            //call native method
+            window.cordova.callHandler(
+                'openBluetooth'
+                , {'param': 'openBluetooth'}
+                , function(responseData) {
+                    alert("type:"+typeof(responseData)+"\ndata:"+responseData)
+                }
+            );
+        }
+
+        /**
+        获取蓝牙配对列表
+        **/
+        function getBlueList() {
+            //call native method
+            window.cordova.callHandler(
+                'getBlueList'
+                , {'param': 'getBlueList'}
+                , function(responseData) {
+                    var data=responseData[0]
+                    alert("type:"+typeof(responseData)+"\ndata:"+JSON.stringify(responseData))
+                }
+            );
+        }
+
+        /**
+        连接蓝牙设备
+        **/
+        function connectBlue() {
+            //call native method
+            window.cordova.callHandler(
+                'connectBlue'
+                ,'00:23:02:3E:2A:A9'
+                , function(responseData) {
+                    console.log(responseData)
+                    alert("type:"+typeof(responseData)+"\ndata:"+JSON.stringify(responseData))
+                }
+            );
+        }
+
+        //获取当前位置信息
+        function requestPositioning() {
+            //call native method
+            window.cordova.callHandler(
+                'requestPositioning'
+                , {'param': 'userInfo'}
+                , function(responseData) {
+                    alert("type:"+typeof(responseData)+"\ndata:"+JSON.stringify(responseData))
+                }
+            );
+           
+        }
+
         function connectcordova(callback) {
-            if (window.cordova) {
+                if (window.cordova) {
                 callback(cordova)
             } else {
+            console.log("End:"+Date.getMinutes())
                 document.addEventListener(
-                    'cordovaReady'
-                    , function() {
-                        callback(cordova)
-                    },
-                    false
+                'cordovaReady'
+                , function() {
+                    callback(cordova)
+                },
+                false
                 );
             }
         }
 
         connectcordova(function(bridge) {
-            bridge.init(function(message, responseCallback) {
-                console.log('JS got a message', message);
-                var data = {
-                    'Javascript Responds': '测试中文!'
-                };
+            // bridge.init(function(message, responseCallback) {
+            //     console.log('JS got a message', message);
+            //     var data = {
+            //         'Javascript Responds': '测试中文!'
+            //     };
 
-                if (responseCallback) {
-                    console.log('JS responding with', data);
-                    responseCallback(data);
-                }
-            });
+            //     if (responseCallback) {
+            //         console.log('JS responding with', data);
+            //         responseCallback(data);
+            //     }
+            // });
 
-            bridge.registerHandler("functionInJs", function(data, responseCallback) {
-                document.getElementById("show").innerHTML = ("data from Java: = " + data);
-                if (responseCallback) {
-                    var responseData = "Javascript Says Right back aka!";
-                    responseCallback(responseData);
-                }
-            });
+            // bridge.registerHandler("functionInJs", function(data, responseCallback) {
+            //     document.getElementById("show").innerHTML = ("data from Java: = " + data);
+            //     if (responseCallback) {
+            //         var responseData = "Javascript Says Right back aka!";
+            //         responseCallback(responseData);
+            //     }
+            // });
         })
     </script>
 
