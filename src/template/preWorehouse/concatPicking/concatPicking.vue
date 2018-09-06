@@ -106,8 +106,8 @@
        			待拣货 {{datas.products.length}} 件,已拣货 <i>{{listData.picked.length}}</i> 件
        		</span>
       </div>
-      <div class="btn-submit">  <!--:disabled=""-->
-        <button type="button" @click="completeOrder">完成</button>
+      <div class="btn-submit">
+        <button type="button" @click="completeOrder" :disabled="isAllPicked">完成</button>
       </div>
     </div>
     <div v-transfer-dom class="pre-confirm">
@@ -201,6 +201,7 @@ export default {
       errInfo:{success:true},   //合并拣货的提示信息
       listData:{'noPick':[],'picked':[]},
       isTmpexit:false,  //当前订单是否已经被暂存
+      isAllPicked:true,
     }
   },
   created() {
@@ -331,7 +332,6 @@ export default {
 					}
 					return obj
 				})
-				
 				if(e.orders.filter((item)=>{return item.init==false}).length==e.orders.length&&!isExitPicked){
 					//列表全部拣过货之后
 					e.pickStatus=1;
@@ -339,6 +339,8 @@ export default {
 				}
 			}
 		})
+  		this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})
+  		
   	},
   	/**
   	 * 缺货按钮点击事件,将输入的值回调给当前点击的halfPickNum
@@ -355,6 +357,7 @@ export default {
 			})
 			this.popItem=seleItem[0];
 			this.popItem.pid = pid;
+  		this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})
   	},
   	/**
   	 * 全部拣货按钮点击事件
@@ -376,6 +379,7 @@ export default {
 					}
 				})
 	  		this.alreadyPick=this.alreadyPick+1
+  			this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})	  		
   	},
   	/**
   	 * 一键拣货
@@ -394,13 +398,16 @@ export default {
   				this.listData.picked.push(e)  // 将一键拣货拣过的合并订单放到已拣货中
   			}
   		})
+  		this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})
   	},
     /**
      * 完成拣货
      */
     completeOrder(){
     	//判断是否有未拣货的的商品
-    	if(this.datas.products.length-this.listData.picked.length>0){
+    	
+    	this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})
+    	if(this.isAllPicked){
     		this.$vux.toast.show({
           type: 'text',
           text:'需对商品“拣货”确认'
@@ -424,11 +431,11 @@ export default {
 						      "diffNum": e.num-e.halfPickNum,  //缺货数量
 						      "goodsBarCode": e.barcode,
 						      "goodsCode": e.goodCode,
-						      "goodsName": e.subtitle,  //山滚名称选哪个
+						      "goodsName": e.subtitle,  //商品名称选哪个
 						      "goodsWarehouseId": e.goodsWarehouseId,
 						      "itemid": e.itemid,
 						      "orderid": e.orderid,  //订单id
-						      "qty": e.halfPickNum,
+						      "qty": e.halfPickNum,  //补货数量
 						      "saleprice": e.price.value,
 						      "skucode": e.id,		//
 						      "stockout": e.num-e.halfPickNum>0 ? 1:0,		//是否缺货 1 缺货，0为 不缺货
@@ -436,11 +443,21 @@ export default {
 						      "warehouseCode":e.warehouseCode,
 						      "imgurl":e.imgurl,
 					    	}
-								obj.goodsInfoDTOS.push(objs)
+								if(objs.diffNum||objs.qty){
+									obj.goodsInfoDTOS.push(objs)
+								}else{
+									this.isAllPicked=true
+										this.$vux.toast.show({
+						          type: 'text',
+						          text:e.ordersequenceno+e.subtitle+'未拣货'
+						        })
+										return;
+								}
 							}
 					})
 					return obj
 				})
+				if(!this.isAllPicked){
 		    $request.post("/api/online-order/v1/protected/merge/finishpick",lists).then(res=>{
 		    	if(res.success&&res.success==true){
 						if(res.data){
@@ -465,6 +482,7 @@ export default {
 		    		
 		    	}
 		  	})
+		    }
    		}
     }
   },
