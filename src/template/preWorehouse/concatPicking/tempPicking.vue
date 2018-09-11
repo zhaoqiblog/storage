@@ -2,7 +2,7 @@
   <div class="shop-supply pick-supply" v-if="datas.toTime">
   	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="backToList">
   		合单拣货详情
-  		<a slot="right" class="picking-right"> <span @click="cancelSave" v-if="isTmp">取消暂存</span><span @click="tmpSave" v-if="!isTmp">&nbsp;&nbsp;&nbsp;暂存</span></a>
+  		<a slot="right" class="picking-right"> <span @click="cancelSave" v-if="isTmp">取消暂存</span><span @click="tmpSave" >&nbsp;&nbsp;&nbsp;暂存</span></a>
   	</x-header>
     <div class="pre-content-title">
     	<div class="picking-title">
@@ -415,9 +415,9 @@ export default {
 				let lists = this.datas.orderInfos.map((item,indexs)=>{
 					let obj = {orderid:item.id,goodsInfoDTOS:[]}
 					ids.push(item.id)
-					if(indexs==1||indexs==2){
+					/*if(indexs==1||indexs==2){
 						obj.orderid=item.id+'5'
-					}
+					}*/
 					allList.forEach((e)=>{
 						if(e.orderid==item.id){
 								let objs ={
@@ -442,7 +442,8 @@ export default {
 					})
 					return obj
 				})
-		    $request.post("/api/online-order/v1/protected/merge/finishpick",lists).then(res=>{
+					let ObjPush={'isTempMergePick':'1',orderPickRequestDTOs:lists}
+		    $request.post("/api/online-order/v1/protected/merge/finishpick",ObjPush).then(res=>{
 		    	if(res.success&&res.success==true){						
 						if(res.data){
 							this.errInfo=res;

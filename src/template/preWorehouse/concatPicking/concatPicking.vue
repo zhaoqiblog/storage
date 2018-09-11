@@ -2,7 +2,7 @@
   <div class="shop-supply pick-supply" v-if="datas.toTime">
   	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="backToList">
   		合单拣货详情
-  		<a slot="right" class="picking-right" > <span @click="cancelSave" v-if='isTmpexit'>取消暂存</span><span@click="tmpSave" v-if='!isTmpexit'>&nbsp;&nbsp;&nbsp;暂存</span></a>
+  		<a slot="right" class="picking-right" > <span @click="cancelSave" v-if='isTmpexit'>取消暂存</span><span@click="tmpSave">&nbsp;&nbsp;&nbsp;暂存</span></a>
   	</x-header>
     <div class="pre-content-title">
     	<div class="picking-title">
@@ -404,8 +404,7 @@ export default {
      * 完成拣货
      */
     completeOrder(){
-    	//判断是否有未拣货的的商品
-    	
+    	//判断是否有未拣货的的商品    	
     	this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})
     	if(this.isAllPicked){
     		this.$vux.toast.show({
@@ -457,9 +456,12 @@ export default {
 					})
 					return obj
 				})
+				let ObjPush={'isTempMergePick':'0',orderPickRequestDTOs:lists}
 				if(!this.isAllPicked){
-		    $request.post("/api/online-order/v1/protected/merge/finishpick",lists).then(res=>{
+					this.isAllPicked=true;
+		    $request.post("/api/online-order/v1/protected/merge/finishpick",ObjPush).then(res=>{
 		    	if(res.success&&res.success==true){
+		    		this.isAllPicked=false;
 						if(res.data){
 							this.errInfo=res;
 			    		let errMsg = res.data
@@ -475,6 +477,7 @@ export default {
 						}
 						
 		    	}else{
+		    		this.isAllPicked=false;
 		    		this.$vux.toast.show({
 	          type: 'text',
 	          text:res.message

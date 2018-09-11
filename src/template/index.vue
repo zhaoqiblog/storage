@@ -185,7 +185,7 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
-                <grid-item :link="{name: 'setPrinter'}">
+                <!--<grid-item :link="{name: 'setPrinter'}">
                   <div class="text">
                     <h2>设置打印机</h2>
                     <p>前置仓拣货前，优先设置打印设备</p>
@@ -193,8 +193,8 @@
                   <div class="img">
                     <img src="../assets/home/icon9.png">
                   </div>
-                </grid-item>
-                <grid-item :link="{name: 'concatPickList1'}">
+                </grid-item>-->
+               <!-- <grid-item :link="{name: 'concatPickList1'}">
                   <div class="text">
                     <h2>测试超时列表</h2>
                     <p>前置仓拣货前，优先设置打印设备</p>
@@ -202,7 +202,7 @@
                   <div class="img">
                     <img src="../assets/home/icon9.png">
                   </div>
-                </grid-item>
+                </grid-item>-->
               </grid>
               <grid :cols="2">
               </grid>
@@ -306,7 +306,6 @@ export default {
         if(Object.keys(this.commonInfo).length == 0) {
          factory.getUser().then(result => {
           	if(result.info.userNo){
-//        		alert($conf.upmUrl + "/api/v1/public/user/" + result.info.userNo)
 	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.info.userNo).then(res => {
 	              if(res.success) {
 	                let userInfo = Object.assign(res.data);
@@ -336,15 +335,6 @@ export default {
 	                  }
 	                })
 	              }
-	            }, error => {
-	            	alert(error)
-	              this.$vux.toast.show({
-	                type: 'text',
-	                text: '获取用户信息失败1',
-	                onHide: () => {
-	                  factory.exit()
-	                }
-	              })
 	            })
             }else{
             	this.$vux.toast.show({
@@ -356,7 +346,7 @@ export default {
 	              })
             }
           }).catch((err)=>{
-          	alert(err)
+          	alert('2222'+err)
           })
         }
       } else {

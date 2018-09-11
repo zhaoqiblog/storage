@@ -158,21 +158,18 @@ export default{
 	created(){
 		this.copyValue = typeof this.value == "string" ? parseInt(this.value) : this.value;
 		typeof this.totalNum == "string" && (this.totalNum = parseInt(this.totalNum));
-		this.actualValue=typeof this.actualVal == "string" ? parseInt(this.actualVal) : this.actualVal;
-		this.giftsValue=typeof this.giftsVal == "string" ? parseInt(this.giftsVal) : this.giftsVal;
+		this.actualValue=typeof this.actualVal == "string" ? parseFloat(this.actualVal) : this.actualVal;
+		this.giftsValue=typeof this.giftsVal == "string" ? parseFloat(this.giftsVal) : this.giftsVal;
 		this.timeValue=this.timeSel
 	},
-//	updated(){
-//		this.copyValue = parseInt(this.value);
-//	},
 	watch: {
 	  value:{	
 	    immediate: true,
-      handler(value) {
-        let newVal = Number(value);
-        if (isNaN(newVal)) return;
-        this.copyValue != newVal && (this.copyValue = newVal);
-      }
+	      handler(value) {
+	        let newVal = Number(value);
+	        if (isNaN(newVal)) return;
+	        this.copyValue != newVal && (this.copyValue = newVal);
+	      }
 	  },
 	  actualVal:{
 	  	immediate: true,
@@ -217,17 +214,17 @@ export default{
 			this.$emit("change",this.copyValue,this.$options._parentVnode.key);
 		},
 		inputVal(){
-			if(typeof parseInt(this.copyValue) != "number"){
+			if(typeof parseFloat(this.copyValue) != "number"){
 				return this.popError('请输入数字！');
 			}
-			typeof this.copyValue != "number" && (this.copyValue = parseInt(this.copyValue));
+			typeof this.copyValue != "number" && (this.copyValue = parseFloat(this.copyValue))
 			this.pop(this.copyValue);
 		},
 		inputActaul(){
 			if(typeof parseInt(this.actualValue) != "number"){
 				return this.popError('请输入数字！');
 			}
-			typeof this.actualValue != "number" && (this.actualValue = parseInt(this.actualValue));
+			typeof this.actualValue != "number" && (this.actualValue = parseFloat(this.actualValue));
 			this.$emit("input",this.actualValue);
 			this.$emit("changeActual",this.actualValue,this.$options._parentVnode.key);
 		},
@@ -235,7 +232,7 @@ export default{
 			if(typeof parseInt(this.giftsValue) != "number"){
 				return this.popError('请输入数字！');
 			}
-			typeof this.giftsValue != "number" && (this.giftsValue = parseInt(this.giftsValue));
+			typeof this.giftsValue != "number" && (this.giftsValue = parseFloat(this.giftsValue));
 			this.$emit("input",this.giftsValue);
 			this.$emit("changeGift",this.giftsValue,this.$options._parentVnode.key);
 		},

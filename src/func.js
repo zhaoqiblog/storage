@@ -132,11 +132,8 @@ export default {
 		})
 		let printText='',printArray=[]
 		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
-		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,
-			text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+
-				data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to
-				
-		})
+		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
+		printArray.push({printSetData:{alignMode:0,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
 					data.id+'\n打印次数：'+data.printCount+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
 					'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
@@ -185,7 +182,7 @@ export default {
 			})
 			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
 			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
-			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
+			printArray.push({printSetData:{alignMode:0,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
 						data.id+'\n打印次数：'+data.printCount+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
 						'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
@@ -201,7 +198,6 @@ export default {
 					printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'单价￥'+e.saleprice+'金额￥'+(e.saleprice*e.qty)+'\n--------------------------------'})
 				}
 			})
-			
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'商品金额：'+data.amount.goodsamount/100})
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'订单运费：'+data.amount.freightamount/100})
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'商品优惠：'+(data.amount.coupondiscountamount+data.amount.promotiondiscountamount)/100})

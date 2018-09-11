@@ -6,7 +6,7 @@ let config = {
   isMock: false,
   mockPath: 'json/',
   userTest: {
-//        uid: '80800461', 
+//        uid: '80442347', 
           uid: '80733765',
 //        uid: '80000968',
 //        uid: '80723068',
@@ -43,7 +43,7 @@ let config = {
 	
 //	upmUrl: 'http://ycloud-api.yonghui.cn:9999/upm', // 测试环境
 //	baseUrl: 'http://ycloud-api.yonghui.cn:9999/store-inventory', // 测试环境
-	
+//	
 
 }
 

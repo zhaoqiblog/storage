@@ -24,10 +24,11 @@
              @change="listChange">
           </goods-info-item>
         </div>
-        <div class="cm-footer">
-          <button type="button" class="btnblue-add" @click="addProduct()" :disabled="isDisabled">确认加入清单</button>
-        </div>
+       
       </div>
+    </div>
+    <div class="cm-footer">
+      <button type="button" class="btnblue-add" @click="addProduct()" :disabled="isDisabled">确认加入清单</button>
     </div>
   </div>
 </template>

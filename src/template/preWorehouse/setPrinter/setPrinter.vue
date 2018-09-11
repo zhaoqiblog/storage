@@ -1,12 +1,14 @@
 <template>
-  <div class="shop-supply">
+  <div class="shop-supply set-printer">
     <x-header class="vux-1px-b" :left-options="{preventGoBack:true}" @on-click-back="back">设置打印机</x-header>
   	<div class="print-content">
   		<p class="print-tip">提示：保持蓝牙开启状态，才能匹配打印机</p>
   		<group class="group">
-	  		<cell 
+  			<!--<button class="switchs vux-1px-b" @click="changeBooth">打开蓝牙</button>-->
+	  		<cell
 	  			:title="currentDevice.value ? '当前连接设备':'上次连接设备'" 
 	  			:value="currentDevice.value ? currentDevice.name:lastConDevice.name"></cell>
+	  		
 	  		<!--<cell title="当前连接设备" :value="currentDevice.name"></cell>-->
 	  		<popup-picker 
 	  		title="更换打印机"
@@ -24,14 +26,14 @@
 </template>
 
 <script>
-	import { XHeader,XSwitch,Group,Cell,PopupPicker } from 'vux'
+	import { XHeader,XSwitch,Group,Cell,PopupPicker,Alert} from 'vux'
 	import $request from '@/service/request.js'
 	import factory from '@/factory.js'	
 	import { mapState } from 'vuex';
 	
 	export default {
 		components: {
-			XHeader,XSwitch,Group,Cell,PopupPicker
+			XHeader,XSwitch,Group,Cell,PopupPicker,Alert
 		},
 		name: 'set-printer',
 	    computed: mapState({
@@ -46,12 +48,13 @@
 				lastConDevice:{},//之前连接过的设备
 				showSelectBlue:false,
 				slectBlue:[], //选中的蓝牙设备号
+				isOpenBolth:false,
+				isAndroid:true
 			}
 		},
 		beforeCreated(){},
 		created(){
 			this.getBoothList()
-			this.openBlooth()  //打开蓝牙
 		},
 		methods:{
 			changeBlue(){
@@ -61,7 +64,6 @@
 						let param1 = e.value;//这里传入用户点击的目标蓝牙设备地址
 						//连接打印机
 						factory.connectBlue(param1).then(res=>{
-//							alert(res)
 							if(res=='连接成功'||res=='true'){
 								localStorage.setItem("bluedata",e.value);
 								sessionStorage.setItem("bluedata",e.value);
@@ -78,17 +80,37 @@
 						})
 					}
 				})
-			},			
-			openBlooth(){
-				factory.openBluetooth().then(res=>{
+			},		
+			//打开蓝牙点击事件
+			changeBooth(){
 					this.getBoothList()
+			},
+			openBlooth(callback){
+				factory.openBluetooth().then(res=>{
+					if(res=='蓝牙打开成功'||res=='true'){
+							alert("蓝牙打开成功，去获取蓝牙设备列表")
+							callback()
+					}
+				},err=>{
+					alert(err)
 				})
 			},
 			getBoothList(){
 				let deviceId = localStorage.getItem("bluedata");
-				let currentId =sessionStorage.getItem("bluedata")
+				let currentId =sessionStorage.getItem("bluedata");
+				let _this=this;
 				if(window.cordova){
 					factory.getBlueList().then((res)=>{
+						if(res=='0'){
+							this.$vux.alert.show({
+							  title: '提示',
+							  content: '蓝牙未打开，请打开蓝牙之后再操作',
+							  onHide:()=>{
+							  	this.$router.back()
+	              	return;
+							  }
+							})
+						}
 						this.boothList=[];
 						let list = res.map((e)=>{
 							return {name:e.name,value:e.address}
@@ -114,7 +136,6 @@
 						}else{
 							this.currentDevice={name:'未连接过',value:null}
 						}
-						alert(JSON.stringify(this.boothList))
 					},(err)=>{
 						alert("获取蓝牙列表失败！"+err);
 						this.boothList.push([{name:err,value:null}])
@@ -153,11 +174,17 @@
 	}
 </script>
 <style lang="less" scoped>
+
 .shop-supply .weui-cells .weui-cell{
-	&.vux-x-switch{
-		padding: 6px 10px 6px 36px;
-	}
+	
 }
+&.switchs{
+		width: 100%;
+		height: 40px;
+		background: rgb(61, 165, 254);
+		border: none;
+		color: white;
+	}
 	.print-content{
 		font-size: 17px;
 		.print-tip{
@@ -188,6 +215,9 @@
 				height: 45px;background: #FFFFFF;padding-left: 36px;line-height: 45px;
 			}
 		}
+		.switchs{
+			/*padding: 13px 16px;*/
+		}
 	}
 	.weui-cell:before{
 		border: none;
@@ -195,6 +225,11 @@
 	
 </style>
 <style lang="less">
+	.vux-x-dialog .weui-dialog .weui-dialog__bd{
+		>div{
+			line-height: 40px;
+		}
+}
 	.shop-supply {
 		.print-content{
 			.group{

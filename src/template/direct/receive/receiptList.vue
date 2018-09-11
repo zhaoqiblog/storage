@@ -63,7 +63,6 @@
           <p class="info-pass">
           	<span>{{passText}}</span>
           </p>
-          
         </div>
         <div @click="" class="click-btn">
          <button type="button" :index='delIndex' @click="showPassOver=false" class="sub">确定</button>
@@ -200,7 +199,6 @@ export default {
 			this.$store.commit("setReceiveAddGoods",this.initData)  //当前页面上的数据，使返回按钮返回到当前页数据不丢失
 			this.$store.commit("setdirectReceiveConfirm",this.initData)  //去下一个页面的数据（确认收货清单的数据）
 			if(this.initData.length<this.directReceiveShowList.length){
-				
 				this.notScanGoods= [];
 				this.directReceiveShowList.forEach(e=>{
 					let isSame=false;
