@@ -133,9 +133,9 @@ export default {
 		let printText='',printArray=[]
 		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
 		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
-		printArray.push({printSetData:{alignMode:0,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
+		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
-					data.id+'\n打印次数：'+data.printCount+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
+					data.id+'\n打印次数：'+(data.printCount+1)+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
 					'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
 					'收 货 人：'+data.recvinfo.name+'\n'+
 					'联系电话：'+data.recvinfo.phone+'\n'+(data.deliverType==0 ?'':'收货地址：'+data.recvinfo.address.city+'-'+data.recvinfo.address.detail)})
@@ -156,11 +156,11 @@ export default {
 		printArray.push({printSetData:{alignMode:0,charSize:1},printType:0,text:'订单件数：'+data.amount.productcount/100})
 		printArray.push({printSetData:{alignMode:0,charSize:0,feedLine:1},printType:0,text:'应收金额：'+data.amount.totalamount/100+'\n--------------------------------'})
 		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'谢谢惠顾，欢迎再次光临 \n'+data.shop.address+'\n'+'配送时间:09:00 - 20:00\n联系客服：400-800-5050\n\n提货码:'+data.outerOrderId})
-		printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:150,"modelSize":5},printType:1,text:data.outerOrderId})
+		printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:200},printType:1,text:data.outerOrderId})
 		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n签名栏：\n\n\n--------------------------------\n\n"})
-		/*printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"开票码:\n"})
-		printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:150,"modelSize":5},printType:2,text:data.obtaininvoiceurl})
-		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n--------------------------------\n\n"})*/
+		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"开票码:\n"})
+		printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:350,"modelSize":5},printType:3,text:data.obtaininvoiceurl})
+		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n--------------------------------\n\n"})
 		let datas = {datas:printArray}
 		factory.print(datas).then((res)=>{
 			callback();
@@ -182,9 +182,9 @@ export default {
 			})
 			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
 			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
-			printArray.push({printSetData:{alignMode:0,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
+			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
-						data.id+'\n打印次数：'+data.printCount+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
+						data.id+'\n打印次数：'+(data.printCount+1)+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
 						'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
 						'收 货 人：'+data.recvinfo.name+'\n'+
 						'联系电话：'+data.recvinfo.phone+'\n'+(data.deliverType==0 ?'':'收货地址：'+data.recvinfo.address.city+'-'+data.recvinfo.address.detail)})
@@ -205,11 +205,11 @@ export default {
 			printArray.push({printSetData:{alignMode:0,charSize:1},printType:0,text:'订单件数：'+data.amount.productcount/100})
 			printArray.push({printSetData:{alignMode:0,charSize:0,feedLine:1},printType:0,text:'应收金额：'+data.amount.totalamount/100+'\n--------------------------------'})
 			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'谢谢惠顾，欢迎再次光临 \n'+data.shop.address+'\n'+'配送时间:09:00 - 20:00\n联系客服：400-800-5050\n\n提货码:'+data.outerOrderId})
-			printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:150,"modelSize":5},printType:1,text:data.outerOrderId})
+			printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:100,"modelSize":5},printType:1,text:data.outerOrderId})
 			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n签名栏：\n\n\n--------------------------------\n\n\n"})
-			/*printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"开票码:\n"})
-			printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:150,"modelSize":5},printType:2,text:data.obtaininvoiceurl})
-			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n--------------------------------\n\n"})*/
+			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"开票码:\n"})
+			printArray.push({printSetData:{alignMode:1,charSize:0,feedLine:1,isPrintTextCut:true,height:150,"modelSize":5},printType:3,text:data.obtaininvoiceurl})
+			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:"\n--------------------------------\n\n"})
 		
 		})	
 		let datas = {datas:printArray}

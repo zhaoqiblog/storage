@@ -13,7 +13,7 @@
         	class="store-picker vux-1px-b" 
         	ref="storepicker"></popup-picker>
         <div class="group">
-          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 0}">
+          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 0}" v-if="roles.sim_receive_port">
             <group-title @click.native="toggle(0)"><i class="i-line"></i>收货口<i class="i-arrow"></i></group-title>
             <div class="content">
               <grid :cols="2">
@@ -49,7 +49,7 @@
               </grid>
             </div>
           </div>
-          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 1}">
+          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 1}" v-if="roles.sim_shopping_place">
             <group-title @click.native="toggle(1)"><i class="i-line"></i>卖场<i class="i-arrow"></i></group-title>
             <div class="content">
               <grid :cols="2">
@@ -74,7 +74,7 @@
               </grid>
             </div>
           </div>
-          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 2}">
+          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 2}" v-if="roles.sim_back_store">
             <group-title @click.native="toggle(2)"><i class="i-line"></i>后场<i class="i-arrow"></i></group-title>
             <div class="content">
             	<grid :cols="2">
@@ -131,7 +131,7 @@
               </grid>
             </div>
           </div>
-          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 3}">
+          <div class="group-item vux-1px-b vux-1px-l" :class="{show: showIndex == 3}" v-if="roles.sim_front_store">
             <group-title @click.native="toggle(3)"><i class="i-line"></i>前置仓<i class="i-arrow"></i></group-title>
             <div class="content">
               <grid :cols="2">
@@ -185,7 +185,7 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
-                <!--<grid-item :link="{name: 'setPrinter'}">
+                <grid-item :link="{name: 'setPrinter'}">
                   <div class="text">
                     <h2>设置打印机</h2>
                     <p>前置仓拣货前，优先设置打印设备</p>
@@ -193,7 +193,7 @@
                   <div class="img">
                     <img src="../assets/home/icon9.png">
                   </div>
-                </grid-item>-->
+                </grid-item>
                <!-- <grid-item :link="{name: 'concatPickList1'}">
                   <div class="text">
                     <h2>测试超时列表</h2>
@@ -267,8 +267,7 @@ export default {
       currentStore:[],
       aaa:this.commonInfo,
       data:{},
-      blueList:[],
-      inputss:"",
+      roles:{'sim_receive_port':false,'sim_shopping_place':false,'sim_back_store':false,'sim_front_store':false}
     }
   },
   watch:{
@@ -308,10 +307,20 @@ export default {
           	if(result.info.userNo){
 	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.info.userNo).then(res => {
 	              if(res.success) {
+	              	$request.get($conf.simUrl+"/api/user-permit/v1/protected/"+result.info.userNo).then(res1=>{ 					    	
+							    		let lists = Object.keys(this.roles)
+							    		for(var i=0;i<lists.length;i++){
+							    			res1.data.sysMenuViewDTOS.forEach(e=>{
+								    			if(e.permission==lists[i]){
+								    				this.roles[lists[i]]=true;
+								    			}
+							    			})
+							    		}
+							    })
 	                let userInfo = Object.assign(res.data);
 	                res.data.costCenterNum = res.data.costNumber
 	                this.$store.commit("updateCommonInfo", res.data);
-	               	let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
+//	               	let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
 	               	let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
 	               	this.currentStore.push(aaa)
 	          			const target = this.commonInfo.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
@@ -326,6 +335,7 @@ export default {
 								   	this.currentStore.push(this.commonInfo.stores[0].storeCode)
 								   	localStorage.setItem("costNumber",this.commonInfo.stores[0].storeCode)
 								   }
+								   
 	              } else {
 	               this.$vux.toast.show({
 	                  type: 'text',
@@ -352,10 +362,21 @@ export default {
       } else {
         $request.get($conf.upmUrl + "/api/v1/public/user/" + $conf.userTest.uid).then(res => {
           if(res.success) {
+          	 $request.get($conf.simUrl+"/api/user-permit/v1/protected/"+res.data.userNo).then(res1=>{ 					    	
+					    		let lists = Object.keys(this.roles)
+					    		for(var i=0;i<lists.length;i++){
+					    			res1.data.sysMenuViewDTOS.forEach(e=>{
+						    			if(e.permission==lists[i]){
+						    				this.roles[lists[i]]=true;
+						    			}
+					    			})
+					    		}
+					    	
+					    })
             let userInfo = Object.assign(res.data);
             res.data.costCenterNum = res.data.costNumber
 		        this.$store.commit("updateCommonInfo", res.data);
-            let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
+//          let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
             let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
 						this.currentStore.push(aaa)
 	          let target = res.data.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
@@ -364,6 +385,15 @@ export default {
 					    	costName:target.storeName,
 					    	costNumber:target.storeCode,
 					    });
+					   
+          }else{
+          	this.$vux.toast.show({
+              type: 'text',
+              text: res.message || '获取用户信息失败2',
+              onHide: () => {
+                factory.exit()
+              }
+            })
           }
         })
       }

@@ -107,7 +107,7 @@
        		</span>
       </div>
       <div class="btn-submit">  <!--:disabled=""-->
-        <button type="button" @click="completeOrder">完成</button>
+        <button type="button" @click="completeOrder" :disabled="isAllPicked">完成</button>
       </div>
     </div>
     <div v-transfer-dom class="pre-confirm">
@@ -198,6 +198,7 @@ export default {
       listData:{'noPick':[],'picked':[]},
       listIds:[],
       isTmp:true,
+      isAllPicked:true,
     }
   },
   created() {
@@ -339,6 +340,7 @@ export default {
 				}
 			}
 		})
+  		this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})
   	},
   	/**
   	 * 缺货按钮点击事件,将输入的值回调给当前点击的halfPickNum
@@ -355,6 +357,7 @@ export default {
 			})
 			this.popItem=seleItem[0];
 			this.popItem.pid = pid;
+			this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})
   	},
   	/**
   	 * 全部拣货按钮点击事件
@@ -376,6 +379,7 @@ export default {
 					}
 				})
 	  		this.alreadyPick=this.alreadyPick+1
+	  		this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})	
   	},
   	/**
   	 * 一键拣货
@@ -393,17 +397,19 @@ export default {
   				this.listData.picked.push(e)  // 将一键拣货拣过的合并订单放到已拣货中
   			}
   		})
+  		this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})
   	},
     /**
      * 完成拣货
      */
     completeOrder(){
     	//判断是否有未拣货的的商品
-    	if(this.datas.products.length-this.listData.picked.length>0){
+    	this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})
+    	if(this.isAllPicked){
     		this.$vux.toast.show({
           type: 'text',
           text:'需对商品“拣货”确认'
-        })
+       })
     	}else{
 				let allList = [];
 				this.datas.products.forEach((e)=>{
@@ -437,14 +443,26 @@ export default {
 						      "warehouseCode":e.warehouseCode,
 						      "imgurl":e.imgurl,
 					    	}
-								obj.goodsInfoDTOS.push(objs)
+								if(objs.diffNum||objs.qty){
+									obj.goodsInfoDTOS.push(objs)
+								}else{
+									this.isAllPicked=true
+										this.$vux.toast.show({
+						          type: 'text',
+						          text:e.ordersequenceno+e.subtitle+'未拣货'
+						        })
+										return;
+								}
 							}
 					})
 					return obj
 				})
 					let ObjPush={'isTempMergePick':'1',orderPickRequestDTOs:lists}
+				if(!this.isAllPicked){
+					this.isAllPicked=true;
 		    $request.post("/api/online-order/v1/protected/merge/finishpick",ObjPush).then(res=>{
-		    	if(res.success&&res.success==true){						
+		    	if(res.success&&res.success==true){
+		    		this.isAllPicked=false;
 						if(res.data){
 							this.errInfo=res;
 			    		let errMsg = res.data
@@ -459,9 +477,15 @@ export default {
 							this.$router.push({name:"concatSuccessDetail",query:{id:ids.join('|')}})
 						}
 		    	}else{
+		    		this.isAllPicked=false;
+		    		this.$vux.toast.show({
+		          type: 'text',
+		          text:res.message
+		        })
 		    		
 		    	}
 		  	})
+		    }
    		}
     }
   },

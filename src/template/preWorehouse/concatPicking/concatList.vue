@@ -46,7 +46,7 @@
           			:receiveOrder="receiveOrder"
           			></pre-list-concats>
 			    </div>
-			    <m-empty v-if="data.pageOver && data.pageOver.length == 0"></m-empty>
+			    <m-empty v-if="data.overTime && data.overTime.length == 0"></m-empty>
 			    <div v-if="pageOver.isEnd" class="theEnd">已经到底啦</div>
         </div>
         <div v-if="index==2">
@@ -244,6 +244,7 @@ export default {
     
   },
   created() {
+  	console.log(localStorage.getItem("currentStore"))
     this.getSupplyList(0);
   },
   destroyed(){
