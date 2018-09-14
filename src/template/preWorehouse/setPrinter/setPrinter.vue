@@ -63,8 +63,16 @@
 						//选择完毕连接打印机
 						let param1 = e.value;//这里传入用户点击的目标蓝牙设备地址
 						//连接打印机
+						this.$vux.loading.show({
+							text:'连接中'
+						})
 						factory.connectBlue(param1).then(res=>{
 							if(res=='连接成功'||res=='true'){
+								this.$vux.loading.hide()
+								this.$vux.toast.show({
+	                  type: 'text',
+	                  text: '连接成功',
+	                })
 								localStorage.setItem("bluedata",e.value);
 								sessionStorage.setItem("bluedata",e.value);
 								this.currentDevice = e;

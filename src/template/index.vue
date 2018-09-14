@@ -194,15 +194,6 @@
                     <img src="../assets/home/icon9.png">
                   </div>
                 </grid-item>
-               <!-- <grid-item :link="{name: 'concatPickList1'}">
-                  <div class="text">
-                    <h2>测试超时列表</h2>
-                    <p>前置仓拣货前，优先设置打印设备</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/icon9.png">
-                  </div>
-                </grid-item>-->
               </grid>
               <grid :cols="2">
               </grid>
@@ -297,7 +288,7 @@ export default {
 		    this.curr=this.currentStore;
 		    //将状态保存到本地，下次进来还是当前的状态，选中的小店，上次操作的是卖场还是前置仓
     		localStorage.setItem("currentStore",this.currentStore)
-		    
+    		
       }
     },
     init () {
@@ -305,6 +296,7 @@ export default {
         if(Object.keys(this.commonInfo).length == 0) {
          factory.getUser().then(result => {
           	if(result.info.userNo){
+    					localStorage.setItem("userNo",result.info.userNo)
 	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.info.userNo).then(res => {
 	              if(res.success) {
 	              	$request.get($conf.simUrl+"/api/user-permit/v1/protected/"+result.info.userNo).then(res1=>{ 					    	

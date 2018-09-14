@@ -116,7 +116,7 @@
 <script>
 
 export default {
-	name: 'home',
+	name: 'home1',
 	data(){
 		return {
 			lalala: '啦啦啦',

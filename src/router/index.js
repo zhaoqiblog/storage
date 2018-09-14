@@ -22,7 +22,8 @@ const router = new Router({
   routes: [{
       path: '/',
       component: index,
-      meta:{index:0}
+      meta:{index:0},
+      keepAlive: true
     },
     /*{
       path: '/test',

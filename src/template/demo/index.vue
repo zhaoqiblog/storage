@@ -194,7 +194,7 @@
 <script>
 
 export default {
-	name: 'home',
+	name: 'home2',
 	data(){
 		return {
 			lalala: '啦啦啦',

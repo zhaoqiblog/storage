@@ -12,7 +12,7 @@ Axios.defaults.headers['Content-Type'] = 'application/json';
 Axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest';
 
 Axios.defaults.baseURL = CONFIG.baseUrl;
-
+//Axios.defaults.baseURL="http://localhost:8080"
 let timeouts=null;
 Axios.interceptors.request.use((config) => {
   Vue.$vux.loading.show({
@@ -20,13 +20,13 @@ Axios.interceptors.request.use((config) => {
   })
 	timeouts = setTimeout(()=>{Vue.$vux.loading.hide()},8000)
 if(window.cordova){
-  if(store.getters.getCommonInfo.id) {
-    config.headers['userName'] = store.getters.getCommonInfo.id
-    config.headers['costNumber'] = store.getters.getCommonInfo.costNumber
-  }
-  }else{
+//if(store.getters.getCommonInfo.id) {
+    config.headers['userName'] = localStorage.getItem("userNo")
+    config.headers['costNumber'] = localStorage.getItem("currentStore")
+//}
+ }else{
   	config.headers['userName'] = CONFIG.userTest.uid
-  	config.headers['costNumber'] = store.getters.getCommonInfo.costNumber
+  	config.headers['costNumber'] = localStorage.getItem("currentStore")
   }
   return config;
 }, (error) => {

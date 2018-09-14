@@ -49,7 +49,6 @@ export default {
 		} });
   },
   mounted() {
-    factory.changeColor([255, 255, 255]);
     let routes = this.$router.options.routes,
       arr = []
     for (let i = 0; i < routes.length; i++) {
