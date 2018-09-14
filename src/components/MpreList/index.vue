@@ -27,7 +27,7 @@
    				</dl>
    			</div>
    			<div class="button-to-pick" v-if="receiveOrder">
-				<button @click="receiveOrder(id)" 
+				<button @click="receiveOrders(id)" :disabled="isHttps"
 					style="width: 70px;height: 30px;line-height: 29px;padding: 0;"
 				>接单</button>
    			</div>
@@ -45,10 +45,20 @@ import {Group} from 'vux'
 		components:{Group},
 		data(){
 			return {
-				
+				isHttps:false
 			}
 		},
 		created(){
+		},
+		updated(){
+		},
+		methods:{
+			receiveOrders(id){
+				this.isHttps=true;
+				this.receiveOrder(id,()=>{
+					this.isHttps=false;
+				});
+			}
 		},
 		props:{
 			id:[String], //id
@@ -62,6 +72,7 @@ import {Group} from 'vux'
 			slotType:[String,Number],  //订单类别（极速达，预约
 			receiveOrder:[Function],  //是否显示接单按钮
 			classInfo:[Object,String],  //生鲜，冻品，加工
+			type:[String],   //订单类型（未超时已超时）
 		}
 	}
 </script>
@@ -81,5 +92,8 @@ import {Group} from 'vux'
 	}
 	.order-form-immedirte{
 		background: #FEF6E9;border: 1px solid #EBD3AF;border-radius: 1px;color: #A95519;
+	}
+	.pre-picking .pre-pick-list .list-pre-item .pre-list-item-content .button-to-pick button:disabled{
+		background: #d5d5d6;
 	}
 </style>

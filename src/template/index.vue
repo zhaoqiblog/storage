@@ -284,11 +284,30 @@ export default {
 		    	costName:target.name,
 		    	costNumber:target.value,
 		    });
-		    localStorage.setItem("costNumber",target.value)
+		    localStorage.setItem("costNumber",target.value)  //成本中心
 		    this.curr=this.currentStore;
+		    let lists = Object.keys(this.roles)
+		    lists.forEach((n)=>{this.roles[n]=false})
+		    $request.get($conf.simUrl+"/api/user-permit/v1/protected/"+localStorage.getItem("userNo")+"/"+this.currentStore[0]).then(res1=>{
+					if(res1.success==true){
+						
+						
+			    		for(var i=0;i<lists.length;i++){
+			    			res1.data.sysMenuTree.forEach(e=>{
+				    			if(e.data.permission==lists[i]){
+				    				this.roles[lists[i]]=true;
+				    			}
+			    			})
+			    		}
+					}else{
+						this.$vux.toast.show({
+							type:'text',
+							text:res1.message
+						})
+					}
+				})
 		    //将状态保存到本地，下次进来还是当前的状态，选中的小店，上次操作的是卖场还是前置仓
     		localStorage.setItem("currentStore",this.currentStore)
-    		
       }
     },
     init () {
@@ -297,36 +316,25 @@ export default {
          factory.getUser().then(result => {
           	if(result.info.userNo){
     					localStorage.setItem("userNo",result.info.userNo)
-	            $request.get($conf.upmUrl + "/api/v1/public/user/" + result.info.userNo).then(res => {
+	            $request.get($conf.simUrl + "/api/sys-user/v1/protected/userinfo/" + result.info.userNo).then(res => {
 	              if(res.success) {
-	              	$request.get($conf.simUrl+"/api/user-permit/v1/protected/"+result.info.userNo).then(res1=>{ 					    	
-							    		let lists = Object.keys(this.roles)
-							    		for(var i=0;i<lists.length;i++){
-							    			res1.data.sysMenuViewDTOS.forEach(e=>{
-								    			if(e.permission==lists[i]){
-								    				this.roles[lists[i]]=true;
-								    			}
-							    			})
-							    		}
-							    })
 	                let userInfo = Object.assign(res.data);
 	                res.data.costCenterNum = res.data.costNumber
 	                this.$store.commit("updateCommonInfo", res.data);
-//	               	let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
-	               	let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
+	               	let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):res.data.stores[0].storeCode;
 	               	this.currentStore.push(aaa)
-	          			const target = this.commonInfo.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
+	          			const target = res.data.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
 									//更新成本中心，成本中心要一起修改
-									if(target){									
+//									if(target){									
 								    this.$store.commit("updateCommonInfo", {
 								    	costName:target.storeName,
 								    	costNumber:target.storeCode,
 								    });
 								    localStorage.setItem("costNumber",target.storeCode)
-								   }else{
+								  /* }else{
 								   	this.currentStore.push(this.commonInfo.stores[0].storeCode)
 								   	localStorage.setItem("costNumber",this.commonInfo.stores[0].storeCode)
-								   }
+								   }*/
 								   
 	              } else {
 	               this.$vux.toast.show({
@@ -352,32 +360,20 @@ export default {
           })
         }
       } else {
-        $request.get($conf.upmUrl + "/api/v1/public/user/" + $conf.userTest.uid).then(res => {
-          if(res.success) {
-          	 $request.get($conf.simUrl+"/api/user-permit/v1/protected/"+res.data.userNo).then(res1=>{ 					    	
-					    		let lists = Object.keys(this.roles)
-					    		for(var i=0;i<lists.length;i++){
-					    			res1.data.sysMenuViewDTOS.forEach(e=>{
-						    			if(e.permission==lists[i]){
-						    				this.roles[lists[i]]=true;
-						    			}
-					    			})
-					    		}
-					    	
-					    })
-            let userInfo = Object.assign(res.data);
-            res.data.costCenterNum = res.data.costNumber
-		        this.$store.commit("updateCommonInfo", res.data);
-//          let className=res.data.costName.slice(res.data.costName.indexOf("-")+1)
-            let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):this.commonInfo.costNumber;
-						this.currentStore.push(aaa)
+      	$request.get($conf.simUrl+"/api/sys-user/v1/protected/userinfo/"+$conf.userTest.uid).then(res=>{		    		
+		    		if(res.success) {
+		    			localStorage.setItem("userNo",$conf.userTest.uid)
+		    			let userInfo = Object.assign(res.data);
+	            res.data.costCenterNum = res.data.costNumber
+			        this.$store.commit("updateCommonInfo", res.data);
+	            let currentObj =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):res.data.stores[0].storeCode;
+							this.currentStore.push(currentObj)
 	          let target = res.data.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
-					//更新成本中心，成本中心要一起修改
-					    this.$store.commit("updateCommonInfo", {
-					    	costName:target.storeName,
-					    	costNumber:target.storeCode,
-					    });
-					   
+						//更新成本中心，成本中心要一起修改
+				    this.$store.commit("updateCommonInfo", {
+				    	costName:target.storeName,
+				    	costNumber:target.storeCode,
+				    });
           }else{
           	this.$vux.toast.show({
               type: 'text',
@@ -387,7 +383,10 @@ export default {
               }
             })
           }
-        })
+		    })
+//      $request.get($conf.upmUrl + "/api/v1/public/user/" + $conf.userTest.uid).then(res => {
+          
+//      })
       }
     },
     back () {

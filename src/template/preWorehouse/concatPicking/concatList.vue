@@ -269,6 +269,7 @@ export default {
 	          res.data.content.map((item,ins)=>{
 	            let supplyNum = 0, products = []
 	            item.classInfo=JSON.parse(item.classInfo)
+	            item.isHttps=false;
 	            let a = parseInt(item.toTime-new Date().getTime())
 	            item.OverText=Math.abs(parseInt(a/(1000*60)));
 	            if(a>0){
@@ -342,14 +343,15 @@ export default {
   	/*
   	 * 接单
   	 */
-  	receiveOrder(id){
+  	receiveOrder(id,callback=null){
   		$request.get("/api/online-order/v1/protected/startpick/"+id).then(res=>{
 	  			if(res.success==true){
 	  				//接单成功：刷新界面
 	  				this.$vux.toast.show({
 	            type: 'text',
 	            text: '接单成功'
-	          })
+	         })	  	
+	         callback()
 	  				this.$refs.scrollWrap.scrollTop=0
 	  				if(this.index==1){
 	  					this.pageOver.pageNo=0;
@@ -363,6 +365,7 @@ export default {
 	            type: 'text',
 	            text: res.message
 	          })
+	  				callback()
 	  				this.getSupplyList(0,1)
 	  			}
 	  		})
@@ -469,6 +472,7 @@ export default {
 	          res.data.content.map((item,ins)=>{
 			            let supplyNum = 0, products = []
 			            item.classInfo=JSON.parse(item.classInfo)
+			            item.isHttps=false;
 			            let a = parseInt(item.toTime-new Date().getTime())	
 			            item.OverText=Math.abs(parseInt(a/(1000*60)));
 			            if(a>0){
