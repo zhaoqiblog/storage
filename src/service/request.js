@@ -26,7 +26,7 @@ if(window.cordova){
 //}
  }else{
   	config.headers['userName'] = CONFIG.userTest.uid
-  	config.headers['costNumber'] = localStorage.getItem("currentStore")
+//	config.headers['costNumber'] = localStorage.getItem("currentStore")
   }
   return config;
 }, (error) => {
@@ -64,7 +64,7 @@ const request = {
     var obj = {
       params: params
     }
-    return Axios.get(url, obj)
+    return Axios.get(url,{headers:{'costNumber':localStorage.getItem('currentStore')}},obj)
   },
   delete(url, params) {
     var obj = {
