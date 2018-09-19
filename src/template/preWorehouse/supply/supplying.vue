@@ -28,7 +28,8 @@
     			</div>
     			<div class="supply-input" >
     				<span>补货至前置仓</span>
-    				<input type="number" v-model="e.supplyNum" :id='"input-la"+index'  pattern="[0-9]*" @input="changeinput(e.supplyNum)"/>
+    				 <!--pattern="[0-9]*"-->
+    				<input type="number" v-model="e.supplyNum" :id='"input-la"+index'  @input="changeinput(e.supplyNum)"/>
     			</div>
     		</div>
     </div>

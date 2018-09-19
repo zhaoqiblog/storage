@@ -17,7 +17,7 @@
     			</div>
     			<div class="supply-input vux-1px-t">
     				<span>补货至前置仓</span>
-    				<input type="number" v-model="e.num" @input="isubtn(e.num)" pattern="[0-9]*"/>
+    				<input type="number" v-model="e.num" @input="isubtn(e.num)" />
     			</div>
       </div>
     </div>

@@ -445,6 +445,7 @@ export default {
     		}
     	}
     	let obj;
+    	
     	if(status==0){
     		obj={
     			shopId:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
@@ -452,8 +453,9 @@ export default {
     			isTimeOut:0,
     		}
     	}else{
+    		console.log(status)
     		obj={
-    			operatorNo:this.commonInfo.userNo,
+    			operatorNo:localStorage.getItem("userNo"),
     			shopId:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
     			status:status,
     			page: pageNow,

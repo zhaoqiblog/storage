@@ -26,7 +26,6 @@ export default {
   methods: {
     scan () {
       factory.scan().then(function(res) {
-        alert('success:' + JSON.stringify(res))
       })
     }
   }

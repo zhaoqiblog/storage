@@ -32,7 +32,7 @@
     			</div>
     			<div class="supply-input vux-1px-t">
     				<span>补货至前置仓</span>
-    				<input type="number" v-model="e.count" @input="isubtn(e.count,index)" pattern="[0-9]*"/>
+    				<input type="number" v-model="e.count" @input="isubtn(e.count,index)" />
     			</div>
     			<p class="tips" v-if="e.isOver">库位现有数量为:{{e.availableNum}}&nbsp;不能超过现有库存数量！</p>
 		    </div>

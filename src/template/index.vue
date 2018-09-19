@@ -199,6 +199,7 @@
               </grid>
             </div>
           </div>
+          <!--<input type="number" pattern="[0-9]*"/>-->
         </div>
       </div>
     </scroller>
@@ -278,107 +279,75 @@ export default {
     storeChange (value) {
       const costName = this.$refs.storepicker.getNameValues();
       if(costName){
-	      const target = this.storeList[0].filter(item=>this.currentStore==item.value)[0];
+	      const target = this.storeList[0].filter(item=>this.currentStore[0]==item.value)[0];
 	      //切换小店时，成本中心要一起修改
 		    this.$store.dispatch("changeCommonInfo", {
 		    	costName:target.name,
 		    	costNumber:target.value,
 		    });
-		    localStorage.setItem("costNumber",target.value)  //成本中心
-		    localStorage.setItem("currentStore",this.currentStore)
+		    localStorage.setItem("costNumber",this.currentStore[0])  //成本中心
+		    localStorage.setItem("currentStore",this.currentStore[0])
+		    
 		    this.getUserInfo ()
-		    //将状态保存到本地，下次进来还是当前的状态，选中的小店，上次操作的是卖场还是前置仓
-    		/*localStorage.setItem("currentStore",this.currentStore)
-    		console.log(localStorage.getItem('currentStore'))*/
       }
     },
     getUserInfo(){
     	let lists = Object.keys(this.roles)
 		  lists.forEach((n)=>{this.roles[n]=false})
-		  this.currentStore=[]
-		  let currentObj =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):'';
-			this.currentStore[0]=currentObj
-    	if(window.cordova){
+		  /*this.currentStore=[]
+		  let currentObj =localStorage.getItem("currentStore");
+			this.currentStore[0]=currentObj*/
     		$request.get($conf.simUrl + "/api/user-permit/v1/protected/userinfo").then(res => {
-	              if(res.success) {
-	                let userInfo = Object.assign(res.data.sysUser);
-	                res.data.sysUser.costCenterNum = res.data.sysUser.costNumber
-	                this.$store.commit("updateCommonInfo", res.data.sysUser);
-	          			const target = res.data.sysUser.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
-				          for(var i=0;i<lists.length;i++){
-						    			res.data.sysMenuTree.forEach(e=>{
-							    			if(e.data.permission==lists[i]){
-							    				this.roles[lists[i]]=true;
-							    			}
-						    			})
-						    	}
-									//更新成本中心，成本中心要一起修改					
-								    this.$store.commit("updateCommonInfo", {
-								    	costName:target.storeName,
-								    	costNumber:target.storeCode,
-								    });
-								    localStorage.setItem("costNumber",target.storeCode)
-	              } else {
-	               this.$vux.toast.show({
-	                  type: 'text',
-	                  text: res.message || '获取用户信息失败2',
-	                  onHide: () => {
-	                    factory.exit()
-	                  }
-	                })
-	              }
-	            })
-    	}else{
-    		/*let currentObj =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):'';
-				this.currentStore[0]=currentObj
-      	$request.get($conf.simUrl+"/api/user-permit/v1/protected/userinfo").then(res=>{		    		
-		    		if(res.success) {
-		    			localStorage.setItem("userNo",$conf.userTest.uid)
-		    			let userInfo = Object.assign(res.data.sysUser);
-	            res.data.sysUser.costCenterNum = res.data.sysUser.costNumber
-			        this.$store.commit("updateCommonInfo", res.data.sysUser);
-	          	let target = res.data.sysUser.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
-		          for(var i=0;i<lists.length;i++){
-				    			res.data.sysMenuTree.forEach(e=>{
-					    			if(e.data.permission==lists[i]){
-					    				this.roles[lists[i]]=true;
-					    			}
-				    			})
-				    	}
-						//更新成本中心，成本中心要一起修改
-						if(target){
-				    this.$store.commit("updateCommonInfo", {
-				    	costName:target.storeName,
-				    	costNumber:target.storeCode,
-				    })
-				   }
-          }else{
-          	this.$vux.toast.show({
-              type: 'text',
-              text: res.message || '获取用户信息失败2',
-              onHide: () => {
-                factory.exit()
-              }
-            })
-          }
-		    })*/
-    	}
+		      if(res.success) {
+		        let userInfo = Object.assign(res.data.sysUser);
+		        res.data.sysUser.costCenterNum = res.data.sysUser.costNumber
+		        this.$store.commit("updateCommonInfo", res.data.sysUser);
+		        localStorage.setItem("currentStore",res.data.sysUser.currentStoreCode)
+//		        alert(localStorage.getItem('currentStore')+'-----')
+		  			const target = res.data.sysUser.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
+			          for(var i=0;i<lists.length;i++){
+					    			res.data.sysMenuTree.forEach(e=>{
+					    				console.log(e.data.permission,lists[i])
+						    			if(e.data.permission==lists[i]){
+						    				this.roles[lists[i]]=true;
+						    			}
+					    			})
+					    	}
+			          console.log(this.roles)
+								//更新成本中心，成本中心要一起修改					
+							    this.$store.commit("updateCommonInfo", {
+							    	costName:target.storeName,
+							    	costNumber:target.storeCode,
+							    });
+							    localStorage.setItem("costNumber",target.storeCode)
+		      } else {
+		       this.$vux.toast.show({
+		          type: 'text',
+		          text: res.message || '获取用户信息失败2',
+		          onHide: () => {
+									localStorage.setItem("currentStore",'')
+		            factory.exit()
+		          }
+		        })
+		      }
+		    })
     },
     init () {
     	let lists = Object.keys(this.roles)
 		  lists.forEach((n)=>{this.roles[n]=false})
      if(window.cordova) {
+    		console.log("初始化 手机")
         if(Object.keys(this.commonInfo).length == 0) {
          factory.getUser().then(result => {
           	if(result.info.userNo){
-    					localStorage.setItem("userNo",result.info.userNo)
+          		localStorage.setItem("userNo",result.info.userNo)
 	            $request.get($conf.simUrl + "/api/user-permit/v1/protected/userinfo").then(res => {
 	              if(res.success) {
+									localStorage.setItem("currentStore",res.data.sysUser.currentStoreCode)
+									this.currentStore[0]=res.data.sysUser.currentStoreCode
 	                let userInfo = Object.assign(res.data.sysUser);
 	                res.data.sysUser.costCenterNum = res.data.sysUser.costNumber
 	                this.$store.commit("updateCommonInfo", res.data.sysUser);
-	               	let aaa =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):res.data.sysUser.stores[0].storeCode;
-	               	this.currentStore.push(aaa)
 	          			const target = res.data.sysUser.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
 				          for(var i=0;i<lists.length;i++){
 						    			res.data.sysMenuTree.forEach(e=>{
@@ -398,6 +367,7 @@ export default {
 	                  type: 'text',
 	                  text: res.message || '获取用户信息失败2',
 	                  onHide: () => {
+											localStorage.setItem("currentStore",'')
 	                    factory.exit()
 	                  }
 	                })
@@ -408,6 +378,7 @@ export default {
 	                type: 'text',
 	                text: '获取底座用户信息失败',
 	                onHide: () => {
+									localStorage.setItem("currentStore",'')
 	                  factory.exit()
 	                }
 	              })
@@ -417,10 +388,22 @@ export default {
           })
         }
       } else {
-      	let currentObj =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):'';
-				this.currentStore[0]=currentObj
-      	$request.get($conf.simUrl+"/api/user-permit/v1/protected/userinfo").then(res=>{		    		
+//  		console.log("初始化 非手机")
+    		if(localStorage.getItem("userNo")!=$conf.userTest.uid){
+    			localStorage.setItem("currentStore",'')
+    		}
+    		console.log(localStorage.setItem("userNo",$conf.userTest.uid))
+      	$request.get($conf.simUrl+"/api/user-permit/v1/protected/userinfo").then(res=>{
 		    		if(res.success) {
+		    			if(localStorage.getItem("userNo")==$conf.userTest.uid){
+								let currentObj =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):res.data.sysUser.currentStoreCode;
+								this.currentStore[0]=currentObj
+//								console.log("上次登陆同一个账号，"+localStorage.getItem("currentStore"))
+							}else{
+//								console.log("上次登陆非同，"+localStorage.getItem("currentStore"))
+								this.currentStore[0] = res.data.sysUser.currentStoreCode
+								localStorage.setItem("currentStore",res.data.sysUser.currentStoreCode)
+							}
 		    			localStorage.setItem("userNo",$conf.userTest.uid)
 		    			let userInfo = Object.assign(res.data.sysUser);
 	            res.data.sysUser.costCenterNum = res.data.sysUser.costNumber
@@ -445,6 +428,7 @@ export default {
               type: 'text',
               text: res.message || '获取用户信息失败2',
               onHide: () => {
+								localStorage.setItem("currentStore",'')
                 factory.exit()
               }
             })
@@ -456,6 +440,7 @@ export default {
       }
     },
     back () {
+			localStorage.setItem("currentStore",'')
       factory.exit()
     },
     toggle (index) {

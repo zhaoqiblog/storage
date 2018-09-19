@@ -60,6 +60,7 @@ export default {
       this.$root.goBack = () => {
         let path = this.$route.path
         if (path === '/') {
+					localStorage.setItem("currentStore",'')
           factory.exit()
         } else {
           this.$router.back()

@@ -186,7 +186,7 @@ export default {
     			this.scanGoods(i.text)
     		})
     	}else{
-    		const arrs = [6908061011970];
+    		const arrs = [2302471000007];
     		arrs.forEach(es=>{
     			this.scanGoods(es)
     		})

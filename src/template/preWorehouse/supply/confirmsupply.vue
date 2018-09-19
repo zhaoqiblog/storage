@@ -94,12 +94,14 @@ import {XInput} from 'vux';
 				}
 			})
 			let shopnum=0;
+			console.log(this.preSupplyConfirm.supplyItemDTOS)
 			this.preSupplyConfirm.supplyItemDTOS.forEach(e=>{
 				e.supplyChannelDTOList.forEach(a=>{
 					if(a.fromWarehouseId==-1){
 						shopnum++;
 					}
 				})
+				console.log(shopnum)
 				if(shopnum==this.preSupplyConfirm.supplyItemDTOS.length){
 					this.disab=false;
 				}
@@ -160,6 +162,7 @@ import {XInput} from 'vux';
 				  "totalNum": 0
 				}
 				let list1=[];
+				console.log(this.preSupplyConfirm.supplyItemDTOS)
 				this.preSupplyConfirm.supplyItemDTOS.forEach((e,index)=>{
 					obj.totalNum+=e.supplyNum;
 					

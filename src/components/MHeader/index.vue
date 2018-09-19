@@ -32,6 +32,7 @@ export default {
     onClickBack() {
       let path = this.$route.path
       if (path === '/') {
+				localStorage.setItem("currentStore",'')
         factory.exit()
       } else {
         this.$router.back()

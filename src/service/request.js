@@ -25,8 +25,8 @@ if(window.cordova){
     config.headers['costNumber'] = localStorage.getItem("currentStore")
 //}
  }else{
-  	config.headers['userName'] = CONFIG.userTest.uid
-//	config.headers['costNumber'] = localStorage.getItem("currentStore")
+  	config.headers['userName'] = localStorage.getItem("userNo")
+	config.headers['costNumber'] = localStorage.getItem("currentStore")
   }
   return config;
 }, (error) => {
@@ -64,7 +64,7 @@ const request = {
     var obj = {
       params: params
     }
-    return Axios.get(url,{headers:{'costNumber':localStorage.getItem('currentStore')}},obj)
+    return Axios.get(url,obj)
   },
   delete(url, params) {
     var obj = {

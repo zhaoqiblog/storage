@@ -133,6 +133,7 @@ export default {
      * 通过托盘码获取所需抽检信息
      */
     getProlist () {
+    	console.log("po",this.costCenterNum,this.palletCode)
       $request.get('/api/spot-check-result/v1/protected/queryCheckInfo', {
         palletCode: this.palletCode,
         costCenterNum: this.costCenterNum

@@ -19,7 +19,7 @@
 	    			</slot>
 	    			<div v-if="type=='input'" class="l-list-ctl">
 	    				<div @touchstart.stop.prevent="minus"  class="l-list-minus"></div>
-	    				<input @input="inputVal" v-model="copyValue" type="number"  pattern="[0-9]*"/>
+	    				<input @input="inputVal" v-model="copyValue" type="number" />
 	    				<div @touchstart.stop.prevent="add"  class="l-list-add"></div>
 	    			</div>
     			</div>
@@ -79,7 +79,7 @@
 	      	<label for="">实际收货数量</label>
 	      	<div class="l-list-ctl">
 				<div @touchstart.stop.prevent="minusActual"  class="l-list-minus"></div>
-				<input v-model="actualValue" type="number" @input='inputActaul' pattern="[0-9]*"/>
+				<input v-model="actualValue" type="number" @input='inputActaul'/>
 				<div @touchstart.stop.prevent="addActual"  class="l-list-add"></div>
 			</div>
 	      </div>
@@ -87,7 +87,8 @@
 	      	<label for="">赠品数量</label>
 	      	<div class="l-list-ctl">
 				<div @touchstart.stop.prevent="minusGifts"  class="l-list-minus"></div>
-				<input @input="inputGifts" v-model="giftsValue" type="number" pattern="[0-9]*"/>
+				<!--pattern="[0-9]*"-->
+				<input @input="inputGifts" v-model="giftsValue" type="number" />
 				<div @touchstart.stop.prevent="addGifts"  class="l-list-add"></div>
 			</div>
 	      </div>
@@ -117,7 +118,7 @@ export default{
 			objX: 0,//目标对象位置
 			initX: null,
 			moveX: null,
-			copyValue: null,
+			copyValue: [Number],
 			actualValue:null, 	//实际收货数量
 			giftsValue:null,	//赠品数量
 			count: -10,//数量
@@ -156,8 +157,8 @@ export default{
 	    
 	},
 	created(){
-		this.copyValue = typeof this.value == "string" ? parseInt(this.value) : this.value;
-		typeof this.totalNum == "string" && (this.totalNum = parseInt(this.totalNum));
+		this.copyValue = typeof this.value == "string" ? parseFloat(this.value) : this.value;
+		typeof this.totalNum == "string" && (this.totalNum = parseFloat(this.totalNum));
 		this.actualValue=typeof this.actualVal == "string" ? parseFloat(this.actualVal) : this.actualVal;
 		this.giftsValue=typeof this.giftsVal == "string" ? parseFloat(this.giftsVal) : this.giftsVal;
 		this.timeValue=this.timeSel
@@ -214,25 +215,25 @@ export default{
 			this.$emit("change",this.copyValue,this.$options._parentVnode.key);
 		},
 		inputVal(){
-			if(typeof parseFloat(this.copyValue) != "number"){
+			if(!parseFloat(this.copyValue)&&parseFloat(this.copyValue)!=0){
 				return this.popError('请输入数字！');
 			}
-			typeof this.copyValue != "number" && (this.copyValue = parseFloat(this.copyValue))
+//			typeof this.copyValue != "number" && (this.copyValue = parseFloat(this.copyValue))
 			this.pop(this.copyValue);
 		},
 		inputActaul(){
-			if(typeof parseInt(this.actualValue) != "number"){
+			if(!parseFloat(this.actualValue)&&parseFloat(this.actualValue)!=0){
 				return this.popError('请输入数字！');
 			}
-			typeof this.actualValue != "number" && (this.actualValue = parseFloat(this.actualValue));
+			/* typeof this.actualValue != "number" && (this.actualValue = parseFloat(this.actualValue));*/
 			this.$emit("input",this.actualValue);
 			this.$emit("changeActual",this.actualValue,this.$options._parentVnode.key);
 		},
 		inputGifts(){
-			if(typeof parseInt(this.giftsValue) != "number"){
+			if(!parseFloat(this.giftsValue)&&parseFloat(this.giftsValue)!=0){
 				return this.popError('请输入数字！');
 			}
-			typeof this.giftsValue != "number" && (this.giftsValue = parseFloat(this.giftsValue));
+			/*typeof this.giftsValue != "number" && (this.giftsValue = parseFloat(this.giftsValue));*/
 			this.$emit("input",this.giftsValue);
 			this.$emit("changeGift",this.giftsValue,this.$options._parentVnode.key);
 		},
