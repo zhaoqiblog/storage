@@ -388,22 +388,11 @@ export default {
           })
         }
       } else {
-//  		console.log("初始化 非手机")
-    		if(localStorage.getItem("userNo")!=$conf.userTest.uid){
-    			localStorage.setItem("currentStore",'')
-    		}
-    		console.log(localStorage.setItem("userNo",$conf.userTest.uid))
+    		localStorage.setItem("userNo",$conf.userTest.uid)
       	$request.get($conf.simUrl+"/api/user-permit/v1/protected/userinfo").then(res=>{
 		    		if(res.success) {
-		    			if(localStorage.getItem("userNo")==$conf.userTest.uid){
-								let currentObj =localStorage.getItem("currentStore")?localStorage.getItem("currentStore"):res.data.sysUser.currentStoreCode;
-								this.currentStore[0]=currentObj
-//								console.log("上次登陆同一个账号，"+localStorage.getItem("currentStore"))
-							}else{
-//								console.log("上次登陆非同，"+localStorage.getItem("currentStore"))
-								this.currentStore[0] = res.data.sysUser.currentStoreCode
-								localStorage.setItem("currentStore",res.data.sysUser.currentStoreCode)
-							}
+							localStorage.setItem("currentStore",res.data.sysUser.currentStoreCode)
+							this.currentStore[0]=res.data.sysUser.currentStoreCode
 		    			localStorage.setItem("userNo",$conf.userTest.uid)
 		    			let userInfo = Object.assign(res.data.sysUser);
 	            res.data.sysUser.costCenterNum = res.data.sysUser.costNumber
