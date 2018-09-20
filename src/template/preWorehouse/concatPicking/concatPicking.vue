@@ -63,6 +63,8 @@
 							type="concat"
 			    		:phone="item.phone"
 			    		:ordersequencenos="item.ordersequenceno"
+			    		:categoryname='item.categoryname'
+			    		:rtCurrentNum="item.rtCurrentNum"
 							:key="index">
 			    	</pre-pic-all>
 			    	<m-empty class="datas" v-if="listData.picked.length == datas.products.length"></m-empty>
@@ -88,6 +90,8 @@
 							type="concat"
 			    		:phone="item.phone"
 			    		:ordersequencenos="item.ordersequenceno"
+			    		:categoryname='item.categoryname'
+			    		:rtCurrentNum="item.rtCurrentNum"
 							:key="index">
 			    	</pre-pic-all>
 			    	<m-empty class="popo" v-if="listData.picked.length==0"></m-empty>
@@ -484,6 +488,12 @@ export default {
 	        })
 		    		
 		    	}
+		  	},(err)=>{
+		  		this.$vux.toast.show({
+	          type: 'text',
+	          text:'拣货提交失败，请重试'
+	        })
+		  		this.isAllPicked=false;
 		  	})
 		    }
    		}

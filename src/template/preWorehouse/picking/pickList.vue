@@ -285,7 +285,7 @@ name: 'pick-list',
     	if(status==0){
     		obj={shopId:this.commonInfo.costNumber,status:status,page:pageNow,size: this.page.pageSize}
     	}else{
-    		obj={operatorNo:this.commonInfo.userNo,shopId:this.commonInfo.costNumber,status:status,page: pageNow,size: this.page1.pageSize}
+    		obj={operatorNo:localStorage.getItem("userNo"),shopId:this.commonInfo.costNumber,status:status,page: pageNow,size: this.page1.pageSize}
     	}
       $request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
         if(res.success) {

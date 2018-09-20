@@ -73,7 +73,7 @@ export default {
     	this.page.pageNo++;
       $request.get('/api/supplement-invoices/v1/protected/query_page', {
         supplementType:"2",
-        userNo:this.commonInfo.userNo,
+        userNo:localStorage.getItem("userNo"),
 //      status:1,//卖场补货不用传status
         pageable: {
           page: this.page.pageNo,
@@ -82,16 +82,20 @@ export default {
       }).then(res => {
         if(res.success) {
           const datas ={...res.data};
-          
           this.data.content =this.data.content.concat(res.data.content)
           this.data.content.forEach(function(item) {
             let supplyNum = 0, products = []
-            item.supplementInvoicesDetails.forEach(function(detail) {
-              supplyNum += detail.goodsSupplementNum,
-              products.push(detail.goodsName)
-            })
-            item.supplyNum = supplyNum
-            item.products = products.join(';')
+            console.log(item)
+            /*if(item.supplementInvoicesDetails){
+            	console.log( item.supplementInvoicesDetails)
+	            item.supplementInvoicesDetails.forEach(function(detail) {
+	            	console.log(detail)
+	              supplyNum += detail.goodsSupplementNum,
+	              products.push(detail.goodsName)
+	            })
+            }
+            item.supplyNum = supplyNum*/
+            item.products = item.goodsNames
           })
           this.page.totalPage=res.data.totalPages
         } else {

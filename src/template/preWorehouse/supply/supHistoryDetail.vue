@@ -20,7 +20,7 @@
     			<p>创建日期：<span>{{new Date(data.creatTime).format("yyyy-MM-dd hh:mm:ss")}}</span></p> 
     			<p>补货SKU总数：<span>{{data.skuNum}}</span></p>     			
     			<p>补货总件数：<span>{{data.totalNum}}</span></p>  
-    			<p>通道号：<span>{{data.supplementBillNo.slice(-2)}}</span></p>     			
+    			<p>通道号：<span v-if="data.supplementBillNo">{{data.supplementBillNo.slice(-2)}}</span></p>     			
     			<p>补货员：<span>{{data.supplementerName}}</span></p>     			
     			<p>补货完成时间：<span>{{new Date(data.updateTime).format("yyyy-MM-dd hh:mm:ss")}}</span></p>     			
     		</div>

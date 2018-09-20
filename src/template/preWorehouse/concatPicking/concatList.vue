@@ -453,7 +453,6 @@ export default {
     			isTimeOut:0,
     		}
     	}else{
-    		console.log(status)
     		obj={
     			operatorNo:localStorage.getItem("userNo"),
     			shopId:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,

@@ -63,6 +63,8 @@
 							type="concat"
 			    		:phone="item.phone"
 			    		:ordersequencenos="item.ordersequenceno"
+			    		:categoryname='item.categoryname'
+			    		:rtCurrentNum="item.rtCurrentNum"
 							:key="index">
 			    	</pre-pic-all>
 			    	<m-empty class="datas" v-if="listData.picked.length == datas.products.length"></m-empty>
@@ -88,6 +90,8 @@
 							type="concat"
 			    		:phone="item.phone"
 			    		:ordersequencenos="item.ordersequenceno"
+			    		:categoryname='item.categoryname'
+			    		:rtCurrentNum="item.rtCurrentNum"
 							:key="index">
 			    	</pre-pic-all>
 			    	<m-empty class="popo" v-if="listData.picked.length==0"></m-empty>
@@ -301,8 +305,8 @@ export default {
 				})
 				this.datas.orderInfos.forEach((e)=>{
 					this.listIds.push(e.id)
-					console.log("poopo")
 				})
+				this.isAllPicked=this.datas.products.some((e)=>{return e.pickStatus==0})
 			}else{
 				this.$router.push({path:'/fail',query:{text: res.data ? res.message:'查询合单暂存失败',title: '合单暂存拣货拣货',info: '', path: {name: 'concatPickList'}}})
 			}

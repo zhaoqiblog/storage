@@ -8,6 +8,11 @@
     			<span v-if="preCode" :class="nowNum<=5 ?'safe-num warn':'safe-num'">库存 <span>{{nowNum}}</span></span>
     		</div>
     	</div>
+    	<div class="listRt">
+    		<span>{{categoryname}}</span>
+    		<span> 融通 <span>{{rtCurrentNum}}</span></span>
+    		 
+    	</div>
     		<div class="l-list-content vux-1px-t">
     			<div class="list-pic-goods">
     				<img :src="imgurl"/>
@@ -98,7 +103,8 @@ export default{
 		type:[String],  //concat 是否是合单界面
 	    phone:[String,Number],  //合单界面：需要需要联系顾客的电话
 	    ordersequencenos:[String,Number],  //合单界面需要的内容订单号
-	    
+	    categoryname:[String],  //小类
+	    rtCurrentNum:[String,Number],  //融通库存
 	    pickAllGoods:[Function],   //一键拣货函数
 	},
 	created(){
@@ -157,7 +163,7 @@ export default{
 		}
 		.l-list-info{
 			.totalnums{
-				font-size: 20px;color: #000000;padding: 4px 0;font-weight: 600;
+				font-size: 25px;color: #000000;padding: 4px 0;font-weight: 600;
 			}	
 		}
 	}
@@ -168,6 +174,21 @@ export default{
 	.uniqs{
 		li{
 			span{font-size: 13px;}
+		}
+	}
+	.listRt{
+		padding: 0 10px 10px;
+		font-size: 13px;
+		line-height: 1;
+		display: flex;justify-content: space-between;
+		align-items: center;
+		>span{
+			color: #999999;
+			
+			>span{
+				color: #303030;
+				
+			}
 		}
 	}
 </style>
