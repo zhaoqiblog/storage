@@ -287,7 +287,6 @@ export default {
 		    });
 		    localStorage.setItem("costNumber",this.currentStore[0])  //成本中心
 		    localStorage.setItem("currentStore",this.currentStore[0])
-		    
 		    this.getUserInfo ()
       }
     },
@@ -389,6 +388,7 @@ export default {
         }
       } else {
     		localStorage.setItem("userNo",$conf.userTest.uid)
+    		localStorage.setItem("currentStore",'')
       	$request.get($conf.simUrl+"/api/user-permit/v1/protected/userinfo").then(res=>{
 		    		if(res.success) {
 							localStorage.setItem("currentStore",res.data.sysUser.currentStoreCode)
@@ -405,6 +405,7 @@ export default {
 					    			}
 				    			})
 				    	}
+		          console.log(this.currentStore)
 						//更新成本中心，成本中心要一起修改
 						if(target){
 				    this.$store.commit("updateCommonInfo", {

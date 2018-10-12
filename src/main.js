@@ -1,5 +1,79 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+ var u = navigator.userAgent, app = navigator.appVersion; 
+ var isAndroidPlat = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器 
+  function setupWebViewJavascriptBridge(callback) {
+        //第一次调用这个方法的时候，为false
+        if (window.cordova) {
+            var result = callback(cordova);
+            return result;
+        }
+        //第一次调用的时候，也是false
+        if (window.WVJBCallbacks) {
+            var result = window.WVJBCallbacks.push(callback);
+            return result;
+        }
+        
+        //把callback对象赋值给对象。
+        window.WVJBCallbacks = [callback];
+        //这段代码的意思就是执行加载WebViewJavascriptBridge_JS.js中代码的作用
+        var WVJBIframe = document.createElement('iframe');
+        WVJBIframe.style.display = 'none';
+        WVJBIframe.src = 'https://__bridge_loaded__';
+        document.documentElement.appendChild(WVJBIframe);
+        setTimeout(function() {
+            document.documentElement.removeChild(WVJBIframe)
+            
+        }, 0);
+    }
+
+    //setupWebViewJavascriptBridge执行的时候传入的参数，这是一个方法。
+    function callback(bridge) {
+        var uniqueId = 1
+        //把WEB中要注册的方法注册到bridge里面
+        bridge.registerHandler('OC调用JS提供的方法', function(data, responseCallback) {
+            log('OC调用JS方法成功', data)
+            var responseData = { 'JS给OC调用的回调':'回调值!' }
+            log('OC调用JS的返回值', responseData)
+            responseCallback(responseData)
+            alert(3)
+        })
+    };
+    //驱动所有hander的初始化
+    setupWebViewJavascriptBridge(callback);
+    
+  function connectcordova(callback) {
+        if (window.cordova) {
+            callback(cordova)
+        } else {
+            document.addEventListener(
+                'cordovaReady'
+                , function() {
+                    callback(cordova)
+                },
+                false
+            );
+        }
+    }
+
+    connectcordova(function(bridge) {
+        bridge.init(function(message, responseCallback) {
+            var data = {
+                'Javascript Responds': '测试中文!'
+            };
+
+            if (responseCallback) {
+                responseCallback(data);
+            }
+        });
+
+        bridge.registerHandler("functionInJs", function(data, responseCallback) {
+            if (responseCallback) {
+                var responseData = "Javascript Says Right back aka!";
+                responseCallback(responseData);
+            }
+        });
+    })
 import Vue from 'vue'
 import App from './App'
 import router from './router'

@@ -2,7 +2,7 @@
 	<div class="goods-info-item list-info-cell goods-info-item-pre">
     <div ref="listCt" class="l-list-ct" style="position: relative!important;">
     	<div v-if="preCode||typeof preCode != 'undefined'" class="l-list-title clearfix"> 
-    		<span v-if="preCode">{{preCode.slice(0,2)+"-"+preCode.slice(2,4)+"-"+preCode.slice(4)}}</span>
+    		<span v-if="preCode">{{preCode}}</span>
     		<span v-if="!preCode">卖场</span>
     		<div class="title-right fr" v-if="status!=1">
     			<span v-if="preCode" :class="nowNum<=5 ?'safe-num warn':'safe-num'">库存 <span>{{nowNum}}</span></span>

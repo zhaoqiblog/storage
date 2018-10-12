@@ -135,7 +135,7 @@ export default {
 		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
 		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
-					data.id+'\n打印次数：'+(data.printCount+1)+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
+					data.id+'\n打印次数：'+(data.printCount+1)+'\n下单时间：'+ new Date(parseInt(data.generatetime)).format("yyyy-MM-dd hh:mm")+'\n'+
 					'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
 					'收 货 人：'+data.recvinfo.name+'\n'+
 					'联系电话：'+data.recvinfo.phone+'\n'+(data.deliverType==0 ?'':'收货地址：'+data.recvinfo.address.city+'-'+data.recvinfo.address.detail)})
@@ -184,7 +184,7 @@ export default {
 			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
 			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
-						data.id+'\n打印次数：'+(data.printCount+1)+'\n下单时间：'+ new Date(parseInt(data.finishTime)).format("yyyy-MM-dd hh:mm")+'\n'+
+						data.id+'\n打印次数：'+(data.printCount+1)+'\n下单时间：'+ new Date(parseInt(data.generatetime)).format("yyyy-MM-dd hh:mm")+'\n'+
 						'预约送达: '+new Date(parseInt(data.expectdeliverydatetime.date)).format("yyyy-MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to+'\n'	+							
 						'收 货 人：'+data.recvinfo.name+'\n'+
 						'联系电话：'+data.recvinfo.phone+'\n'+(data.deliverType==0 ?'':'收货地址：'+data.recvinfo.address.city+'-'+data.recvinfo.address.detail)})

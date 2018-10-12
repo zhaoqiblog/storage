@@ -122,7 +122,6 @@ export default {
 //	     _this.printOrders(ids.length,ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
 	     _this.printOrders(ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
 		}
-		
 	},
 	printOrders(ids,callback=null){		
 		$request.post("/api/online-order/v1/protected/batchquery/pickdetail",ids).then((res)=>{

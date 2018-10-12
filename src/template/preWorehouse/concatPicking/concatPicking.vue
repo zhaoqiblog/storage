@@ -25,6 +25,7 @@
 	    					<span>订单数量</span>
 	    					<span v-if="datas" style="color: #333333;">{{datas.ordersequencenos.length}}</span>
 	    				</dd>
+	    				<dd v-if="currentStore=='9297'||currentStore=='9428'"><button style="border: none;background: #3DA5FE;color: #FFFFFF; border-radius: 2px; width: 72px;height: 28px;" @click="printOrders">一键打印</button></dd>
 	    			</dl>
 	    		</div>
 	    		<div>
@@ -197,18 +198,17 @@ export default {
     	alreadyPick:0,		//已拣货的商品的种类
     	timeIntever:null,  //倒计时定时器
     	showbackTip:false,  //退出弹框提示
-    	showSelectBlue:false, //选择蓝牙
-    	slectBlue:[], //选中的蓝牙设备号
-    	isConnectDevice:false,
       datas:[],
       showConcatOrder:true,  //合单订单备注信息显示与否
       errInfo:{success:true},   //合并拣货的提示信息
       listData:{'noPick':[],'picked':[]},
       isTmpexit:false,  //当前订单是否已经被暂存
       isAllPicked:true,
+      currentStore:'',
     }
   },
   created() {
+  	this.currentStore=localStorage.getItem("currentStore")
 		this.getPickingInfo();
     let self = this;
 		this.timeIntever = setInterval(function(){
@@ -246,7 +246,18 @@ export default {
   	//取消暂存
   	cancelSave(){
   		$request.get('/api/online-order/v1/protected/mergetemp/cancel').then((res)=>{
-  			console.log(res)
+  			if(res.success){
+  				this.isTmp=false;
+  				this.$vux.toast.show({
+	          type: 'text',
+	          text:res.message
+	        })
+  			}else{
+  				this.$vux.toast.show({
+	          type: 'text',
+	          text:res.message
+	        })
+  			}
   		})
   	},
   	confirmExit(){
@@ -497,7 +508,56 @@ export default {
 		  	})
 		    }
    		}
-    }
+    },
+    /**
+     * printOrders（）一键打印
+     * ids：打印的单据的单号
+     */
+    printOrders(callback=null){		
+    	let ids = this.$route.query.id.split("|")
+			$request.post("/api/online-order/v1/protected/batchquery/pickdetail",ids).then((res)=>{
+				if(res.success==true){
+					func.setPrintData(res.data,(callData)=>{
+						factory.print(callData).then((printdata)=>{
+							$request.post("/api/online-order/v1/protected/printcount",ids).then((res2)=>{
+								if(res2.success==true){
+									this.datas.orderInfos.forEach((r)=>{
+										for(var i=0;i<res2.data.length;i++){
+											let arrobj = Object.keys(res2.data[i])
+											if(r.id==arrobj){
+												r.printCount = res2.data[i][arrobj]
+											}
+										}
+									})
+									if(ids.length<2){
+										this.$vux.toast.show({
+					            type: 'text',
+					            text: res.data[0].ordersequenceno+'打印成功',
+					          })
+									}else{
+										this.$vux.toast.show({
+					            type: 'text',
+					            text: '打印成功',
+					          })
+									}
+									
+								}
+							},(err)=>{
+								this.$vux.toast.show({
+				            type: 'text',
+				            text: res.message||'打印次数计数失败',
+			          })
+							})
+						},(err)=>{
+							this.$vux.toast.show({
+		            type: 'text',
+		            text: '打印失败',
+		          })
+						})
+					})
+				}
+			})
+		},
   },
 }
 

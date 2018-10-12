@@ -1,4 +1,4 @@
- var u = navigator.userAgent, app = navigator.appVersion; 
+/* var u = navigator.userAgent, app = navigator.appVersion; 
  var isAndroidPlat = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器 
   function setupWebViewJavascriptBridge(callback) {
         //第一次调用这个方法的时候，为false
@@ -71,7 +71,7 @@
                 responseCallback(responseData);
             }
         });
-    })
+    })*/
 const
   _MIDEA_COMMON = 'MideaCommon',
   _MIDEA_USER = 'MideaUser',
