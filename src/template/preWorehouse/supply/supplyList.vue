@@ -12,7 +12,7 @@
     	<!--<MpopInput :isShow="showPop"></MpopInput>-->
     	 <div class="container-list">
 	       <Group class="list-pre-item" v-for="e,index in data.content" :key="index" @click.native="goTosupplying(e.id)">
-	       		<cell :title="e.status=='0'?'待补货':'已完成'" :value="new Date(e.supplementDate).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>
+	       		<cell :title="e.status=='0'?'待补货':'已完成'" :value="new Date(e.creatTime).format('yyyy-MM-dd hh:mm:ss')" class="vux-1px-b cell-pre"></cell>
 	       		<div class="pre-list-item-content">
 	       			<div>
 	       				<dl>

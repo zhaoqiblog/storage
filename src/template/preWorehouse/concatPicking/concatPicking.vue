@@ -112,7 +112,7 @@
        		</span>
       </div>
       <div class="btn-submit">
-        <button type="button" @click="completeOrder" :disabled="isAllPicked">完成</button>
+        <button type="button" @click="completeOrder" :disabled="isAllPicked">拣货完成</button>
       </div>
     </div>
     <div v-transfer-dom class="pre-confirm">
@@ -435,9 +435,9 @@ export default {
 				})
 				let lists = this.datas.orderInfos.map((item,indexs)=>{
 					let obj = {orderid:item.id,goodsInfoDTOS:[]}
-					/*if(indexs==1||indexs==2){
+					if(indexs==1||indexs==2){
 						obj.orderid=item.id+'5'
-					}*/
+					}
 					allList.forEach((e)=>{
 						if(e.orderid==item.id){
 								let objs ={

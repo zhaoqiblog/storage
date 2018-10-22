@@ -1,7 +1,11 @@
 <template>
   <div class="shop-supply pick-supply">
-  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="backToPickList">合单拣货完成</x-header>
+  	<x-header class="vux-1px-b" :left-options="{preventGoBack:true}" @on-click-back="backToPickList">合单拣货详情</x-header>
     <div class="scroll-content pre-content pre-content-pic" ref="scrollWrap">
+    	<dl class="pick-statius-tip">
+    		<dt>待分单</dt>
+    		<dd>合单商品拣货完成！需打印小票，分单装袋。</dd>
+    	</dl>
     	<div class="concat-list-wrap" v-if="datas.ordersequencenos&&datas.ordersequencenos.length>0">
 	    	<div class="pic-item-info" >
 	    		<div>
@@ -9,7 +13,7 @@
 	    				<dt>合单信息</dt>
 	    				<dd>
 	    					<span>拣货员</span>
-	    					<span>{{datas.id}} <span style="color: #6fc710;">{{datas.operatorName}}</span></span>
+	    					<span>{{datas.id}} <span>{{datas.operatorName}}</span></span>
 	    				</dd>
 	    				<dd>
 	    					<span>订单数量</span>
@@ -19,22 +23,35 @@
 	    					<span v-if="datas.ordersequencenos.length>0" v-for="i in datas.ordersequencenos">{{i}}&nbsp;</span>
 	    				</dd>
 	    			</dl>
-    				<img class="succes-icon" src="../../../assets/common/icon_yiwancheng.png"/>	    			
+    				<!--<img class="succes-icon" src="../../../assets/common/icon_yiwancheng.png"/>-->	    			
 	    		</div>
 	    		<div>
 	    			<dl>
-	    				<dt class="pick-success-print">
+	    				<dt class="pick-success-print vux-1px-b">
 	    					<span v-if="datas.mergeId">合单号&nbsp;{{datas.mergeId}}</span>
 	    					<span @click="printAll(null)"><button>一键打印</button></span>
-	    					<!--<span v-if="!datas.mergeId">小票分单打印</span>-->
 	    				</dt>
-	    				<dd class="print-list" v-for="e in datas.orderInfos">
-	    					<span>{{e.ordersequenceno}}&nbsp;&nbsp;{{e.id}}</span>
-	    					<button  @click="printAll(e.id)">打印 X{{e.printCount}}</button>
+	    				<dd class="toHide" @click="expendList">
+	    					{{expend?'展开':'收起' }}&nbsp;&nbsp;
+	    					<img class="expendImg" :class="{'isTop':expend}" src="../../../assets/pre/Shape1.png"/>
 	    				</dd>
+	    				<!--<div class="expendImg" :class="{'isExpend':expend}">-->
+		    				<dd class="print-list" v-for="e in datas.orderInfos" v-if="!expend">
+		    					<span>{{e.ordersequenceno}}&nbsp;&nbsp;{{e.id}}</span>
+		    					<button  @click="printAll(e.id)">打印 X{{e.printCount}}</button>
+		    				</dd>
+	    				<!--</div>-->
 	    			</dl>
 	    		</div>
 				</div>
+				<div class="pick-toBag">
+					<div>
+    					<p>打印小票后，拿着小票将商品分单装袋。</p>
+    					<p>装袋完成，确认后可分单配送</p>
+					</div>
+					<button @click="showBagTip=true">已装袋</button>
+				</div>
+				<p style="font-size: 13px;color: #999999;margin: 20px 3% 0">已拣商品</p>
 		    	<pre-item-pic v-for="(item,index) in datas.goodsInfoDTOS"
 					:itemid="item.itemid"
 	    			:imgurl="item.imgurl"
@@ -55,20 +72,44 @@
 	    </div>
     </div>
     <div class="cm-footer">
-    	
-		<div class="btn-add btn-left">
-			<router-link to="/">
-       			<span>返回主页</span>
-       		</router-link>
+			<div class="btn-add btn-left">
+				<router-link to="/">
+	       			<span>返回主页</span>
+	      </router-link>
     	</div>
       	<div class="btn-submit">
       		<router-link :to="{name: 'concatPickList'}">
         		<button type="button">继续拣货</button>
         	</router-link>
         </div>
-       
-      
     </div>
+    <div v-transfer-dom class="pre-confirm">
+      <confirm v-model="showBagTip"
+      title=" "
+      @on-cancel="showBagTip=true"
+      @on-confirm="alreadyBag"
+      confirm-text="已装袋">
+        <p style="text-align:center;">请确认合单中的商品，</p>
+        <p>已经分单装袋</p>
+      </confirm>
+    </div>
+    <x-dialog v-model="!errInfo.success" class="comment-wrap" hide-on-blur v-if="errInfo.message&&errInfo.message.length>0">
+        <div class="pick-result" >
+        	<h5>拣货结果</h5>
+        	<p>
+        		共{{datas.ordersequencenos.length}}个拣货订单,
+        		{{datas.ordersequencenos.length-errInfo.message.length}}个订单拣货成功,
+        		{{errInfo.message.length}}个订单拣货异常
+        	</p>
+        	<p class="err-info">异常原因：</p>
+        	<ul>
+        		<li v-for="i,index in errInfo.message">
+        			{{i.name}}
+        		</li>
+        	</ul>
+        </div>
+        <div @click="errConfim" class="comment-yes vux-1px-t" style="color: #3DA5FE;padding-top: 20px;">确认</div>
+      </x-dialog>
   </div>
 </template>
 
@@ -98,6 +139,9 @@ export default {
       isAndroid:false,
       printId:'',
       int:null,
+      showBagTip:true,
+      expend:false,
+      errInfo:{success:true},   //合并拣货的提示信息
     }
   },
   created() {
@@ -224,12 +268,31 @@ export default {
     backToPickList () {
       this.$router.push({name:'concatPickList'})
     },
+    /*
+     *确认已装袋 
+     */
+    alreadyBag(){
+    	this.showBagTip=true;
+    	this.completeOrder()
+    	//请求后端接口
+    },
+    //展开收起
+    expendList(){this.expend=!this.expend},
+    /**
+     * 完成装袋
+     */
+    completeOrder(){
+    	let ids = this.$route.query.id.split("|")
+    	$request.post("/api/online-order/v1/protected/complete",ids).then(res=>{
+    		console.log(res)
+    	})
+    },
   },
 }
 
 </script>
 <style lang="less" scoped>
-	.pre-content-pic{top: 56px;
+	.pre-content-pic{top: 44px;
 	.pic-item-info{
 		position: relative;	
 		/*dt{line-height: 40px;}*/
@@ -251,6 +314,34 @@ export default {
 		}
 	}
 	}
-	.pick-success-print{display: flex;justify-content: space-between;align-items: center;margin-bottom: 10px;}
+	.pick-success-print{display: flex;justify-content: space-between;align-items: center;padding-bottom: 10px;margin-bottom: 10px;}
 	.succes-icon{width: 75px;position: absolute;top: 15px;right: 5%;}
+	.pick-statius-tip{
+		padding: 9px 4%;margin: 0;
+		font-family: PingFangSC-Regular;
+		font-size: 14px;
+		color:white;
+		background: url(../../../assets/pre/iconFile.png) 92% center no-repeat;
+		background-color: rgba(100,183,255,0.80);
+		margin-bottom: 10px;
+		dt{font-size: 16px;}
+	}
+	.pick-toBag{display: flex;align-items: center;justify-content: space-between;
+	/*background: rgba(216,216,216,0.20);*/
+		width: 94%;margin: 0 auto;padding: 10px 4%;line-height: 1.5;box-sizing: border-box;border-radius: 0 0 3px 3px;
+		box-shadow: 0px 0 5px 0 #DDDDDD;
+		p{color: #666666;font-size: 13px;}
+		button{background: #2DC7EC;border-radius: 3px;color: #FFFFFF;border: none;width: 72px;height: 28px;}
+	}
+	.toHide{
+		color: #999999;font-size: 14px;
+		display: flex;justify-content: center;align-items: center;
+		text-align: center;
+		.toBottom{}
+		.isTop{
+			transform: rotate(180deg);
+		}
+		.expendImg{transition: all 0.4s;}
+		
+	}
 </style>
