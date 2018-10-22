@@ -72,6 +72,7 @@
             }
         });
     })*/
+   let e = 0;
 const
   _MIDEA_COMMON = 'MideaCommon',
   _MIDEA_USER = 'MideaUser',
