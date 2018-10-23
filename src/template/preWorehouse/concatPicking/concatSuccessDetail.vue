@@ -158,14 +158,10 @@ export default {
 		let _this = this;
 		let ids = _this.$route.query.id.split("|")
 		if(id){
-//				_this.printId=[id];
-//			 _this.printOrders(1,[id])
 			 _this.printOrders([id])
 		}else{
-//			_this.printId=ids;
-//	     _this.printOrders(ids.length,ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
-	     _this.printOrders(ids)  //这里执行函数， 传入的参数为：3，【1223，234，23424】
-		}
+	     _this.printOrders(ids) 
+	  }
 	},
 	printOrders(ids,callback=null){		
 		$request.post("/api/online-order/v1/protected/batchquery/pickdetail",ids).then((res)=>{
@@ -257,6 +253,7 @@ export default {
 				this.datas.orderInfos=res.data.orderInfos.map((e)=>{
 					return {...e,printCount:0}
 				})
+				console.log(this.datas)
 			}
 		})
 	},
@@ -274,7 +271,16 @@ export default {
     alreadyBag(){
     	this.showBagTip=true;
     	this.completeOrder()
-    	//请求后端接口
+    	//回掉函数，去成功页面
+    	this.$router.push({path:'/successPage',query:{
+    		title:'分单配送',
+    		text:'订单完成，分单配送',
+    		info:'完成合单拣货、分单装袋后，订单发送至配送平台， 您可继续在前置仓进行接单拣货。',
+    		btn1Text:'前置仓 合单拣货',
+    		btn1Link:'/preWorehouse/concatPickList',
+    		btn2Text:'库位管理',
+    		btn2Link:'/'
+    	}})
     },
     //展开收起
     expendList(){this.expend=!this.expend},
@@ -285,8 +291,52 @@ export default {
     	let ids = this.$route.query.id.split("|")
     	$request.post("/api/online-order/v1/protected/complete",ids).then(res=>{
     		console.log(res)
+    		if(res.success&&res.success==true){
+		    		this.isAllPicked=false;
+						if(res.data){
+							this.errInfo=res;
+			    		let errMsg = res.data
+			    		this.errInfo.message = JSON.parse(errMsg);
+			    		this.errInfo.success=false;
+			    		this.errInfo.message.forEach((e,indexss)=>{
+			    			let key = Object.keys(e)[0]
+			    				e.name = key+':'+e[key]
+			    				e.id=key
+			    		})
+						}else{
+							this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})	
+						}
+						
+		    	}else{
+		    		this.isAllPicked=false;
+		    		this.$vux.toast.show({
+	          type: 'text',
+	          text:res.message
+	        })
+		    		
+		    	}
     	})
     },
+    errConfim(){
+  		if(this.datas.ordersequencenos.length-this.errInfo.message.length>0){
+  			//部分订单成功
+				let ids = this.$route.query.id.split("|")
+				let pushid=[]
+				let pushids=ids.concat([])
+				for(let i=0;i<ids.length;i++){
+					let ispush=false;
+					this.errInfo.message.forEach((e,indexx)=>{
+						if(ids[i]==e.id){
+							ispush=true;
+							ids.splice(i,1)
+						}
+					})
+				}
+//				this.$router.push({name:"concatSuccessDetail",query:{id:ids.join("|")}})  //成功回调函数
+  		}else{
+				this.$router.back()  //全部订单都有问题
+  		}
+  	},
   },
 }
 

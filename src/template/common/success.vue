@@ -23,7 +23,7 @@ export default {
   components: {
     XHeader,XButton
   },
-  name: 'turnoverIndex',
+  name: '',
   data() {
     return {
     	obj:{},

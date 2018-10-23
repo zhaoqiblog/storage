@@ -7,6 +7,7 @@ import turnoverPort from './turnoverArea'
 import shop from './shop'
 //import backStorage from './backStorage'
 import preWorehouse from './preWorehouse'
+import successPage from '../template/common/successAll.vue'
 
 import $request from '@/service/request.js'
 import $conf from 'configuration'
@@ -36,6 +37,11 @@ const router = new Router({
       name: 'index',
       component: index,
       meta:{index:0}
+    },
+    {
+    	path:'/successPage',
+    	name:'successPage',
+    	component:successPage,
     },
     ...receivingPort,
     ...turnoverPort,
