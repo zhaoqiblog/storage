@@ -83,7 +83,7 @@
         	</router-link>
         </div>
     </div>
-    <div v-transfer-dom class="pre-confirm">
+    <!--<div v-transfer-dom class="pre-confirm">
       <confirm v-model="showBagTip"
       title=" "
       @on-cancel="showBagTip=true"
@@ -92,7 +92,7 @@
         <p style="text-align:center;">请确认合单中的商品，</p>
         <p>已经分单装袋</p>
       </confirm>
-    </div>
+    </div>-->
     <x-dialog v-model="!errInfo.success" class="comment-wrap" hide-on-blur v-if="errInfo.message&&errInfo.message.length>0">
         <div class="pick-result" >
         	<h5>拣货结果</h5>
@@ -139,7 +139,6 @@ export default {
       isAndroid:false,
       printId:'',
       int:null,
-      showBagTip:true,
       expend:false,
       errInfo:{success:true},   //合并拣货的提示信息
     }
@@ -268,20 +267,10 @@ export default {
     /*
      *确认已装袋 
      */
-    alreadyBag(){
+    /*alreadyBag(){
     	this.showBagTip=true;
     	this.completeOrder()
-    	//回掉函数，去成功页面
-    	this.$router.push({path:'/successPage',query:{
-    		title:'分单配送',
-    		text:'订单完成，分单配送',
-    		info:'完成合单拣货、分单装袋后，订单发送至配送平台， 您可继续在前置仓进行接单拣货。',
-    		btn1Text:'前置仓 合单拣货',
-    		btn1Link:'/preWorehouse/concatPickList',
-    		btn2Text:'库位管理',
-    		btn2Link:'/'
-    	}})
-    },
+    },*/
     //展开收起
     expendList(){this.expend=!this.expend},
     /**
@@ -289,6 +278,7 @@ export default {
      */
     completeOrder(){
     	let ids = this.$route.query.id.split("|")
+    	ids[1]=ids[1]+"5"
     	$request.post("/api/online-order/v1/protected/complete",ids).then(res=>{
     		console.log(res)
     		if(res.success&&res.success==true){
@@ -304,7 +294,16 @@ export default {
 			    				e.id=key
 			    		})
 						}else{
-							this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})	
+							this.$router.push({path:'/successPage',query:{
+				    		title:'分单配送',
+				    		text:'订单完成，分单配送',
+				    		info:'完成合单拣货、分单装袋后，订单发送至配送平台， 您可继续在前置仓进行接单拣货。',
+				    		btn1Text:'前置仓 合单拣货',
+				    		btn1Link:'/preWorehouse/concatPickList',
+				    		btn2Text:'库位管理',
+				    		btn2Link:'/'
+				    	}})
+//							this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})	
 						}
 						
 		    	}else{
@@ -313,7 +312,6 @@ export default {
 	          type: 'text',
 	          text:res.message
 	        })
-		    		
 		    	}
     	})
     },
@@ -332,7 +330,7 @@ export default {
 						}
 					})
 				}
-//				this.$router.push({name:"concatSuccessDetail",query:{id:ids.join("|")}})  //成功回调函数
+				this.$router.push({name:"concatSuccessDetail",query:{id:ids.join("|")}})  //成功回调函数
   		}else{
 				this.$router.back()  //全部订单都有问题
   		}

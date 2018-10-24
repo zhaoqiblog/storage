@@ -1,14 +1,20 @@
 <template>
-  <div class="pre-picking">
-    <x-header class="vux-1px-b" :left-options="{preventGoBack:true}" @on-click-back="back">
-    	合单拣货
-    	<a slot="right"><router-link to='searchOrder'>搜索</router-link></a>
-    </x-header>
-    <tab v-model="index" active-color="#3DA5FE">
-	      <tab-item v-for="(i,ins) in ['待拣货 刷新','已超时','拣货中','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
-	      <span v-if="page.totalElements" style="position: absolute;font-size:10px;top: 15%;background: red; border-radius: 50%;padding: 0 5px;color:#FFFFFF;left: 22%;">{{page.totalElements}}</span>
-	      <span v-if="pageOver.totalElements" style="position: absolute;font-size:10px;top: 15%;background: red; border-radius: 50%;padding: 0 5px;color:#FFFFFF;left: 43%;">{{pageOver.totalElements}}</span>
+  <div class="pre-picking" style="overflow-x: auto;">
+  	<!--<div style="overflow-x: hidden;">-->
+	    <x-header class="vux-1px-b" :left-options="{preventGoBack:true}" @on-click-back="back" >
+	    	合单拣货
+	    	<a slot="right"><router-link to='searchOrder'>搜索</router-link></a>
+	    </x-header>
+    <!--</div>-->
+    <!--<div style="width: 450px;overflow-x: scroll;">-->
+    	<tab v-model="index" active-color="#3DA5FE">
+	      <tab-item v-for="(i,ins) in ['待拣货','已超时','拣货中','未装袋','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
+	      <span class="tipnum" v-if="numMap&&numMap.newNum" style="left: 15%;">{{numMap.newNum}}</span>
+	      <span class="tipnum" v-if="numMap&&numMap.timeoutNum" style="left: 34%;">{{numMap.timeoutNum}}</span>
+	      <span class="tipnum" v-if="numMap&&numMap.pikingNum" style="left: 54%;">{{numMap.pikingNum}}</span>
+	      <span class="tipnum" v-if="numMap&&numMap.unpackageNum" style="left: 74%;">{{numMap.unpackageNum}}</span>
 	    </tab>
+	  <!--</div>-->
     <div class="scroll-content pre-pick-list pre-concat-list" ref="scrollWrap">
     	<p class="tempConcat-tips" @click="goToTempList" v-if="isTmpNumber">您有一个订单已暂存,点击此处继续拣货，完成即可继续合单</p>
         <div v-if="index==0">
@@ -95,6 +101,38 @@
         </div>
         <div v-if="index==3">
           	<div class="container-list" >
+			        <Group class="list-pre-item" v-for="e,index in data.isUnpackage" :key="index">
+				       		<router-link :to="{path:'conHistoryDetail',query:{id:e.id}}">
+					       		<div class="item-top vux-1px-b">
+					       			<span class="good-code">{{e.operatorName}}  拣货  <span v-if="e.mergeId" class="">合单号{{e.mergeId}}</span></span>
+					       		</div>
+				       		</router-link>
+				       		<div class="pre-list-item-content concat">
+				       			<div>
+				       				<dl>
+				       					<dt v-if="e.isOver" class="overTime">已超时 {{e.OverText}} 分钟</dt>
+			       					<dt v-if="!e.isOver">
+			       						剩余 
+			       						<span>{{e.OverText}}</span> 分钟
+			       					</dt>
+			       					<!--:class="{'isShowAll':isShowall}"-->
+				       					<dd class="unPageText">
+			       						<span class="category-num" v-for="key,ind in e.mergeOrderSequenceNo">{{key}} <span v-if="ind<e.mergeOrderSequenceNo.length-1">,</span></span>
+				       					</dd>
+				       				</dl>
+				       			</div>
+				       			<div class="button-to-pick">
+				       				<button  class="" @click="toPackage(e.mergeOrderId)" style="padding: 10px 20px;">去装袋</button>
+				       			</div>
+				       		</div>
+			       		
+			        </Group>
+			    </div>
+			    <div v-if="pageUnpackage.isEnd" class="theEnd">已经到底啦</div>
+			    <m-empty v-if="data.isUnpackage && data.isUnpackage.length == 0"></m-empty>
+        </div>
+        <div v-if="index==4">
+          	<div class="container-list" >
 			        <Group class="list-pre-item" v-for="e,index in data.history" :key="index">
 				       		<router-link :to="{path:'conHistoryDetail',query:{id:e.id}}">
 					       		<div class="item-top vux-1px-b">
@@ -165,7 +203,7 @@ export default {
         isEnd:false,
         totalElements:0,
       },
-      page1:{
+      page1:{  //拣货中分页
       	pageNo: 0,
         pageSize: 20,
         totalPage: 1,
@@ -179,9 +217,16 @@ export default {
         isEnd:false,
         totalElements:0,
       },
-      pageOver:{
+      pageOver:{  //已超时分页
       	pageNo: 0,
         pageSize: 20,
+        totalPage: 1,
+        isEnd:false,
+        totalElements:0,
+      },
+      pageUnpackage:{  //未装袋分页
+      	pageNo: 0,
+        pageSize: 8,
         totalPage: 1,
         isEnd:false,
         totalElements:0,
@@ -190,12 +235,15 @@ export default {
       	'noPick':[],
       	'picking':[],
       	'history':[],
-      	'overTime':[],
+      	'overTime':[], //已超时列表
+      	'isUnpackage':[], //未装袋列表
       },
       timer:null,
       selectDefault:'',//默认拣货数据
       selectLists:[], //选择的列表
       isTmpNumber:false, //是否存在暂存
+      numMap:null,   //各个列表数量汇总
+//    isShowall:false,  //是否展开
     }
   },
     mounted() {
@@ -210,7 +258,13 @@ export default {
 		    	}
 	    	}
 	    	else if(this.index==1){
-	    		this.getOverList();
+	    		let e =this.pageOver;
+	    		if(e.pageNo<e.totalPage){
+	    			this.getOverList();
+	    		}else{
+	    			this.pageOver.isEnd=true;
+	    		}
+//	    		this.getOverList();
 	    	}
 	    	else if(this.index==2){
 	    		let e=this.page1;
@@ -219,6 +273,13 @@ export default {
 		    	}else{
 		    		this.page1.isEnd=true;
 		    	}
+	    	}else if(this.index==3){ //未装袋
+	    		let e =this.pageUnpackage;
+	    		if(e.pageNo<e.totalPage){
+	    			this.getOverList(1);
+	    		}else{
+	    			this.pageUnpackage.isEnd=true;
+	    		}
 	    	}else{  //拣货历史
 	    		let e=this.page2;
 	    		if(e.pageNo<e.totalPage){
@@ -244,28 +305,49 @@ export default {
     
   },
   created() {
-  	console.log(localStorage.getItem("currentStore"))
+//	console.log(localStorage.getItem("currentStore"))
     this.getSupplyList(0);
   },
   destroyed(){
   	clearInterval(this.timer)
   },
   methods: {
-  	/**
-  	 * 获取超时订单列表
-  	 */
-  	getOverList(){
-  		this.pageOver.pageNo++
+  	/** 获取超时订单列表和未装袋列表*/
+  	getOverList(isUnpackage){  //isUnpage：未装袋列表，不传：不是未装袋，只要是未装袋列表都要传
   		let obj={
     			shopId:localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
     			status:0,page:this.pageOver.pageNo,size: this.pageOver.pageSize,
-    			isTimeOut:1,
     		}
-  		 $request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
+  		if(isUnpackage){  //未装袋时：
+  			this.pageUnpackage.pageNo++;
+  			obj.status=3;
+  			obj.isUnpackage=1;
+  			obj.page=this.pageUnpackage.pageNo;
+  			obj.size = this.pageUnpackage.pageSize
+  		}else{ //已超时
+  			this.pageOver.pageNo++;
+  			obj.isTimeOut=1;
+  			obj.page = this.pageOver.pageNo
+  		}
+  		$request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
   		 	if(res.success==true){
-  		 		if(this.pageOver.pageNo==1){
-	         		this.data.overTime=[];
-	         	}
+  		 		this.numMap={...res.data.numMap}
+  		 		this.data.isUnpackage = (isUnpackage&&this.pageUnpackage==1) ? [] : this.data.isUnpackage
+  		 		this.data.overTime = (this.pageOver.pageNo==1&&!isUnpackage) ? [] : this.data.overTime
+	       	if(isUnpackage){
+	       		res.data.content.map((item,indexs)=>{
+	       			let a = parseInt(new Date(item.toTime).getTime()-new Date().getTime())
+	            item.OverText=Math.abs(parseInt(a/(1000*60)));
+	            if(a>0){
+	            	item.isOver=false;
+	            }else{
+	            	item.isOver=true;
+	            }
+	            item.mergeOrderSequenceNo=item.mergeOrderSequenceNo.split(",")
+	       		})
+	       		this.data.isUnpackage = this.data.isUnpackage.concat(res.data.content);
+	       		this.pageUnpackage.totalPage = res.data.totalPages
+	       	}else{
 	          res.data.content.map((item,ins)=>{
 	            let supplyNum = 0, products = []
 	            item.classInfo=JSON.parse(item.classInfo)
@@ -279,11 +361,11 @@ export default {
 	            }
 	          })
 	         this.data.overTime =this.data.overTime.concat(res.data.content)
-//	         console.log(this.data.overTime.length)
 	    		this.pageOver.totalPage=res.data.totalPages
-	    		this.pageOver.totalElements=res.data.totalElements
-  		 	}
-  		 })
+//	    		this.pageOver.totalElements=res.data.totalElements
+  		 		}
+	      }
+  		})
   	},
   /**
    * 
@@ -380,13 +462,17 @@ export default {
   		if(index==0){  //待拣货
   			this.data.noPick=[];
   			this.getSupplyList(0,1)
-  		}else if(index==1){  //拣货中
+  		}else if(index==1){  //已超时
   			this.data.overTime=[]
   			this.pageOver.pageNo=0;
   			this.getOverList();
   		}else if(index==2){  //拣货中
   			this.data.picking=[];
   			this.getSupplyList(2,1);
+  		}else if(index==3){
+  			this.data.isUnpackage=[];
+  			this.pageUnpackage.pageNo=0;
+  			this.getOverList(1)
   		}else{  //拣货历史
   			this.data.history=[];
   			
@@ -463,6 +549,8 @@ export default {
     	}
       $request.get('/api/online-order/v1/protected/findpage', obj).then(res => {
         if(res.success) {
+        	this.numMap={...res.data.numMap}
+//		 		console.log(this.numMap)
         	if(res.data.mergetemp=='yes'){
         			this.isTmpNumber = true
         		}
@@ -514,6 +602,10 @@ export default {
     goToTempList(){
     	this.$router.push({name:'tempPicking'})
     },  
+    toPackage(id){
+    	let ids = id.split(",")
+    	this.$router.push({name:"concatSuccessDetail",query:{id:id.split(",").join("|")}})
+    }
   },
 
   activated () {
@@ -531,6 +623,15 @@ export default {
 
 </script>
 <style lang="less">
+	.tipnum{
+		position: absolute;font-size:12px;top: 15%;
+		/*background: red;*/
+		/*background: red;*/
+		 border-radius: 50%;padding: 0 5px;
+		color:red;
+		font-weight: 600;
+		/*color:#FFFFFF;*/
+	}
 	.pre-concat-list{
 		padding-bottom: 48px;
 		.tempConcat-tips{
@@ -585,5 +686,11 @@ export default {
 				
 			}
 		}
+	}
+	.unPageText{
+		max-width: 200px;
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
 	}
 </style>
