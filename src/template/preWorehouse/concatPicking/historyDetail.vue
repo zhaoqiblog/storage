@@ -41,6 +41,10 @@
     					<span>{{data.operatorName}}</span>
     				</dd>
     				<dd>
+    					<span>装袋员</span>
+    					<span style="color: red;font-weight: 800;">{{data.operatorName}}未确认是哪个字段</span>
+    				</dd>
+    				<dd>
     					<span>完成时间</span>
     					<span>{{new Date(data.finishTime).format("yyyy-MM-dd hh:mm:ss")}}</span>
     				</dd>
@@ -102,7 +106,7 @@ import { mapState } from 'vuex';
 		components: {
 			XHeader,PopupPicker
 		},
-		name: 'pick-list',
+		name: 'history-detail',
   computed: mapState({
     commonInfo: state => state.global.commonInfo,
   }),

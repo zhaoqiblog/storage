@@ -266,6 +266,9 @@ export default {
   	
   },
   created(){
+  	let obj ={a:1,b:2}
+  	let c = {...obj,c:3}
+  	console.log(c.prototype==obj.prototype)
   },
   mounted() {
   	let _this=this;

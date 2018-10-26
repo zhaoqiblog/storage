@@ -23,7 +23,6 @@
 	    					<span v-if="datas.ordersequencenos.length>0" v-for="i in datas.ordersequencenos">{{i}}&nbsp;</span>
 	    				</dd>
 	    			</dl>
-    				<!--<img class="succes-icon" src="../../../assets/common/icon_yiwancheng.png"/>-->	    			
 	    		</div>
 	    		<div>
 	    			<dl>
@@ -38,7 +37,7 @@
 	    				<!--<div class="expendImg" :class="{'isExpend':expend}">-->
 		    				<dd class="print-list" v-for="e in datas.orderInfos" v-if="!expend">
 		    					<span>{{e.ordersequenceno}}&nbsp;&nbsp;{{e.id}}</span>
-		    					<button  @click="printAll(e.id)">打印 X{{e.printCount}}</button>
+		    					<button  @click="printAll(e.id)" class="printSingle">打印 X{{e.printCount}}</button>
 		    				</dd>
 	    				<!--</div>-->
 	    			</dl>
@@ -47,9 +46,9 @@
 				<div class="pick-toBag">
 					<div>
     					<p>打印小票后，拿着小票将商品分单装袋。</p>
-    					<p>装袋完成，确认后可分单配送</p>
+    					<p>装袋完成，确认后可分单配送。</p>
 					</div>
-					<button @click="showBagTip=true">已装袋</button>
+					<button @click="completeOrder">已装袋</button>
 				</div>
 				<p style="font-size: 13px;color: #999999;margin: 20px 3% 0">已拣商品</p>
 		    	<pre-item-pic v-for="(item,index) in datas.goodsInfoDTOS"
@@ -83,33 +82,6 @@
         	</router-link>
         </div>
     </div>
-    <!--<div v-transfer-dom class="pre-confirm">
-      <confirm v-model="showBagTip"
-      title=" "
-      @on-cancel="showBagTip=true"
-      @on-confirm="alreadyBag"
-      confirm-text="已装袋">
-        <p style="text-align:center;">请确认合单中的商品，</p>
-        <p>已经分单装袋</p>
-      </confirm>
-    </div>-->
-    <x-dialog v-model="!errInfo.success" class="comment-wrap" hide-on-blur v-if="errInfo.message&&errInfo.message.length>0">
-        <div class="pick-result" >
-        	<h5>拣货结果</h5>
-        	<p>
-        		共{{datas.ordersequencenos.length}}个拣货订单,
-        		{{datas.ordersequencenos.length-errInfo.message.length}}个订单拣货成功,
-        		{{errInfo.message.length}}个订单拣货异常
-        	</p>
-        	<p class="err-info">异常原因：</p>
-        	<ul>
-        		<li v-for="i,index in errInfo.message">
-        			{{i.name}}
-        		</li>
-        	</ul>
-        </div>
-        <div @click="errConfim" class="comment-yes vux-1px-t" style="color: #3DA5FE;padding-top: 20px;">确认</div>
-      </x-dialog>
   </div>
 </template>
 
@@ -139,8 +111,7 @@ export default {
       isAndroid:false,
       printId:'',
       int:null,
-      expend:false,
-      errInfo:{success:true},   //合并拣货的提示信息
+      expend:true,
     }
   },
   created() {
@@ -206,40 +177,6 @@ export default {
 				}
 			})
 	},
-	printOrders1(length,ids,callback=null){
-	//开启蓝牙
-	const _this =this;
-	let ind=0;  //默认为0
-		//获取打印小票信息
-		if(length==1){
-			$request.post("/api/online-order/v1/protected/batchquery/pickdetail",ids).then((res)=>{
-				if(res.success==true){
-					this.datas.orderInfos.forEach((r)=>{
-						if(r.id==ids[0]){
-							r.printCount = res.data[0].printCount
-						}
-					})
-					func.printInfo(res.data[0],this,()=>{   //打印，成功的回调函数，记录打印次数并显示在界面上
-						func.printAdd(res.data[0],this,(count)=>{
-							callback()
-						})
-					})					
-				}
-			})
-		}else{
-			//进来函数之后length>1，执行else内容
-			let _thiss= this
-			var callbacks=function(){
-				ind++;
-				if(ind>=length){  //11.进来这里，退出循环
-					return;
-				}else{ //4.进来这里
-					_thiss.printOrders(1,[ids[ind]],callbacks) //5.执行这个，完成之后执行回调函数  //8，再一次执行，完成回调
-				}
-			}
-			_thiss.printOrders(1,[ids[0]],callbacks)  //1，首先执行这里，传入回掉函数callbacks，第一遍执行完，执行回掉函数
-		}
-},
 	/**
 	 * 获取拣货单信息
 	 */
@@ -252,7 +189,6 @@ export default {
 				this.datas.orderInfos=res.data.orderInfos.map((e)=>{
 					return {...e,printCount:0}
 				})
-				console.log(this.datas)
 			}
 		})
 	},
@@ -264,13 +200,6 @@ export default {
     backToPickList () {
       this.$router.push({name:'concatPickList'})
     },
-    /*
-     *确认已装袋 
-     */
-    /*alreadyBag(){
-    	this.showBagTip=true;
-    	this.completeOrder()
-    },*/
     //展开收起
     expendList(){this.expend=!this.expend},
     /**
@@ -278,69 +207,23 @@ export default {
      */
     completeOrder(){
     	let ids = this.$route.query.id.split("|")
-    	ids[1]=ids[1]+"5"
-    	$request.post("/api/online-order/v1/protected/complete",ids).then(res=>{
-    		console.log(res)
-    		if(res.success&&res.success==true){
-		    		this.isAllPicked=false;
-						if(res.data){
-							this.errInfo=res;
-			    		let errMsg = res.data
-			    		this.errInfo.message = JSON.parse(errMsg);
-			    		this.errInfo.success=false;
-			    		this.errInfo.message.forEach((e,indexss)=>{
-			    			let key = Object.keys(e)[0]
-			    				e.name = key+':'+e[key]
-			    				e.id=key
-			    		})
-						}else{
-							this.$router.push({path:'/successPage',query:{
-				    		title:'分单配送',
-				    		text:'订单完成，分单配送',
-				    		info:'完成合单拣货、分单装袋后，订单发送至配送平台， 您可继续在前置仓进行接单拣货。',
-				    		btn1Text:'前置仓 合单拣货',
-				    		btn1Link:'/preWorehouse/concatPickList',
-				    		btn2Text:'库位管理',
-				    		btn2Link:'/'
-				    	}})
-//							this.$router.push({name:"concatSuccessDetail",query:{id:this.$route.query.id}})	
-						}
-						
-		    	}else{
-		    		this.isAllPicked=false;
-		    		this.$vux.toast.show({
-	          type: 'text',
-	          text:res.message
-	        })
-		    	}
-    	})
+    	this.$router.push({name:'packageResult',query:{id:this.$route.query.id}})
     },
-    errConfim(){
-  		if(this.datas.ordersequencenos.length-this.errInfo.message.length>0){
-  			//部分订单成功
-				let ids = this.$route.query.id.split("|")
-				let pushid=[]
-				let pushids=ids.concat([])
-				for(let i=0;i<ids.length;i++){
-					let ispush=false;
-					this.errInfo.message.forEach((e,indexx)=>{
-						if(ids[i]==e.id){
-							ispush=true;
-							ids.splice(i,1)
-						}
-					})
-				}
-				this.$router.push({name:"concatSuccessDetail",query:{id:ids.join("|")}})  //成功回调函数
-  		}else{
-				this.$router.back()  //全部订单都有问题
-  		}
-  	},
   },
 }
 
 </script>
 <style lang="less" scoped>
 	.pre-content-pic{top: 44px;
+	.pic-item-info{
+		.printSingle{
+			background: #FFFFFF;
+			border: 1px solid #D0D0D0;
+			font-size: 14px;
+color: #333333;
+			border-radius: 4px;
+		}
+	}
 	.pic-item-info{
 		position: relative;	
 		/*dt{line-height: 40px;}*/

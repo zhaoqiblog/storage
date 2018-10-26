@@ -182,7 +182,7 @@ export default {
   components: {
     XHeader, MEmpty,MpopInput,Confirm,PopupPicker ,XDialog,Tab, TabItem
   },
-  name: 'pick-list',
+  name: 'picking-list',
   computed: mapState({
     commonInfo: state => state.global.commonInfo,
 		time:function(){  //现实的倒计时
@@ -435,9 +435,9 @@ export default {
 				})
 				let lists = this.datas.orderInfos.map((item,indexs)=>{
 					let obj = {orderid:item.id,goodsInfoDTOS:[]}
-					if(indexs==1||indexs==2){
+					/*if(indexs==1||indexs==2){
 						obj.orderid=item.id+'5'
-					}
+					}*/
 					allList.forEach((e)=>{
 						if(e.orderid==item.id){
 								let objs ={

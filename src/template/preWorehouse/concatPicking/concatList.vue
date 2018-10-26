@@ -8,11 +8,11 @@
     <!--</div>-->
     <!--<div style="width: 450px;overflow-x: scroll;">-->
     	<tab v-model="index" active-color="#3DA5FE">
-	      <tab-item v-for="(i,ins) in ['待拣货','已超时','拣货中','未装袋','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
-	      <span class="tipnum" v-if="numMap&&numMap.newNum" style="left: 15%;">{{numMap.newNum}}</span>
+	      <tab-item v-for="(i,ins) in ['待拣货 刷新','已超时','拣货中','未装袋','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
+	      <span class="tipnum" v-if="numMap&&numMap.newNum" style="left: 19%;">{{numMap.newNum}}</span>
 	      <span class="tipnum" v-if="numMap&&numMap.timeoutNum" style="left: 34%;">{{numMap.timeoutNum}}</span>
 	      <span class="tipnum" v-if="numMap&&numMap.pikingNum" style="left: 54%;">{{numMap.pikingNum}}</span>
-	      <span class="tipnum" v-if="numMap&&numMap.unpackageNum" style="left: 74%;">{{numMap.unpackageNum}}</span>
+	      <span class="tipnum" v-if="numMap&&numMap.unpackageNum" style="left: 75%;">{{numMap.unpackageNum}}</span>
 	    </tab>
 	  <!--</div>-->
     <div class="scroll-content pre-pick-list pre-concat-list" ref="scrollWrap">
@@ -104,7 +104,11 @@
 			        <Group class="list-pre-item" v-for="e,index in data.isUnpackage" :key="index">
 				       		<router-link :to="{path:'conHistoryDetail',query:{id:e.id}}">
 					       		<div class="item-top vux-1px-b">
-					       			<span class="good-code">{{e.operatorName}}  拣货  <span v-if="e.mergeId" class="">合单号{{e.mergeId}}</span></span>
+					       			<span class="good-code">
+					       				<!--{{e.operatorName}}  拣货-->  
+					       				<span>合单号 {{e.mergeId}}</span>
+					       				<!--<span v-if="e.mergeId" class="merge-color">合单号{{e.mergeId}}</span>-->
+					       			</span>
 					       		</div>
 				       		</router-link>
 				       		<div class="pre-list-item-content concat">
@@ -604,7 +608,14 @@ export default {
     },  
     toPackage(id){
     	let ids = id.split(",")
-    	this.$router.push({name:"concatSuccessDetail",query:{id:id.split(",").join("|")}})
+    	$request.post("/api/online-order/v1/protected/whether/complete",ids).then((res)=>{
+    		if(res.success==true){
+    			this.$router.push({name:"concatSuccessDetail",query:{id:res.data.join("|")}})
+    		}else{
+    			
+    		}
+    	})
+//  	this.$router.push({name:"concatSuccessDetail",query:{id:id.split(",").join("|")}})
     }
   },
 
@@ -641,6 +652,9 @@ export default {
 			line-height: 35px;
 			padding-left: 16px;
 		}
+	}
+	.pre-picking{
+		.vux-tab .vux-tab-item{font-size: 13px;}
 	}
 	.pre-picking .pre-pick-list .list-pre-item .pre-list-item-content .button-to-pick button{
 		&.print-btn{
@@ -688,7 +702,7 @@ export default {
 		}
 	}
 	.unPageText{
-		max-width: 200px;
+		max-width: 235px;
 		overflow: hidden;
 		text-overflow:ellipsis;
 		white-space: nowrap;

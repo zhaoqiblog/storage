@@ -181,7 +181,7 @@ export default {
   components: {
     XHeader, MEmpty,MpopInput,Confirm,PopupPicker ,XDialog,Tab, TabItem
   },
-  name: 'pick-list',
+  name: 'picking-tmp',
   computed: mapState({
     commonInfo: state => state.global.commonInfo,
 		time:function(){  //现实的倒计时
