@@ -7,6 +7,7 @@ import preItemPic from "../MpreItemPic/index";
 import prePicAll from "../MpreItemPic/indexNew.vue";
 import preListConcats from "../MpreList/index"
 import preSearchItem from "../MpreSearchItem/index"
+import picExchangeItem from '../Mpre/exchange.vue'
 const components = [
 	goodsInfoItem,
 	goodsSelectGroup,
@@ -17,6 +18,7 @@ const components = [
 	preListConcats,
 	preSearchItem,
 	prePicAll,
+	picExchangeItem,
 ]
 
 const install = ( Vue, options ) => {

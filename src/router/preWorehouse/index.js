@@ -48,6 +48,13 @@ import preShopDetail from '../../template/preWorehouse/shop/detail.vue'	//卖场
 import wareHouseAdd from '../../template/preWorehouse/backStorage/addGoods.vue'  //库位上商品信息
 import wareHouseConfirm from '../../template/preWorehouse/backStorage/confirmGoodsInfo.vue'  //确认商品信息
 
+/*前置仓商品互换*/
+import preGoodsInfo from '../../template/preWorehouse/exchangeGoods/preGoodsInfo.vue'  //前置仓商品信息
+import removeConfirm from '../../template/preWorehouse/exchangeGoods/removeConfirm.vue' //移动货位确认
+import removeSuccess from '../../template/preWorehouse/exchangeGoods/removeSuccess.vue'  //移动货位结果
+import exchangeConfirm from '../../template/preWorehouse/exchangeGoods/exchangeConfirm.vue'  //替换商品确认
+import exchangeSuccess from '../../template/preWorehouse/exchangeGoods/exchangeSuccess.vue'  //替换商品结果
+
 
  export default [
  	{path:'/preWorehouse',component:preWorehouse,name:'preWorehouse',meta:{index:2},
@@ -84,7 +91,13 @@ import wareHouseConfirm from '../../template/preWorehouse/backStorage/confirmGoo
  			 {path:'searchOrder',name:'searchOrder',component:searchOrder},
  			 {path:'searchDetail',name:'searchDetail',component: searchDetail},
  			 //装袋结果
- 			 {path:'packageResult',name:'packageResult',component:packageResult}
+ 			 {path:'packageResult',name:'packageResult',component:packageResult},
+ 			 //前置仓商品互换
+ 			 {path:'preGoodsInfo',name:'preGoodsInfo',component:preGoodsInfo},
+ 			 {path:'removeConfirm',name:'removeConfirm',component:removeConfirm},
+ 			 {path:'removeSuccess',name:'removeSuccess',component:removeSuccess},
+ 			 {path:'exchangeConfirm',name:'exchangeConfirm',component:exchangeConfirm},
+ 			 {path:'exchangeSuccess',name:'exchangeSuccess',component:exchangeSuccess},
  		]
  	},
  	{path:"/preSuccess",component:preSuccess,name:'preSuccess'},

@@ -11,7 +11,7 @@ import turnoverArea from './module/turnoverArea.js'
 import backCount from './module/backCount.js'
 import direct from './module/direct.js'
 import prePick from './module/prePick.js'
-
+import preExchange from './module/preExchange.js'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -22,6 +22,7 @@ export default new Vuex.Store({
     turnoverArea,
     backCount,
     direct,
-    prePick
+    prePick,
+    preExchange
   },
 })

@@ -492,3 +492,30 @@ body {
   color: #FFFFFF;
 }
 .weui-mask{position: absolute !important;}
+/*弹出confirm框样式复写*/
+.common-confirm{
+    .weui-dialog{
+        width: 70%;border-radius: 5px;
+        .weui-dialog__hd{
+            font-size: 18px;color: #333333;margin-top: 10px;margin-bottom: 5px;
+            .weui-dialog__title{font-weight: 700;}
+        }
+        .weui-dialog__ft{
+            .weui-dialog__btn_primary{color: #333333;}
+        }
+        
+        .vux-prompt-msgbox{border: none;position: relative;border: 1px solid #DADADA;height: 36px;box-sizing: border-box;width: 87%;padding-left: 5%;}
+//      .vux-prompt-msgbox:before{
+//          content:' ';
+//          position:absolute;
+//          left: 0;
+//          top: 0;
+//          right: 0;
+//          height: 1px;
+//          border-top: 1px solid #C7C7C7;
+//          color: #C7C7C7;
+//          transform-origin: 0 0;
+//          transform: scaleY(0.5);
+//      }
+    }
+}

@@ -48,7 +48,7 @@
     					<p>打印小票后，拿着小票将商品分单装袋。</p>
     					<p>装袋完成，确认后可分单配送。</p>
 					</div>
-					<button @click="completeOrder">已装袋</button>
+					<button @click="completeOrder">确认装袋</button>
 				</div>
 				<p style="font-size: 13px;color: #999999;margin: 20px 3% 0">已拣商品</p>
 		    	<pre-item-pic v-for="(item,index) in datas.goodsInfoDTOS"

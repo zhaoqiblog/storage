@@ -85,8 +85,8 @@ export default {
   	/*完成装袋*/
   	completePackage(){
   		let ids = this.$route.query.id.split("|")
-    	/*ids[0]=ids[0]+"5"
-    	ids[1]=ids[1]+"5"*/
+//  	ids[0]=ids[0]+"5"
+//  	ids[1]=ids[1]+"5"
     	$request.post("/api/online-order/v1/protected/complete",ids).then(res=>{
     		if(res.success&&res.success==true){
     			if(res.data){  //有订单提交失败

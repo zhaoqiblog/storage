@@ -126,7 +126,7 @@
 				       				</dl>
 				       			</div>
 				       			<div class="button-to-pick">
-				       				<button  class="" @click="toPackage(e.mergeOrderId)" style="padding: 10px 20px;">去装袋</button>
+				       				<button  class="" @click="toPackage(e.mergeOrderId)" style="padding: 10px 20px;">确认装袋</button>
 				       			</div>
 				       		</div>
 			       		
@@ -612,7 +612,10 @@ export default {
     		if(res.success==true){
     			this.$router.push({name:"concatSuccessDetail",query:{id:res.data.join("|")}})
     		}else{
-    			
+    			this.$vux.toast.show({
+            type: 'text',
+            text: res.message
+          })
     		}
     	})
 //  	this.$router.push({name:"concatSuccessDetail",query:{id:id.split(",").join("|")}})

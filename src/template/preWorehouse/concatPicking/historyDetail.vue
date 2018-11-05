@@ -42,7 +42,7 @@
     				</dd>
     				<dd>
     					<span>装袋员</span>
-    					<span style="color: red;font-weight: 800;">{{data.operatorName}}未确认是哪个字段</span>
+    					<span>{{data.packagerName}}</span>
     				</dd>
     				<dd>
     					<span>完成时间</span>

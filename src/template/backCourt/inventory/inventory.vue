@@ -127,7 +127,7 @@ export default {
 			this.$store.dispatch("chaninventoryToConfirm",this.inventoryList)
 			let submitList=this.inventoryList.map(e=>{
 				return {
-					"costCenterNum": localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
+//					"costCenterNum": localStorage.getItem("currentStore") ? localStorage.getItem("currentStore") : this.commonInfo.costNumber,
 			    "goodsBarCode": e.goodsBarCode,
 			    "goodsWarehouseId": e.id,
 			    "realityNum": e.count,
@@ -135,7 +135,7 @@ export default {
 				}
 			})
 			this.isdisabled=true;
-			$request.post("/api/goods-warehouse/v1/protected/warehouse/check",submitList).then(res=>{
+			$request.post("/api/inventory-check/v1/protected/goodscheck",submitList).then(res=>{
 				if(res.success==true){
 					this.isdisabled=false;
 					this.$router.push({path:"inventoryResult",query:{id:res.data}})

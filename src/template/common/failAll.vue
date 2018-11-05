@@ -3,7 +3,7 @@
     <x-header :left-options="{showBack:false}" class="vux-1px-b">{{obj.title}}</x-header>
     <div class="contentWrap difBtn">
     	<div class="successInfo">
-    		<img src="../../assets/common/pic_success.png" alt="" />
+    		<img src="../../assets/common/pic_fail.png" alt="" />
     		<div class="texts">{{obj.text}}</div>
     		<div class="infos">{{obj.info}}</div>
     	</div>
@@ -28,12 +28,9 @@ export default {
   name: 'turnoverIndex',
   data() {
     return {
-    	showPlaceCode:false,
     	text:"",
     	title:"",info:"",
-    	lastPath:'',
     	sawList:'',
-    	listPath:'',
     	obj:{}
     }
   },
@@ -46,15 +43,6 @@ export default {
   mounted(){
   },
   methods: {
-     toShowPlace(){  //扫描二维码显示库位码
-    	this.showPlaceCode=true;
-    },
-    back(){
-    	this.$router.push(this.lastPath)
-    },
-    seeList(){
-    	this.$router.push(this.listPath)
-    }
   }
 }
 

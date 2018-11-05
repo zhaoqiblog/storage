@@ -103,8 +103,12 @@ export default {
         wareHouseAdd:{
         	header:{title:'后场补货至前置仓',headerRt: { name: '我的补货', to: 'preWorehouse/shopHistoryList'}},
         	scanButton:{name:'库位二维码',to:'wareHouseAdd',icons:require('../../assets/scan/pic_scankuwei.png')}
-        }
-        
+        },
+        /*前置仓商品互换*/
+       preExchange:{
+       	header:{title:'前置仓商品'},
+       	scanButton:{name:'商品二维码',to:'preGoodsInfo',icons:require('../../assets/scan/pic_scanshangpin1.png')}
+       }
       }
     }
   },
@@ -122,10 +126,10 @@ export default {
           this.$router.push({ name: this.data[this.key].scanButton.to, query: { scanResult: res.text }})
         })
       } else {
-//         this.$router.push({ name: this.data[this.key].scanButton.to, query: { scanResult: '6901754060101' }})   //2311189000001/2304013000001/6951881113720
+           this.$router.push({ name: this.data[this.key].scanButton.to, query: { scanResult: '6903244958103' }})   //2311189000001/2304013000001/6951881113720
 //      this.$router.push({ name: this.data[this.key].scanButton.to, query: { scanResult: '6907992822730' }})  //4031362199/4031361913/4031193610
 //         this.$router.push({ name: this.data[this.key].scanButton.to, query: { scanResult: '101' }})
-           this.$router.push({ name: this.data[this.key].scanButton.to, query: { scanResult: 'P0059342' }}) //P0058891/P0024259/P0059342
+//         this.$router.push({ name: this.data[this.key].scanButton.to, query: { scanResult: 'P0059342' }}) //P0058891/P0024259/P0059342
       }
     },
     /**

@@ -194,6 +194,15 @@
                     <img src="../assets/home/icon9.png">
                   </div>
                 </grid-item>
+                <grid-item :link="{name: 'scanEntry', query: {key: 'preExchange'}}">
+                  <div class="text">
+                    <h2>前置仓商品互换</h2>
+                    <p>在前置仓对商品进行替换、移位等操作</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon9.png">
+                  </div>
+                </grid-item>
               </grid>
               <grid :cols="2">
               </grid>
@@ -266,9 +275,8 @@ export default {
   	
   },
   created(){
-  	let obj ={a:1,b:2}
-  	let c = {...obj,c:3}
-  	console.log(c.prototype==obj.prototype)
+  	/*let obj ={a:1,b:2}
+  	let c = {...obj,c:3}*/
   },
   mounted() {
   	let _this=this;
@@ -338,13 +346,14 @@ export default {
     	let lists = Object.keys(this.roles)
 		  lists.forEach((n)=>{this.roles[n]=false})
      if(window.cordova) {
-    		console.log("初始化 手机")
         if(Object.keys(this.commonInfo).length == 0) {
          factory.getUser().then(result => {
           	if(result.info.userNo){
           		localStorage.setItem("userNo",result.info.userNo)
 	            $request.get($conf.simUrl + "/api/user-permit/v1/protected/userinfo").then(res => {
+//	            	alert(JSON.stringify(res))
 	              if(res.success) {
+//	              	alert(JSON.stringify(res))
 									localStorage.setItem("currentStore",res.data.sysUser.currentStoreCode)
 									this.currentStore[0]=res.data.sysUser.currentStoreCode
 	                let userInfo = Object.assign(res.data.sysUser);
@@ -374,6 +383,8 @@ export default {
 	                  }
 	                })
 	              }
+	            }).catch((err)=>{
+//	            	alert(err)
 	            })
             }else{
             	this.$vux.toast.show({
@@ -386,7 +397,7 @@ export default {
 	              })
             }
           }).catch((err)=>{
-          	alert(err)
+//        	alert(err)
           })
         }
       } else {

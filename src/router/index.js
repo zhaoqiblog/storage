@@ -8,6 +8,7 @@ import shop from './shop'
 //import backStorage from './backStorage'
 import preWorehouse from './preWorehouse'
 import successPage from '../template/common/successAll.vue'
+import failPage from '../template/common/failAll.vue'
 
 import $request from '@/service/request.js'
 import $conf from 'configuration'
@@ -42,6 +43,11 @@ const router = new Router({
     	path:'/successPage',
     	name:'successPage',
     	component:successPage,
+    },
+    {
+    	path:'/failPage',
+    	name:'failPage',
+    	component:failPage,
     },
     ...receivingPort,
     ...turnoverPort,
