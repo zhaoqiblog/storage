@@ -220,7 +220,7 @@ export default {
 			background: #FFFFFF;
 			border: 1px solid #D0D0D0;
 			font-size: 14px;
-color: #333333;
+			color: #333333;
 			border-radius: 4px;
 		}
 	}
@@ -241,7 +241,7 @@ color: #333333;
 			background: #3DA5FE;
 			border-radius: 3px;
 			color: #FFFFFF;
-			font-size: 13px;border: none;width: 70px;height: 30px;
+			font-size: 13px;border: none;width: auto;height: 30px;
 		}
 	}
 	}

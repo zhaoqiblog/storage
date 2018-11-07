@@ -107,7 +107,7 @@ export default {
   	exchangeGoods(){
   		if(window.cordova){
   			factory.scan().then(res=>{
-  				
+  				this.$router.push({name:'exchangeConfirm',query:{code:res.text}})
   			})
   		}else{
 			this.$router.push({name:'exchangeConfirm',query:{code:'6954767486390'}}) //商品有货位

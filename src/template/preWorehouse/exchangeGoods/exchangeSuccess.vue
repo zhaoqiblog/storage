@@ -27,6 +27,7 @@
 						<!--<p>22222</p>-->
 					<pic-exchange-item 
 						:data='removeResult'
+						rightTxt="已更新"
 						:warehouseCode="removeResult.rightWarehouseCode ?'前置仓货位  '+removeResult.rightWarehouseCode : '下架商品'"	
 						:imgurl="removeResult.rightImgurl"
 			    		:name="removeResult.rightGoodsName"
@@ -38,6 +39,7 @@
 						<!--<p>11111</p>-->
 					<pic-exchange-item 
 						:data='removeResult'
+						rightTxt="已更新"
 						:warehouseCode="removeResult.rightWarehouseCode ?'前置仓货位  '+removeResult.rightWarehouseCode : '下架商品'"	
 						:imgurl="removeResult.rightImgurl"
 			    		:name="removeResult.rightGoodsName"
@@ -104,7 +106,6 @@
 			if(!this.removeResult.leftGoodsBarCode){  //无商品时
 				this.data=null;
 			}else{this.data=this.removeResult}
-			console.log(this.removeResult)
 		},
 		methods: {
 		},

@@ -18,6 +18,7 @@
 					</dl>
 				</div>
 				<div v-if="lRemoveGoods">
+					<!--<p>111</p>-->
 					<pic-exchange-item 
 						titleInfo="原货位商品"
 						:warehouseCode="'将移至目标货位  '+targetCode"	
@@ -32,21 +33,26 @@
 			    		@inputSafe="changeSafe"
 					/>
 				</div>
-				<div>
+				<div v-if="data&&data.goodsBarCode">
+					<!--<p>222</p>-->
 					<!--货位上有商品时，正常情况-->
-					<pic-exchange-item v-if="data"
-						:data='data'
+					<pic-exchange-item 
 						titleInfo="目标货位商品"
 						:warehouseCode="'将移至原货位  '+lRemoveGoods.warehouseCode"	
 						:imgurl="data.imgurl"
 			    		:name="data.goodsName"
 			    		:code="data.goodsBarCode"
-			    		type="rTxt"
+			    		type="rInput"
 			    		:nowNum="data.availableNum"
 			    		:safeNum="data.safeNum"
+			    		:data='data'
+			    		@inputNow="changeRightNow"
+			    		@inputSafe="changeRightSafe"
 					/>
-					<!--货位上无商品时-->
-					<pic-exchange-item v-if="!data"
+				</div>
+				<div v-if="!data">
+					<!--<p>333</p>-->
+					<pic-exchange-item 
 						:data='data'
 						titleInfo="目标货位商品"
 						:warehouseCode="'将移至原货位  '+lRemoveGoods.warehouseCode"	
@@ -65,7 +71,7 @@
 			</div>
 			<div class="btn-submit">
 				<!--<router-link :to="{name: 'removeSuccess'}">-->
-					<button type="button" @click="submitRemove" :disabled="lRemoveGoods.safeNum<=0">确定</button>
+					<button type="button" @click="submitRemove" :disabled="lRemoveGoods.safeNum==''||lRemoveGoods.availableNum==''||data.safeNum==''||data.availableNum==''">确定</button>
 				<!--</router-link>-->
 			</div>
 		</div>
@@ -90,7 +96,7 @@
 		}),
 		data() {
 			return {
-				data: null,
+				data: {},
 				targetCode:'',
 			}
 		},
@@ -115,6 +121,9 @@
 						this.$vux.toast.show({
 			                type: 'text',
 			                text: res.message,
+			                onHide: () => {
+			                 	this.$router.back()
+					        }
 			            })
 					}
 				})
@@ -155,6 +164,12 @@
 			/*修改安全库存*/
 			changeSafe(val){
 				this.lRemoveGoods.safeNum =val;
+			},
+			changeRightNow(val){
+				this.data.availableNum=val;
+			},
+			changeRightSafe(val){
+				this.data.safeNum=val;
 			}
 		},
 	}

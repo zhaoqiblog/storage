@@ -69,24 +69,28 @@
 		created() {
 			this.newSafe = parseInt(this.safeNum);
 			this.newNowNum=this.nowNum
-//			console.log(this.safeNum,this.newNowNum)
 			typeof this.totalNum == "string" && (this.totalNum = parseInt(this.totalNum));
 		},
 
 		methods: {
 			showInputs() {
-				//			this.showInput()
 				this.$emit("showInput")
 			},
 			//修改安全库存
 			changeVal(){
-//				console.log(this.newSafe)
-				this.$emit("inputSafe",parseInt(this.newSafe)); 
+				if(this.newSafe==''){
+					this.$emit("inputSafe",this.newSafe);
+				}else{
+					this.$emit("inputSafe",parseInt(this.newSafe));
+				}
 			},
 			/*修改现有库存*/
 			changeNew(){
-//				console.log(this.newNowNum,'4445454')
-				this.$emit("inputNow",parseInt(this.newNowNum))
+				if(this.newNowNum==''){
+					this.$emit("inputNow",this.newNowNum)
+				}else{
+					this.$emit("inputNow",parseInt(this.newNowNum))
+				}
 			}
 		},
 

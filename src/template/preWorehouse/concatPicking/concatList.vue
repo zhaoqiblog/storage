@@ -342,6 +342,7 @@ export default {
 	       		res.data.content.map((item,indexs)=>{
 	       			let a = parseInt(new Date(item.toTime).getTime()-new Date().getTime())
 	            item.OverText=Math.abs(parseInt(a/(1000*60)));
+//	            alert(item.toTime);
 	            if(a>0){
 	            	item.isOver=false;
 	            }else{

@@ -42,11 +42,12 @@
 						:imgurl="lRemoveGoods.imgurl"
 			    		:name="lRemoveGoods.goodsName"
 			    		:code="lRemoveGoods.goodsBarCode"
-			    		type="rTxt"
+			    		type="rInput"
 			    		:nowNum="lRemoveGoods.availableNum"
 			    		:safeNum="lRemoveGoods.safeNum"
 			    		:data = "lRemoveGoods"
-			    		
+			    		@inputNow="changeRightNow"
+			    		@inputSafe="changeRightSafe"
 					/>
 				</div>
 				
@@ -63,7 +64,9 @@
 			</div>
 			<div class="btn-submit">
 				<!--<router-link :to="{name: 'removeSuccess'}">-->
-					<button type="button" @click="submitRemove"  :disabled="data.safeNum<=0">确定</button>
+					<!--<button type="button" @click="submitRemove"  :disabled="data.safeNum<=0">确定</button>-->
+					<button type="button" @click="submitRemove" :disabled="lRemoveGoods.safeNum===''||lRemoveGoods.availableNum===''||data.safeNum===''||data.availableNum===''">确定</button>
+					
 				<!--</router-link>-->
 			</div>
 		</div>
@@ -110,11 +113,13 @@
 						if(res.data.warehouseCode){
 							this.data.warehouseCode = res.data.warehouseCode.substr(0,2)+"-"+res.data.warehouseCode.substr(2,2)+"-"+res.data.warehouseCode.substr(4)
 						}
-						console.log(this.data)
 					}else{
 						this.$vux.toast.show({
 			                type: 'text',
 			                text: res.message,
+			                onHide: () => {
+			                 	this.$router.back()
+					        }
 			            })
 					}
 				})
@@ -137,7 +142,6 @@
 				  "rightSafeNum": this.data ? this.data.safeNum: null,
 				  "rightWarehouseCode": this.data.warehouseCode?this.data.warehouseCode.split("-").join(""):'',
 				}	
-				console.log(this.data.availableNum,this.data.safeNum)
 				$request.post("/api/goods-front-warehouse/v1/protected/exchange",obj).then(res=>{
 					if(res.success){
 						this.$store.commit("setRemoveResult",res.data)
@@ -156,6 +160,12 @@
 			/*修改安全库存*/
 			changeSafe(val){
 				this.data.safeNum =val;
+			},
+			changeRightNow(val){
+				this.lRemoveGoods.availableNum=val;
+			},
+			changeRightSafe(val){
+				this.lRemoveGoods.safeNum=val;
 			}
 		},
 	}
