@@ -242,6 +242,9 @@ export default {
 			border-radius: 3px;
 			color: #FFFFFF;
 			font-size: 13px;border: none;width: auto;height: 30px;
+			padding: 0 10px;
+			/*.pre-picking .pre-pick-list .list-pre-item .pre-list-item-content dt span*/
+			/*.pre-picking .pre-pick-list .list-pre-item .pre-list-item-content.concat dt span*/
 		}
 	}
 	}

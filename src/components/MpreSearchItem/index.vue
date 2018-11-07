@@ -5,6 +5,7 @@
    				<span class="order-name">{{orderSequenceNo}}</span>
    				<span class="opera-name" v-if="status=='1'&&operatorName">{{operatorName}} 已完成</span>		   				
    				<span class="opera-name" v-if="status=='0'">待拣货</span>		   				
+   				<span class="opera-name" v-if="status=='3'">待装袋</span>		   				
    				<span class="opera-name" v-if="status=='2'&&operatorName">{{operatorName}} 拣货中</span>		   				
    				<span class="opera-name" v-if="status=='-1'" style="color: red;">已退款</span>		   				
    				<span class="opera-name" v-if="status=='-3'" style="color: orangered;">已被管家完成</span>		   				
@@ -29,6 +30,12 @@
 				<button @click.stop="print(id)"  v-if="status=='1'"
 					style="width: 70px;height: 30px;line-height: 29px;padding: 0;"
 				>打印{{printCount=='0'?'':printCount}}</button>
+				<router-link :to="{name:'concatPicking',query:{id:id}}" v-if="status=='0'">
+					<button style="width: 70px;height: 30px;line-height: 29px;padding: 0;">去拣货</button>
+				</router-link>
+				<router-link :to="{name:'concatSuccessDetail',query:{id:id}}" v-if="status=='3'">
+					<button style="width: 70px;height: 30px;line-height: 29px;padding: 0;">去装袋</button>
+				</router-link>
    			</div>
    			</label>
    		</div>

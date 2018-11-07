@@ -111,7 +111,7 @@
 					       			</span>
 					       		</div>
 				       		</router-link>
-				       		<div class="pre-list-item-content concat">
+				       		<div class="pre-list-item-content ">
 				       			<div>
 				       				<dl>
 				       					<dt v-if="e.isOver" class="overTime">已超时 {{e.OverText}} 分钟</dt>
