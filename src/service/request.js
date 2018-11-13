@@ -57,11 +57,10 @@ Axios.interceptors.response.use((res) => {
 //	alert(JSON.stringify(error))
 //	alert("2,"+error)
   Vue.$vux.loading.hide()
- /* Vue.$vux.toast.show({
+ Vue.$vux.toast.show({
     type: 'text',
     text: error.response.data.error
-  })*/
- 
+ })
   return Promise.reject(error);
 })
 

@@ -9,7 +9,8 @@
     	</div>-->
     		<div class="l-list-content vux-1px-t">
     			<div class="list-pic-goods">
-    				<img :src="imgurl"/>
+    				<img :src="imgurl" v-if="imgurl"/>
+    				<img src="../../assets/common/noPic.png" v-if="!imgurl"/>
     				<div class="l-list-prename">
     				<div class="pre-pic">
 	    				{{name}} &nbsp;<span v-if="unit">{{unit}}</span>

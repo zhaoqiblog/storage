@@ -170,7 +170,6 @@
 import MEmpty from '@/components/MEmpty/index'
 import MpopInput from '@/components/MpopInput/index'
 import { XHeader,Confirm,TransferDomDirective as TransferDom,PopupPicker,XDialog,Tab, TabItem} from 'vux'
-import md5 from 'js-md5';
 import { mapState } from 'vuex';
 import factory from '@/factory.js'
 import $request from '@/service/request.js'

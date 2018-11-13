@@ -121,11 +121,21 @@
 						this.$vux.toast.show({
 			                type: 'text',
 			                text: res.message,
+			                time:1000,
 			                onHide: () => {
 			                 	this.$router.back()
 					        }
 			            })
 					}
+				}).catch(err=>{
+					this.$vux.toast.show({
+		                type: 'text',
+		                text: '系统开小差了，请稍后再试或者更换其他库位哦',
+		                time:0,
+		                onHide: () => {
+		                 	this.$router.back()
+				        }
+		            })
 				})
 			},
 			/*确认移动*/

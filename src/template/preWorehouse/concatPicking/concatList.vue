@@ -10,9 +10,9 @@
     	<tab v-model="index" active-color="#3DA5FE">
 	      <tab-item v-for="(i,ins) in ['待拣货 刷新','已超时','拣货中','未装袋','历史订单']" :key="ins" @on-item-click="clickItem">{{i}}</tab-item>
 	      <span class="tipnum" v-if="numMap&&numMap.newNum" style="left: 19%;">{{numMap.newNum}}</span>
-	      <span class="tipnum" v-if="numMap&&numMap.timeoutNum" style="left: 34%;">{{numMap.timeoutNum}}</span>
-	      <span class="tipnum" v-if="numMap&&numMap.pikingNum" style="left: 54%;">{{numMap.pikingNum}}</span>
-	      <span class="tipnum" v-if="numMap&&numMap.unpackageNum" style="left: 75%;">{{numMap.unpackageNum}}</span>
+	      <span class="tipnum" v-if="numMap&&numMap.timeoutNum" style="left: 37%;">{{numMap.timeoutNum}}</span>
+	      <span class="tipnum" v-if="numMap&&numMap.pikingNum" style="left: 60%;">{{numMap.pikingNum}}</span>
+	      <span class="tipnum" v-if="numMap&&numMap.unpackageNum" style="left: 82%;">{{numMap.unpackageNum}}</span>
 	    </tab>
 	  <!--</div>-->
     <div class="scroll-content pre-pick-list pre-concat-list" ref="scrollWrap">

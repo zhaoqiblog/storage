@@ -14,7 +14,7 @@ import $request from '@/service/request.js'
 import $conf from 'configuration'
 
 // 路由懒加载，实为异步加载路由，避免单个app.js体积过大
-// const test = r => require.ensure([], () => r(require('@/template/test')), 'test')
+   const test = r => require.ensure([], () => r(require('@/template/test')), 'test')
 const index = r => require.ensure([], () => r(require('@/template/index')), 'index')
 
 
@@ -27,12 +27,12 @@ const router = new Router({
       meta:{index:0},
       keepAlive: true
     },
-    /*{
+    {
       path: '/test',
       name: 'test',
       component: test,
 
-    },*/
+    },
     {
       path: '/index',
       name: 'index',

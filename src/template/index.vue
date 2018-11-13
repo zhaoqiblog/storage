@@ -200,7 +200,7 @@
                     <p>在前置仓对商品进行替换、移位等操作</p>
                   </div>
                   <div class="img">
-                    <img src="../assets/home/icon9.png">
+                    <img src="../assets/home/icon19.png">
                   </div>
                 </grid-item>
               </grid>
