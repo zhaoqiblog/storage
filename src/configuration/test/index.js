@@ -6,8 +6,8 @@ let config = {
   isMock: false,
   mockPath: 'json/',
   userTest: {
-//        uid: '80819053', 
-          uid: '80733765',
+//        uid: '80000968', 
+          uid: '80818084',
 //        uid: '80748333',
 //        uid: '80838764',
 //        uid: '80805240',
@@ -38,13 +38,13 @@ let config = {
 //	upmUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/upm',
 //	baseUrl: 'https://zsyh.yonghui.cn/mas-api/restful/inventory/store-inventory'
 
-	upmUrl: 'http://10.0.140.170:8080/upm', // 测试环境
+	/*upmUrl: 'http://10.0.140.170:8080/upm', // 测试环境
 	baseUrl: 'http://10.0.140.170:8080/store-inventory', // 测试环境
-		simUrl:'http://10.0.140.170:8080/sim-upms'
+		simUrl:'http://10.0.140.170:8080/sim-upms'*/
 	
-	/*upmUrl: 'http://ycloud-api.yonghui.cn:9999/upm', // 测试环境
+	upmUrl: 'http://ycloud-api.yonghui.cn:9999/upm', // 测试环境
 	baseUrl: 'http://ycloud-api.yonghui.cn:9999/store-inventory', // 测试环境
-	simUrl:'http://ycloud-api.yonghui.cn:9999/sim-upms'*/
+	simUrl:'http://ycloud-api.yonghui.cn:9999/sim-upms'
 //	
 
 }

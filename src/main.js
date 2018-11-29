@@ -84,8 +84,11 @@ import fastclick from 'fastclick'
 import $request from './service/request.js'
 
 import components from './components/MGoodsInfo';
-Vue.use(components);
+import ElementUI from 'element-ui';
+//import 'element-ui/lib/theme-chalk/index.css'
 
+Vue.use(components);
+Vue.use(ElementUI);
 Vue.config.productionTip = false
 fastclick.attach(document.body)
 Vue.use(LoadingPlugin);

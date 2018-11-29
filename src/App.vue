@@ -77,6 +77,7 @@ export default {
 @import "css/style.less";
 @import '~vux/src/styles/1px.less';
 @import './components/MGoodsInfo/index.less';
+@import '~element-ui/lib/theme-chalk/index.css';    // 默认主题
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

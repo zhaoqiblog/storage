@@ -102,7 +102,7 @@
         <div v-if="index==3">
           	<div class="container-list" >
 			        <Group class="list-pre-item" v-for="e,index in data.isUnpackage" :key="index">
-				       		<router-link :to="{path:'conHistoryDetail',query:{id:e.id}}">
+				       		<!--<router-link :to="{path:'conHistoryDetail',query:{id:e.id}}">-->
 					       		<div class="item-top vux-1px-b">
 					       			<span class="good-code">
 					       				<!--{{e.operatorName}}  拣货-->  
@@ -110,7 +110,7 @@
 					       				<!--<span v-if="e.mergeId" class="merge-color">合单号{{e.mergeId}}</span>-->
 					       			</span>
 					       		</div>
-				       		</router-link>
+				       		<!--</router-link>-->
 				       		<div class="pre-list-item-content ">
 				       			<div>
 				       				<dl>

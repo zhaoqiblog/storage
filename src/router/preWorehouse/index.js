@@ -54,8 +54,10 @@ import removeConfirm from '../../template/preWorehouse/exchangeGoods/removeConfi
 import removeSuccess from '../../template/preWorehouse/exchangeGoods/removeSuccess.vue'  //移动货位结果
 import exchangeConfirm from '../../template/preWorehouse/exchangeGoods/exchangeConfirm.vue'  //替换商品确认
 import exchangeSuccess from '../../template/preWorehouse/exchangeGoods/exchangeSuccess.vue'  //替换商品结果
+/*数据看榜*/
 
-
+import dataListHome from '../../template/preWorehouse/dataList/dataListHome.vue'
+import storeSaleData from '../../template/preWorehouse/dataList/storeSaleData.vue'
  export default [
  	{path:'/preWorehouse',component:preWorehouse,name:'preWorehouse',meta:{index:2},
  		children:[
@@ -98,6 +100,9 @@ import exchangeSuccess from '../../template/preWorehouse/exchangeGoods/exchangeS
  			 {path:'removeSuccess',name:'removeSuccess',component:removeSuccess},
  			 {path:'exchangeConfirm',name:'exchangeConfirm',component:exchangeConfirm},
  			 {path:'exchangeSuccess',name:'exchangeSuccess',component:exchangeSuccess},
+ 			 //数据看榜
+ 			 {path:'dataListHome',name:'dataListHome',component:dataListHome},
+ 			{path:'storeSaleData',name:'storeSaleData',component:storeSaleData}
  		]
  	},
  	{path:"/preSuccess",component:preSuccess,name:'preSuccess'},

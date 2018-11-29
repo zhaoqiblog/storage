@@ -6,6 +6,7 @@
    				<span class="opera-name" v-if="status=='1'&&operatorName">{{operatorName}} 已完成</span>		   				
    				<span class="opera-name" v-if="status=='0'">待拣货</span>		   				
    				<span class="opera-name" v-if="status=='3'">待装袋</span>		   				
+   				<span class="opera-name" v-if="status=='-9'">{{operatorName }}  暂存中</span>		   				
    				<span class="opera-name" v-if="status=='2'&&operatorName">{{operatorName}} 拣货中</span>		   				
    				<span class="opera-name" v-if="status=='-1'" style="color: red;">已退款</span>		   				
    				<span class="opera-name" v-if="status=='-3'" style="color: orangered;">已被管家完成</span>		   				

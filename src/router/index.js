@@ -14,7 +14,7 @@ import $request from '@/service/request.js'
 import $conf from 'configuration'
 
 // 路由懒加载，实为异步加载路由，避免单个app.js体积过大
-   const test = r => require.ensure([], () => r(require('@/template/test')), 'test')
+const test = r => require.ensure([], () => r(require('@/template/test')), 'test')
 const index = r => require.ensure([], () => r(require('@/template/index')), 'index')
 
 
@@ -66,8 +66,6 @@ history.setItem('/', 0)
 router.beforeEach(function(to, from, next) {
   store.commit('updateLoading', true)
   Vue.$vux.loading.show();
-
-
   if (/\/http/.test(to.path)) {
     let url = to.path.split('http')[1]
     window.location.href = `http${url}`

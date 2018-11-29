@@ -135,15 +135,6 @@
             <group-title @click.native="toggle(3)"><i class="i-line"></i>前置仓<i class="i-arrow"></i></group-title>
             <div class="content">
               <grid :cols="2">
-                <!--<grid-item :link="{name: 'pickList'}">
-                  <div class="text">
-                    <h2>前置仓拣货</h2>
-                    <p>接收线上订单，开始挑拣商品</p>
-                  </div>
-                  <div class="img">
-                    <img src="../assets/home/icon17.png">
-                  </div>
-                </grid-item>-->
                 <grid-item :link="{name: 'concatPickList'}">
                   <div class="text">
                     <h2>合单拣货</h2>
@@ -196,7 +187,7 @@
                 </grid-item>
                 <grid-item :link="{name: 'scanEntry', query: {key: 'preExchange'}}">
                   <div class="text">
-                    <h2>前置仓商品互换</h2>
+                    <h2>商品互换</h2>
                     <p>在前置仓对商品进行替换、移位等操作</p>
                   </div>
                   <div class="img">
@@ -205,6 +196,15 @@
                 </grid-item>
               </grid>
               <grid :cols="2">
+              	<grid-item :link="{name: 'dataListHome'}">
+                  <div class="text">
+                    <h2>数据报表</h2>
+                    <p>前置仓订单数据展示</p>
+                  </div>
+                  <div class="img">
+                    <img src="../assets/home/icon20.png">
+                  </div>
+                </grid-item>
               </grid>
             </div>
           </div>
@@ -298,6 +298,7 @@ export default {
 		    });
 		    localStorage.setItem("costNumber",this.currentStore[0])  //成本中心
 		    localStorage.setItem("currentStore",this.currentStore[0])
+		    localStorage.setItem("costName",target.name);
 		    this.getUserInfo ()
       }
     },
@@ -317,7 +318,6 @@ export default {
 		  			const target = res.data.sysUser.stores.filter(item=>this.currentStore[0]==item.storeCode)[0];
 			          for(var i=0;i<lists.length;i++){
 					    			res.data.sysMenuTree.forEach(e=>{
-					    				console.log(e.data.permission,lists[i])
 						    			if(e.data.permission==lists[i]){
 						    				this.roles[lists[i]]=true;
 						    			}
@@ -373,6 +373,7 @@ export default {
 								    	costNumber:target.storeCode,
 								    });
 								    localStorage.setItem("costNumber",target.storeCode)
+								    localStorage.setItem("costName",target.storeName)
 	              } else {
 	               this.$vux.toast.show({
 	                  type: 'text',
@@ -419,7 +420,7 @@ export default {
 					    			}
 				    			})
 				    	}
-		          console.log(this.currentStore)
+//		          console.log(this.currentStore)
 						//更新成本中心，成本中心要一起修改
 						if(target){
 				    this.$store.commit("updateCommonInfo", {
@@ -427,6 +428,7 @@ export default {
 				    	costNumber:target.storeCode,
 				    })
 				   }
+						console.log(localStorage.getItem("costNumber"))
           }else{
           	this.$vux.toast.show({
               type: 'text',
@@ -438,9 +440,6 @@ export default {
             })
           }
 		    })
-//      $request.get($conf.upmUrl + "/api/v1/public/user/" + $conf.userTest.uid).then(res => {
-          
-//      })
       }
     },
     back () {
