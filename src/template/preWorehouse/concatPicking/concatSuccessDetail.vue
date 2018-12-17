@@ -186,6 +186,7 @@ export default {
 		$request.post("/api/online-order/v1/protected/mergepickdetail",ids).then((res)=>{
 			if(res.success==true){
 				this.datas=res.data
+				console.log(this.datas.toTime)
 				this.datas.orderInfos=res.data.orderInfos.map((e)=>{
 					return {...e,printCount:0}
 				})

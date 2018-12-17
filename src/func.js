@@ -132,7 +132,8 @@ export default {
 		})
 		let printText='',printArray=[]
 		printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
-		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
+		printArray.push({printSetData:{alignMode:1,charSize:3},printType:0,text:data.ordersequenceno.split("#")[1]})
+		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno.split("#")[0]+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
 		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
 		printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
 					data.id+'\n打印次数：'+(data.printCount+1)+'\n下单时间：'+ new Date(parseInt(data.generatetime)).format("yyyy-MM-dd hh:mm")+'\n'+
@@ -181,7 +182,8 @@ export default {
 				return i.diffNum>0
 			})
 			printArray.push({printSetData:{alignMode:1,charSize:0},printType:0,text:'\n\n欢迎光临'+data.shop.shopname+'\n'+'--------------------------------'})
-			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
+			printArray.push({printSetData:{alignMode:1,charSize:3},printType:0,text:data.ordersequenceno.split("#")[1]})
+		printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:data.ordersequenceno.split("#")[0]+(data.deliverType==0 ?'-自提\n':'-配送')+(isShort ? '-已调整':'\n')})
 			printArray.push({printSetData:{alignMode:1,charSize:1},printType:0,text:new Date(parseInt(data.expectdeliverydatetime.date)).format("MM-dd")+' '+data.expectdeliverydatetime.from+'-'+data.expectdeliverydatetime.to})
 			printArray.push({printSetData:{alignMode:0,charSize:0},printType:0,text:'--------------------------------\n订 单 号：'+
 						data.id+'\n打印次数：'+(data.printCount+1)+'\n下单时间：'+ new Date(parseInt(data.generatetime)).format("yyyy-MM-dd hh:mm")+'\n'+
@@ -215,4 +217,18 @@ export default {
 		let datas = {datas:printArray}
 		callback(datas)
 	},
+	
+	/*获取周*/
+		getThisWeek(val) {   // val 日期date类型
+				let startdate =new Date(new Date(new Date(val).format("YYYY-MM-dd")).getTime() - (24 * 3600 * 1000) * (new Date(val).getDay() - 1))
+				let year = startdate.getFullYear();
+				let newdate =new Date(startdate.getTime() + (6 * 24 * 60 * 60 * 1000 - 20))
+				let date_value = (startdate.getMonth() + 1) + '.' + startdate.getDate()
+				let newdate_val = (newdate.getMonth() + 1) + '.' + newdate.getDate()
+				let obj = {
+					beginDate: year + '-' + ((startdate.getMonth() + 1)>10?(startdate.getMonth() + 1) :('0'+(startdate.getMonth() + 1))) + '-' + (startdate.getDate() < 10 ? '0' + startdate.getDate() : startdate.getDate()),
+					endDate: year + '-' + ((newdate.getMonth() + 1)>10 ? (newdate.getMonth() + 1) :('0'+(newdate.getMonth() + 1))) + '-' + (newdate.getDate() < 10 ? '0' + newdate.getDate() : newdate.getDate())
+				}
+				return obj
+			}
 }

@@ -73,7 +73,7 @@ export default {
           this.$router.push({path: '/shop/addProduct', query: {scanResult: res.text}})
         })
       } else {
-        this.$router.push({path: '/shop/addProduct', query: {scanResult: '6901070600173'}})  //'2104366200000'
+        this.$router.push({path: '/shop/addProduct', query: {scanResult: '1034323025901092864'}})  //'2104366200000'
       }
     },
     /**

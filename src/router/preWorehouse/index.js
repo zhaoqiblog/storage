@@ -55,9 +55,13 @@ import removeSuccess from '../../template/preWorehouse/exchangeGoods/removeSucce
 import exchangeConfirm from '../../template/preWorehouse/exchangeGoods/exchangeConfirm.vue'  //替换商品确认
 import exchangeSuccess from '../../template/preWorehouse/exchangeGoods/exchangeSuccess.vue'  //替换商品结果
 /*数据看榜*/
+import dataListHome from '../../template/preWorehouse/dataList/dataListHome.vue'     //数据看榜首页
+import storeSaleData from '../../template/preWorehouse/dataList/storeSaleData.vue'   //门店销售数据
+import orderData from '../../template/preWorehouse/dataList/orderData.vue'          //门店订单数据
+import effectiveData from '../../template/preWorehouse/dataList/effectiveData.vue'  //门店拣货效率
+import orderTimeTop from '../../template/preWorehouse/dataList/orderTimeTop.vue'   //订单耗时最长
+import effectiveTop from '../../template/preWorehouse/dataList/effectiveTop.vue'   //员工拣货总效率
 
-import dataListHome from '../../template/preWorehouse/dataList/dataListHome.vue'
-import storeSaleData from '../../template/preWorehouse/dataList/storeSaleData.vue'
  export default [
  	{path:'/preWorehouse',component:preWorehouse,name:'preWorehouse',meta:{index:2},
  		children:[
@@ -102,7 +106,11 @@ import storeSaleData from '../../template/preWorehouse/dataList/storeSaleData.vu
  			 {path:'exchangeSuccess',name:'exchangeSuccess',component:exchangeSuccess},
  			 //数据看榜
  			 {path:'dataListHome',name:'dataListHome',component:dataListHome},
- 			{path:'storeSaleData',name:'storeSaleData',component:storeSaleData}
+ 			{path:'storeSaleData',name:'storeSaleData',component:storeSaleData},
+ 			{path:'orderData',name:'orderData',component:orderData},
+ 			{path:'effectiveData',name:'effectiveData',component:effectiveData},  
+ 			{path:'orderTimeTop',name:'orderTimeTop',component:orderTimeTop}, 
+ 			{path:'effectiveTop',name:'effectiveTop',component:effectiveTop}  
  		]
  	},
  	{path:"/preSuccess",component:preSuccess,name:'preSuccess'},

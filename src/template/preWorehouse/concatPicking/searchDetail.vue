@@ -63,7 +63,9 @@
     				</dd>
     				<dd v-if="data.recvinfo">
     					<span>配送地址</span>
-    					<span>{{data.recvinfo.address.city+data.recvinfo.address.area+data.recvinfo.address.detail}}&nbsp;&nbsp;<span>{{data.recvinfo.phone}}</span></span>
+    					<span v-if="data.recvinfo&&data.recvinfo.address">
+    						{{data.recvinfo.address.city ? data.recvinfo.address.city : ''+data.recvinfo.address.area ? data.recvinfo.address.area :''+data.recvinfo.address.detail ? data.recvinfo.address.detail :''}}
+    						&nbsp;&nbsp;<span>{{data.recvinfo.phone ? data.recvinfo.phone :''}}</span></span>
     				</dd>
     				<dd>
     					<span>顾客备注</span>

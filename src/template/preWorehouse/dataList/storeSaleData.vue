@@ -2,87 +2,279 @@
 	<div class="dataWrap">
 		<x-header class="vux-1px-b">门店销售数据</x-header>
 		<div class="dataList-content contentWrap">
-			<tab>
-		      <tab-item selected >日报</tab-item>
-		      <tab-item >周报</tab-item>
-		      <tab-item>月报</tab-item>
-		    </tab>
-			<div class="dataList-info">
-				<div class="data-total-wrap">
-					<dl class="summary-sale vux-1px-b">
-						<picker-data-item datetime="datetime" @changeTime="changetime"></picker-data-item>
-						
-					</dl>
-					<div class="summary-sale other-summary">
-						<dl class="today-total-order">
-							<dt class="summary-title">今日订单总数</dt>
-							<dd><strong>1450</strong><span class="small">&nbsp;&nbsp;单</span></dd>
-							<dd class="more">订单数据&nbsp;&nbsp;></dd>
-						</dl>
-						<dl class="today-total-effective">
-							<dt class="summary-title">今日拣货总效率</dt>
-							<dd><span class="small">每单&nbsp;&nbsp;</span><strong>16：20</strong></dd>
-							<dd class="more">拣货效率&nbsp;&nbsp;></dd>
-						</dl>
-					</div>
-				</div>
-				<div class="order-plate">
-					<dl>
-						<dt class="vux-1px-b strong-txt">订单平台</dt>
-						<dd class="palte-title-info"><span class="strong-txt">永辉生活</span> <span >12454</span></dd>
-						<dd class="palte-title-info"><span class="strong-txt">京东到家</span> <span>1236</span></dd>
-					</dl>
-					
-				</div>
+			<tab v-model="indexTab" active-color='#3DA5FE' style="z-index: 9;">
+				<tab-item>日报</tab-item>
+				<tab-item>周报</tab-item>
+				<tab-item>月报</tab-item>
+			</tab>
+			<div class="scroll-content" style="top: 83px;z-index: 0;">
+				<swiper v-model="indexTab" height="600px" :show-dots='false' @on-index-change="changeTab">
+					<swiper-item>
+						<div class="tab-swiper vux-center">
+							<div class="dataList-info">
+								<div class="data-total-wrap">
+									<dl class="summary-sale sumary-sale-tab">
+										<picker-data-item :index='indexTab' v-model="time" @changeTime="changetime"></picker-data-item>
+									</dl>
+									<dl class="sumary-sale-tab">
+										<dt class="summary-title">销售总额（元）</dt>
+										<dd><strong class="summary-data">{{dataObj.totalSales}}</strong></dd>
+									</dl>
+								</div>
+								<sales-common v-if="dataObj" :data="dataObj"></sales-common>
+							</div>
+						</div>
+					</swiper-item>
+					<swiper-item>
+						<div class="tab-swiper vux-center">
+							<div class="tab-swiper vux-center">
+								<div class="dataList-info">
+									<div class="data-total-wrap">
+										<dl class="summary-sale">
+											<picker-data-item @changeTime="changetime" :index='indexTab' v-model="weekTime"></picker-data-item>
+										</dl>
+										<div class="summary-sale">
+											<dl>
+												<dt class="summary-title">销售总额（元）</dt>
+												<dd><strong class="summary-data">{{dataObj.totalSales}}</strong></dd>
+											</dl>
+										</div>
+									</div>
+									<sales-common v-if="dataObj" :data="dataObj"></sales-common>
+								</div>
+							</div>
+						</div>
+					</swiper-item>
+					<swiper-item>
+						<div class="tab-swiper vux-center">
+							<div class="dataList-info" v-if="indexTab==2">
+								<div class="data-total-wrap">
+									<dl class="summary-sale">
+										<!--<picker-data-item datetime="datetime" @changeTime="changetime" :index='indexTab'></picker-data-item>-->
+										<picker-data-item :index='indexTab' v-model="monthTime" @changeTime="changetime"></picker-data-item>
+									</dl>
+									<div class="summary-sale">
+										<dt class="summary-title">销售总额（元）</dt>
+										<dd><strong class="summary-data">{{dataObj.totalSales}}</strong></dd>
+									</div>
+								</div>
+								<sales-common v-if="dataObj" :data="dataObj"></sales-common>
+							</div>
+						</div>
+					</swiper-item>
+				</swiper>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-	import {XHeader, Tab, TabItem } from 'vux';
+	import { XHeader, Tab, TabItem, Swiper, SwiperItem, Group, Cell } from 'vux';
+	import $request from '@/service/request';
+	import CONFIG from 'configuration';
+	import func from '@/func'
 	import PickerDataItem from './component/selectData.vue'
+	import SalesCommon from './component/salesCommon.vue'
 	export default {
-		components:{XHeader, Tab, TabItem,PickerDataItem },
-		computed:{
-			costName(){
+		components: {
+			XHeader,
+			Tab,
+			TabItem,
+			PickerDataItem,
+			SalesCommon,
+			Swiper,
+			Group,
+			Cell,
+			SwiperItem
+
+		},
+		computed: {
+			costName() {
 				return localStorage.getItem("costName")
 			}
 		},
-		data(){
+		data() {
 			return {
-				datetime:''
+				indexTab: 0,
+				list2: [1, 2, 3],
+				type: 1,
+				time: new Date().format("YYYY-MM-dd"),
+				weekTime: new Date(),
+				monthTime: new Date().format("YYYY-MM"),
+				dataObj: {
+					totalSales: 0,
+					refundedOrders: 0,
+					refundedAmount: 0,
+					payedOrders: 0,
+					ordersAveragePrice: 0
+				},
 			}
 		},
-		methods:{
-			moreSale(){
-				this.$router.push({path:'storeSaleData'})
-			},
-			changetime(val){
-				this.datetime=val
+		created() {
+			this.time = new Date().format("YYYY-MM-dd");
+			//			console.log(this.time)
+			let obj = {
+				beginDate: new Date().format("YYYY-MM-dd"),
+				endDate: new Date().format("YYYY-MM-dd")
 			}
+			this.getData(obj)
+		},
+		methods: {
+			getData(obj) {
+				$request.post(CONFIG.reportUrl + "/api/online-order-report/v1/protected/sales", obj).then(res => {
+					if(res.success == true) {
+						this.dataObj = { ...this.dataObj,
+							...res.data
+						}
+					}else{
+						this.$vux.toast.show({
+							type:'text',
+							text:res.message
+						})
+					}
+				})
+			},
+			changetime(val) {
+				let obj = {
+					beginDate: this.time,
+					endDate: this.time
+				}
+				if(this.indexTab == 1) { //周选择器
+					obj = {
+						beginDate: val.split("~")[0],
+						endDate: val.split("~")[1]
+					}
+				} else if(this.indexTab == 2) {
+					obj = {
+						beginDate: this.monthTime,
+						endDate: this.monthTime
+					}
+				}
+				this.getData(obj)
+			},
+			changeTab(index) {
+				this.indexTab=index
+				let obj = {
+					beginDate: this.time,
+					endDate: this.time
+				}
+				if(this.indexTab == 1) { //周选择器
+					obj = {...func.getThisWeek(this.weekTime)
+					};
+				} else if(this.indexTab == 2) {
+					obj = {
+						beginDate: this.monthTime,
+						endDate: this.monthTime
+					}
+				}
+				this.getData(obj)
+			},
 		}
-		
+
 	}
 </script>
 
 <style lang="less">
-	.dataList-info{width: 95%;margin: 15px auto 0;}
-	.data-total-wrap{
-		background: #FFFFFF;text-align: center;border-radius: 3px;
-		.more{font-size: 12px;color: #3DA5FE;}
-		.small{font-size: 12px;color: #666666;line-height: 35px;}
+	.palte-title-info {
+		span:nth-child(1) {
+			color: #666666;
+		}
+		span:nth-child(2) {
+			color: #333333;
+		}
 	}
-	.other-summary{display: flex;justify-content: space-around;}
-	.summary-sale{padding: 20px 4%;margin:0 4%;}
-	.order-plate{
-		background: #FFFFFF;margin-top: 10px;padding: 0 4%;line-height: 2.5;
-		dd,dt{font-size: 14px;}
-		.strong-txt{color: #666666;}
+	
+	.vux-slider>.vux-swiper {
+		overflow: scroll;
 	}
-	.palte-title-info{display: flex;justify-content: space-between;color: #333333;}
-	.summary-title{color: #666666;font-size: 14px;}
-	.summary-data{color: #333333;font-size: 28px;}
-	.today-total-order{padding-top:50px;background: url(../../../assets/pre/orderTotal.png) top center no-repeat;}
-	.today-total-effective{padding-top:50px;background: url(../../../assets/pre/effective.png) top center no-repeat;}
+	
+	.dif-plate {
+		padding-top: 10px;
+	}
+	
+	.summary-Thumbnail {
+		background: #FFFFFF;
+		margin-top: 10px;
+	}
+	
+	.pay-total {
+		background: url(../../../assets/pre/data/pay-total.png) top center no-repeat;
+		margin-top: 20px;
+	}
+	
+	.order-middle {
+		background: url(../../../assets/pre/data/order-middle.png) top center no-repeat;
+		margin-top: 20px;
+	}
+	
+	.reback-total {
+		background: url(../../../assets/pre/data/reback-total.png) top center no-repeat;
+		margin-top: 20px;
+	}
+	
+	.reback-total-money {
+		background: url(../../../assets/pre/data/reback-total-money.png) top center no-repeat;
+		margin-top: 20px;
+	}
+	
+	.today-total {
+		padding-left: 20px;
+		padding-right: 20px;
+		width: 50%;
+		padding-bottom: 35px;
+		margin-bottom: 0;
+		padding-top: 70px;
+		background-position-y: 20px;
+	}
+	
+	.summary-sale {
+		background: #FFFFFF;
+		text-align: center;
+		&.other-summary {
+			padding-bottom: 0;
+			padding-top: 0;
+		}
+		.today-total-dif {
+			margin-top: 0;
+			padding-top: 85px;
+			background-position-y: 35px;
+			margin-bottom: 15px;
+		}
+		&.sumary-sale-tab {
+			padding-top: 25px;
+		}
+		&.sale-effective-all {
+			padding-top: 0;
+			font-size: 14px;
+			dt {
+				color: #666666;
+			}
+			dd {
+				color: #333333;
+				span {
+					font-size: 28px;
+					font-weight: 600;
+				}
+			}
+		}
+	}
+	
+	.sumary-sale-tab {
+		padding: 8px 0 20px;
+	}
+	
+	.well-cils-wrap {
+		.weui-cells {
+			font-size: 14px;
+		}
+		.weui-cells .weui-cell .vux-cell-primary .vux-label {
+			color: #333333 !important;
+		}
+		.weui-cells .weui-cell .weui-cell__ft {
+			color: #3DA5FE;
+		}
+		.weui-cell_access .weui-cell__ft:after {
+			border-color: #3DA5FE !important;
+		}
+	}
 </style>

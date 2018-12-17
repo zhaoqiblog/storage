@@ -106,7 +106,7 @@
 					       		<div class="item-top vux-1px-b">
 					       			<span class="good-code">
 					       				<!--{{e.operatorName}}  拣货-->  
-					       				<span>合单号 {{e.mergeId}}</span>
+					       				<span>{{e.operatorName}}  拣货  合单号 {{e.mergeId}}</span>
 					       				<!--<span v-if="e.mergeId" class="merge-color">合单号{{e.mergeId}}</span>-->
 					       			</span>
 					       		</div>

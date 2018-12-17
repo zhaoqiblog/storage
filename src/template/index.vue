@@ -299,6 +299,7 @@ export default {
 		    localStorage.setItem("costNumber",this.currentStore[0])  //成本中心
 		    localStorage.setItem("currentStore",this.currentStore[0])
 		    localStorage.setItem("costName",target.name);
+		    console.log(target.name)
 		    this.getUserInfo ()
       }
     },
@@ -427,8 +428,10 @@ export default {
 				    	costName:target.storeName,
 				    	costNumber:target.storeCode,
 				    })
+				     localStorage.setItem("costName",target.storeName)
 				   }
-						console.log(localStorage.getItem("costNumber"))
+						
+						console.log(localStorage.getItem("costName"))
           }else{
           	this.$vux.toast.show({
               type: 'text',
