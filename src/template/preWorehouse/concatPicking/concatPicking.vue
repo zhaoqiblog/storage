@@ -562,6 +562,20 @@ export default {
 
 </script>
 <style lang="less">
+	.list-info-cell .l-list-ct .l-list-title{
+			line-height: 30px;
+			>span{
+				color: #333333;font-weight: 600;font-size: 16px;
+			}
+		}
+		.counting-time-pic{
+				background: #FEEEE9;
+				border: 0 solid #EBBDAF;
+				font-size: 13px;
+				color: #D0021B;
+				line-height: 40px;padding-left: 5%;
+
+			}
 	.pic-item-info{
 		dl{font-size: 13px;}
 	}
@@ -679,4 +693,78 @@ export default {
 		}
 	}
 }
+.pre-content-pic{
+		top: 98px;padding-bottom: 60px;
+		.pic-item-info{
+			width: 94%;margin: 0 auto;
+			background: #FFFFFF;
+			box-sizing: content-box;
+			.handel-btn{
+				text-align: right;
+				padding-bottom: 10px;
+				button{
+					background: #FFFFFF;
+					border: 1px solid #D0D0D0;
+					border-radius: 4px;
+					font-size: 13px;
+					color: #333333;
+					padding: 6px 10px;
+					margin-left: 10px;
+					width: auto;
+					&.startPick{
+						background: orange;color: #FFFFFF;border-color: orange;
+					}
+				}
+			}
+			>div{
+				padding: 10px;
+				font-size: 12px;
+				padding-bottom: 0;
+				dl{padding: 10px;}
+				dt{color: #303030;}
+				dd{color: #999999;
+					>span:nth-child(1){
+						display: inline-block;
+						width: 60px;
+					}
+				}
+			}
+			>div:nth-child(2){
+				padding-top: 0;
+				padding-bottom: 0;
+			}
+		}
+	}
+	.pre-picking-header{
+		background: #3DA5FE !important;
+		height: 44px;
+		text-align: center;color: #FFFFFF;line-height: 44px;
+		padding: 0;
+		.icons{
+			position: absolute;
+			z-index: 2;
+			display: block;
+			padding: 13px 13px;
+			width: 20px;height: 18px;
+			background: url(../../../assets/white-arrow.png) center center no-repeat;
+		}
+		.txt{
+			font-size: 18px;
+			position: absolute;
+			display: block;
+			width: 100%;
+			top: 0;left: 0;
+			text-align: center;
+			z-index: 1;
+		}
+		img{
+			
+		}
+	}
+	.pre-content{
+		.list-info-cell .l-list-ct .l-list-content .l-list-code em{
+			width: auto;
+			max-width: 100%;color: #333333;
+		}
+	}
 </style>

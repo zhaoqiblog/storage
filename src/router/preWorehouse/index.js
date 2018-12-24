@@ -1,8 +1,8 @@
 import preWorehouse from '../../template/preWorehouse/index.vue'
 import preSuccess from '../../template/common/success.vue'
 
-import pickList from '../../template/preWorehouse/picking/pickList.vue'  //前置仓拣货列表
-import picking from '../../template/preWorehouse/picking/picking.vue'  //前置仓拣拣货中
+//import pickList from '../../template/preWorehouse/picking/pickList.vue'  //前置仓拣货列表
+//import picking from '../../template/preWorehouse/picking/picking.vue'  //前置仓拣拣货中
 //import pickDetail from '../../template/preWorehouse/picking/pickDetail.vue'  //前置仓拣货单详情
 import historyPickList from '../../template/preWorehouse/picking/histotyPickList.vue'  //历史拣货单列表 
 import historyDetail from '../../template/preWorehouse/picking/historyDetail.vue'  //历史拣货单详情
@@ -65,8 +65,8 @@ import effectiveTop from '../../template/preWorehouse/dataList/effectiveTop.vue'
  export default [
  	{path:'/preWorehouse',component:preWorehouse,name:'preWorehouse',meta:{index:2},
  		children:[
- 			 {path:'pickList',name:'pickList',component:pickList,meta:{index:2.1}},
- 			 {path:'picking',name:'picking',component:picking,meta:{index:2.2}},
+// 			 {path:'pickList',name:'pickList',component:pickList,meta:{index:2.1}},
+// 			 {path:'picking',name:'picking',component:picking,meta:{index:2.2}},
 // 			 {path:'pickDetail',name:'pickDetail',component:pickDetail},
  			 {path:'historyPickList',name:'historyPickList',component:historyPickList,meta:{index:2.1}},
  			 {path:'historyDetail',name:'historyDetail',component:historyDetail,meta:{index:2.1}},

@@ -23,8 +23,8 @@
 							<dt class="summary-title">今日拣货总效率</dt>
 							<dd>
 								<span class="small">每单&nbsp;&nbsp;</span>
-								<strong>{{Math.floor(mainData.pickEfficiency/60)+'.'+mainData.pickEfficiency%60}}</strong> 
-								<span class="small">s</span>
+								<strong>{{Math.floor(mainData.pickEfficiency/60)+':'+mainData.pickEfficiency%60}}</strong> 
+								<span class="small"></span>
 							</dd>
 							<dd class="more">拣货效率&nbsp;&nbsp;></dd>
 						</dl>

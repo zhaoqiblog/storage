@@ -397,7 +397,7 @@ import { mapState } from 'vuex';
 		padding-bottom: 0;
 	}
 	.pre-content-pic{
-	.pic-item-info{
+/*	.pic-item-info{
 		.success-top{
 			padding: 0 10px;
 			
@@ -418,6 +418,6 @@ import { mapState } from 'vuex';
 				img{width: 36px;}
 			}
 		}
-	}
+	}*/
 	}
 </style>

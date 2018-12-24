@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="43px" height="44px" viewBox="0 0 43 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>付款总数量</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="9" cy="9" r="9"></circle>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="3门店销售数据" transform="translate(-78.000000, -336.000000)">
+            <g id="展示卡片" transform="translate(10.000000, 297.000000)">
+                <g id="付款订单总数量" transform="translate(40.000000, 40.000000)">
+                    <g id="付款总数量" transform="translate(29.000000, 0.000000)">
+                        <path d="M22.7019813,40 L4,40 C1.790861,40 0,38.209139 0,36 L0,4 C0,1.790861 1.790861,0 4,0 L30,0 C32.209139,0 34,1.790861 34,4 L34,21.0494526" id="Rectangle-10" stroke="#666666" stroke-linecap="round"></path>
+                        <path d="M11.528,8.248 L12.752,8.8 C12.224,10.456 11.576,12.04 10.808,13.528 L10.808,30.4 L9.512,30.4 L9.512,15.808 C8.552,17.296 7.496,18.712 6.296,20.032 L5.864,18.688 C8.504,15.616 10.376,12.136 11.528,8.248 Z M13.424,13.792 L22.952,13.792 L22.952,8.488 L24.248,8.488 L24.248,13.792 L27.8,13.792 L27.8,15.088 L24.248,15.088 L24.248,27.856 C24.248,29.392 23.552,30.16 22.184,30.16 L18.752,30.16 L18.464,28.912 C19.592,28.96 20.672,29.008 21.728,29.008 C22.544,29.008 22.952,28.504 22.952,27.52 L22.952,15.088 L13.424,15.088 L13.424,13.792 Z M15.392,17.968 C17.288,20.176 18.752,22.12 19.76,23.776 L18.656,24.544 C17.6,22.768 16.16,20.8 14.336,18.64 L15.392,17.968 Z" id="付" fill="#666666"></path>
+                        <g id="Group" transform="translate(22.000000, 23.000000)">
+                            <g id="Oval">
+                                <circle stroke="#666666" stroke-width="1" stroke-linejoin="square" fill="#FFFFFF" fill-rule="evenodd" cx="9" cy="9" r="8.5"></circle>
+                                <circle stroke="#FFFFFF" stroke-width="2" cx="9" cy="9" r="10"></circle>
+                            </g>
+                            <polygon id="N" fill="#666666" points="6.05 4.432 7.082 4.432 11.93 11.404 11.966 11.404 11.966 4.432 12.95 4.432 12.95 13 11.942 13 7.07 5.956 7.034 5.956 7.034 13 6.05 13"></polygon>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

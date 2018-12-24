@@ -92,8 +92,9 @@
 				beginDate: new Date().format("YYYY-MM-dd"),
 				endDate: new Date().format("YYYY-MM-dd")
 			}
-			this.timeData={...this.timeData,...obj};
-			console.log(this.timeData)
+			this.timeData = { ...this.timeData,
+				...obj
+			};
 			this.getData(obj)
 		},
 		computed: {
@@ -113,9 +114,9 @@
 					averageStartTime: 0,
 					pickEfficiency: 0,
 				},
-				timeData:{
-					beginDate:this.time,
-					endDate:this.time,
+				timeData: {
+					beginDate: this.time,
+					endDate: this.time,
 				},
 			}
 		},
@@ -130,14 +131,16 @@
 						beginDate: val.split("~")[0],
 						endDate: val.split("~")[1]
 					}
-					
+
 				} else if(this.indexTab == 2) {
 					obj = {
 						beginDate: this.monthTime,
 						endDate: this.monthTime
 					}
 				}
-				this.timeData={...this.timeData,...obj}
+				this.timeData = { ...this.timeData,
+					...obj
+				}
 				this.getData(obj)
 			},
 			changeTab(index) {
@@ -155,10 +158,15 @@
 						endDate: this.monthTime
 					}
 				}
-				this.timeData={...this.timeData,...obj}
+				this.timeData = { ...this.timeData,
+					...obj
+				}
 				this.getData(obj)
 			},
 			getData(obj) {
+				Object.keys(this.dataObj).forEach(n => {
+					this.dataObj[n] = ''
+				})
 				$request.post(CONFIG.reportUrl + "/api/online-order-report/v1/protected/pick", obj).then(res => {
 					if(res.success == true) {
 						this.dataObj = { ...this.dataObj,

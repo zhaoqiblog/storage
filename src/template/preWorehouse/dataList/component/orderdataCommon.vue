@@ -22,8 +22,8 @@
 			<div class="order-plate">
 				<dl>
 					<dt class="vux-1px-b strong-txt">订单平台</dt>
-					<dd class="palte-title-info"><span class="strong-txt">永辉生活</span> <span>{{data.jdorders}}单</span></dd>
-					<dd class="palte-title-info"><span class="strong-txt">京东到家</span> <span>{{data.yhorders}}单</span></dd>
+					<dd class="palte-title-info"><span class="strong-txt">永辉生活</span> <span>{{data.yhorders}}单</span></dd>
+					<dd class="palte-title-info"><span class="strong-txt">京东到家</span> <span>{{data.jdorders}}单</span></dd>
 				</dl>
 			</div>
 		</div>

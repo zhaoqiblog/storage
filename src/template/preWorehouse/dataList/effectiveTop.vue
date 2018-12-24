@@ -30,15 +30,14 @@
 			let obj = {beginDate:this.$route.query.beginDate,endDate:this.$route.query.endDate}
 			let types=this.$route.query.type;
 			this.headerLabel = types=='2' ? obj.beginDate.split("-").join(".")+' ~ '+obj.endDate.split("-").join(".") :obj.beginDate
-			console.log(obj)
 			this.getDataList(obj)
 		},
 		methods:{
 			getDataList(obj){
 				$request.post(CONFIG.reportUrl + "/api/online-order-report/v1/protected/pick/rank", obj).then(res => {
 					if(res.success == true) {
-						this.list = Object.assign(res.data.pickRankList.map(n=>{
-							return {label:n.operatorName,value: Math.floor(n.pickEfficiency/60)+':'+n.pickEfficiency % 60}
+						this.list = Object.assign(res.data.pickRankList.map((n,index)=>{
+							return {label:(index+1)+'. '+n.operatorName,value: Math.floor(n.pickEfficiency/60)+':'+n.pickEfficiency % 60}
 						}))
 					} else {
 						this.$vux.toast.show({

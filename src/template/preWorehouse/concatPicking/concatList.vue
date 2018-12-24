@@ -711,4 +711,104 @@ export default {
 		text-overflow:ellipsis;
 		white-space: nowrap;
 	}
+		.pre-picking{
+		.pre-pick-list{
+			top: 90px;
+			.list-pre-item{
+				width: 95%;
+				margin:0 auto;
+				border-radius: 3px;
+				.weui-cells{
+					margin-top: 10px;
+				}
+				.item-top{
+					display:flex;
+					justify-content: space-between;align-items:center;line-height:35px;
+					margin:0 2.7%;
+					.good-code{
+						font-size: 12px;color: #999999;
+						.merge-color{color: #FE833D;}
+					}
+					.good-time-type{
+						font-size: 12px;
+						.order-type{color: #999999;}
+						.order-time{color: #3DA5FE;}
+					}
+				}
+				.pre-list-item-content{
+					padding: 7px 0 10px 0;
+					margin: 0 2.7%;
+					display: flex;justify-content: space-between;align-items: flex-end;
+					dt{
+						font-size: 18px;font-weight: 600;color: #333333;line-height: 1.6;
+						&.overTime{color: #D0021B;}
+						span{color: #3DA5FE;}
+					}
+					dd{font-size: 12px;color: #FE833D;line-height: 2;
+					>span{
+						padding: 2px 5px;margin-right: 5px;
+					}
+						.order-form{
+							color: #197FA9;background: #F2FBFE;border: 1px solid #AFE2EB;border-radius: 1px;font-size: 10px;
+							&.order-jkd{color: #6DA919;background: #F1FEE9;border: 1px solid #C4EBAF;border-radius: 0px;}
+							}
+							.order-form-immedirte{
+								background: #FEEEE9;border: 1px solid #EBBDAF;border-radius: 1px;color: #D0021B;
+							}
+					}
+					.button-to-pick{
+						button{border-radius: 3px;background: #3DA5FE;border: none;font-size: 13px;padding: 4px 8px;color: #FFFFFF;
+							&.picking-btn{opacity: 0.6;}
+						}
+					}
+				}
+			}
+			.theEnd {
+		    font-size: 14px;
+		    line-height: 1;
+		    margin: 16px 0;
+		    color: #bbb;
+		    text-align: center;
+		  }
+		}
+	}
+		.pre-footer{
+		position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 48px;
+    .btn-add{
+    	padding-left: 20px;text-align: left;
+    	flex: 1;
+    	    background-color: #fff;
+    color: #333333;
+    box-shadow: 0 -3px 8px 0 rgba(12, 12, 12, 0.08);
+    line-height: 50px;
+    font-size: 14px;	
+    i{color: #3DA5FE;font-weight: 700;font-size: 16px; font-style:normal}
+    }
+    .btn-submit{
+    	/*flex: 1;*/
+    	/*width: 35.7%;*/
+    	button{
+	    	background-color: transparent;
+		    border: none;
+		    font-size: 16px;
+		    color: #fff;
+		    height: 100%;
+		    width: 135px;
+		    /*padding: 0 13.6%;*/
+		    background-color: #3DA5FE;
+		    }
+		    button:disabled{
+		    	background-color: #c7c7c7;
+		    }
+	    }
+	}
 </style>

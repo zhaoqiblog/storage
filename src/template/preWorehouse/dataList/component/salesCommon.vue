@@ -2,10 +2,12 @@
 	<div class="summary-Thumbnail">
 		<div class="summary-sale other-summary vux-1px-b">
 			<dl class="pay-total today-total ">
+				<!--<dt class=""><img src="../../../../assets/pre/data/微信图片_20181219181711.png"/></dt>-->
 				<dt class="summary-title">付款订单总数</dt>
 				<dd><strong>{{data.payedOrders}}</strong><span class="small">&nbsp;&nbsp;单</span></dd>
 			</dl>
 			<dl class="order-middle today-total vux-1px-l">
+				<!--<dt class=""><img src="../../../../assets/pre/data/订单均价@2x.png"/></dt>-->
 				<dt class="summary-title">每笔订单均价</dt>
 				<dd><span class="small">每单&nbsp;&nbsp;</span><strong>{{data.ordersAveragePrice}}</strong></dd>
 			</dl>
@@ -40,6 +42,8 @@
 	}
 </script>
 
-<style>
-
+<style lang="less">
+	.summary-Thumbnail .summary-sale{
+			/*img{margin: 0;width: 40%;}*/
+	}
 </style>

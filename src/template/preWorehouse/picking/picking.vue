@@ -562,13 +562,12 @@ export default {
 </script>
 <style lang="less">
 	.shop-supply{
-		.list-info-cell .l-list-ct .l-list-title{
+		/*.list-info-cell .l-list-ct .l-list-title{
 			line-height: 30px;
 			>span{
 				color: #333333;font-weight: 600;font-size: 16px;
-				/*line-height: 30px;*/
 			}
-		}
+		}*/
 		.showposdiffer:before{
 			border-top: none;
 		}
@@ -610,7 +609,7 @@ export default {
 		}
 	}
 	@header-background-color:#fff;
-	.pre-picking-header{
+	/*.pre-picking-header{
 		background: #3DA5FE !important;
 		height: 44px;
 		text-align: center;color: #FFFFFF;line-height: 44px;
@@ -624,7 +623,6 @@ export default {
 			background: url(../../../assets/white-arrow.png) center center no-repeat;
 		}
 		.txt{
-			/*margin-left: -46px;*/
 			font-size: 18px;
 			position: absolute;
 			display: block;
@@ -636,8 +634,8 @@ export default {
 		img{
 			
 		}
-	}
-	.pre-content-pic{
+	}*/
+	/*.pre-content-pic{
 		top: 98px;padding-bottom: 60px;
 		.pic-item-info{
 			width: 94%;margin: 0 auto;
@@ -666,9 +664,6 @@ export default {
 				dl{padding: 10px;}
 				dt{color: #303030;}
 				dd{color: #999999;
-				
-					/*display: flex;*/
-					/*justify-content: flex-start;*/
 					>span:nth-child(1){
 						display: inline-block;
 						width: 60px;
@@ -680,7 +675,7 @@ export default {
 				padding-bottom: 0;
 			}
 		}
-	}
+	}*/
 	.pre-content-title{
 		/*top: 44px;*/
 		.picking-title{
@@ -690,14 +685,14 @@ export default {
 				height: 77px;
 				background: #3DA5FE;text-align: center;color: #FFFFFF;font-size: 18px;font-weight: 500;line-height: 25px;
 			}
-			.counting-time-pic{
+			/*.counting-time-pic{
 				background: #FEEEE9;
 				border: 0 solid #EBBDAF;
 				font-size: 13px;
 				color: #D0021B;
 				line-height: 40px;padding-left: 5%;
 
-			}
+			}*/
 			.none-info{}
 			.pick-code{
 				p{ font-size: 14px;color: #303030;
@@ -759,9 +754,9 @@ export default {
 			
 		}
 	}
-	.pre-content-pic .pic-item-info .handel-btn button.startPick:disabled{
+	/*.pre-content-pic .pic-item-info .handel-btn button.startPick:disabled{
 		background-color:#c7c7c7;
 		border:none;
-	}
+	}*/
 	
 </style>

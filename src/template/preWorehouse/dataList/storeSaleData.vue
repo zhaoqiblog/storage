@@ -112,7 +112,6 @@
 		},
 		created() {
 			this.time = new Date().format("YYYY-MM-dd");
-			//			console.log(this.time)
 			let obj = {
 				beginDate: new Date().format("YYYY-MM-dd"),
 				endDate: new Date().format("YYYY-MM-dd")
@@ -121,6 +120,9 @@
 		},
 		methods: {
 			getData(obj) {
+				Object.keys(this.dataObj).forEach(n => {
+					this.dataObj[n] = ''
+				})
 				$request.post(CONFIG.reportUrl + "/api/online-order-report/v1/protected/sales", obj).then(res => {
 					if(res.success == true) {
 						this.dataObj = { ...this.dataObj,
@@ -198,7 +200,8 @@
 	}
 	
 	.pay-total {
-		background: url(../../../assets/pre/data/pay-total.png) top center no-repeat;
+		padding-top: 0px;
+		background: url(../../../assets/pre/data/pa_total.svg) top center no-repeat;
 		margin-top: 20px;
 	}
 	
@@ -208,12 +211,12 @@
 	}
 	
 	.reback-total {
-		background: url(../../../assets/pre/data/reback-total.png) top center no-repeat;
+		background: url(../../../assets/pre/data/reback_total.svg) top center no-repeat;
 		margin-top: 20px;
 	}
 	
 	.reback-total-money {
-		background: url(../../../assets/pre/data/reback-total-money.png) top center no-repeat;
+		background: url(../../../assets/pre/data/reback_moneysvg.svg) top center no-repeat;
 		margin-top: 20px;
 	}
 	
@@ -226,7 +229,16 @@
 		padding-top: 70px;
 		background-position-y: 20px;
 	}
-	
+	.pay-total {
+		/*padding-top: 0px;*/
+		/*background: url(../../../assets/pre/data/微信图片_20181219181419.png) top center no-repeat;*/
+		/*margin-top: 35px;*/
+	}
+	.order-middle {
+		/*padding-top: 0px;*/
+		/*background: url(../../../assets/pre/data/order-middle.png) top center no-repeat;*/
+		/*margin-top: 35px;*/
+	}
 	.summary-sale {
 		background: #FFFFFF;
 		text-align: center;

@@ -17,6 +17,7 @@
 					    >
 					    <checker-item value="0">永辉</checker-item>
 					    <checker-item value="2">京东</checker-item>
+					    <checker-item value="3">未装袋</checker-item>
 					    </checker>
 					</div>
 					<button class="search-btn" @click="searchOrder">搜索</button>				
@@ -102,7 +103,10 @@
 				this.page.isEnd=false;
 				let obj = {
 					...this.page,
-					searchKey:this.searchList.searchKey,outerOrderType:this.searchList.outerOrderType,shopId:this.searchList.shopId
+					searchKey:this.searchList.searchKey,
+					outerOrderType:this.searchList.outerOrderType ==3 ? '' :this.searchList.outerOrderType,
+					status:this.searchList.outerOrderType==3 ? 3 :'',
+					shopId:this.searchList.shopId
 				}
 				$request.get("/api/online-order/v1/protected/searchOrders",obj).then((res)=>{
 					this.isSe=true;
@@ -237,7 +241,7 @@
 			justify-content: space-between;
 		}
 		.demo5-item {
-		  width: 44.5%;
+		  flex: 0.3;
 		  height: 32px;
 		  line-height: 32px;
 		  text-align: center;

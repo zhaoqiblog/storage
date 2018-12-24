@@ -7,7 +7,8 @@
 			</group>-->
 			<div class="vux-form-preview weui-form-preview">
 				<div class="weui-form-preview__hd">
-					<label class="weui-form-preview__label">2018.12.10 ~ 2018.12.16</label> 
+					<label class="weui-form-preview__label"  v-if="dates.beginDate!=dates.endDate">{{dates.beginDate}} ~ {{dates.endDate}}</label> 
+					<label class="weui-form-preview__label" v-if="dates.beginDate==dates.endDate">{{dates.beginDate}}</label> 
 					<em class="weui-form-preview__value">总耗时</em>
 				</div>
 				<ul class="datalist-list">
@@ -41,7 +42,7 @@
 				list: [],
 				type: '',
 				headerLabel: '',
-
+				dates:{beginDate:"",endDate:""},
 			}
 		},
 		created() {
@@ -49,9 +50,9 @@
 				beginDate: this.$route.query.beginDate,
 				endDate: this.$route.query.endDate
 			}
+			this.dates={...obj}
 			let types = this.$route.query.type;
 			this.headerLabel = types == '2' ? obj.beginDate.split("-").join(".") + ' ~ ' + obj.endDate.split("-").join(".") : obj.beginDate
-			console.log(obj)
 			this.getDataList(obj)
 		},
 		methods: {

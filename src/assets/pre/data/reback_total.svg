@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="43px" height="44px" viewBox="0 0 43 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>退款总数量</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="9" cy="9" r="9"></circle>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="3门店销售数据" transform="translate(-78.000000, -511.000000)">
+            <g id="展示卡片" transform="translate(10.000000, 297.000000)">
+                <g id="退款订单总数量" transform="translate(40.000000, 215.000000)">
+                    <g id="退款总数量" transform="translate(29.000000, 0.000000)">
+                        <path d="M22.7019813,40 L4,40 C1.790861,40 0,38.209139 0,36 L0,4 C0,1.790861 1.790861,0 4,0 L30,0 C32.209139,0 34,1.790861 34,4 L34,21.0494526" id="Rectangle-10" stroke="#666666" stroke-linecap="round"></path>
+                        <text id="退" font-family="PingFangSC-Light, PingFang SC" font-size="24" font-weight="300" fill="#666666">
+                            <tspan x="5" y="28">退</tspan>
+                        </text>
+                        <g id="Group" transform="translate(22.000000, 23.000000)">
+                            <g id="Oval">
+                                <circle stroke="#666666" stroke-width="1" stroke-linejoin="square" fill="#FFFFFF" fill-rule="evenodd" cx="9" cy="9" r="8.5"></circle>
+                                <circle stroke="#FFFFFF" stroke-width="2" cx="9" cy="9" r="10"></circle>
+                            </g>
+                            <text id="N" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#666666">
+                                <tspan x="5.186" y="13">N</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

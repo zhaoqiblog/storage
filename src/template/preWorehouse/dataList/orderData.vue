@@ -164,6 +164,9 @@
 				this.getData(obj)
 			},
 			getData(obj) {
+				Object.keys(this.dataObj).forEach(n => {
+					this.dataObj[n] = 0
+				})
 				$request.post(CONFIG.reportUrl + "/api/online-order-report/v1/protected/orders", obj).then(res => {
 					if(res.success == true) {
 						this.dataObj = { ...this.dataObj,

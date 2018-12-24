@@ -1,11 +1,18 @@
 <template>
   <div class="shop-supply pick-supply">
-  	<x-header class="vux-1px-b" :left-options="{preventGoBack:true}" @on-click-back="backToPickList">合单拣货详情</x-header>
+  	<x-header class="vux-1px-b difer-header" :left-options="{preventGoBack:true}" @on-click-back="backToPickList">合单拣货详情</x-header>
+  	 <div class="pre-content-title">
+    	<div class="picking-title">
+    		<div class="counting-time-pic" v-if="datas.toTime">
+    			拣货倒计时 {{time}}
+    		</div>
+    	</div>
+    </div>
     <div class="scroll-content pre-content pre-content-pic" ref="scrollWrap">
-    	<dl class="pick-statius-tip">
+    	<!--<dl class="pick-statius-tip">
     		<dt>待分单</dt>
     		<dd>合单商品拣货完成！需打印小票，分单装袋。</dd>
-    	</dl>
+    	</dl>-->
     	<div class="concat-list-wrap" v-if="datas.ordersequencenos&&datas.ordersequencenos.length>0">
 	    	<div class="pic-item-info" >
 	    		<div>
@@ -103,12 +110,16 @@ export default {
   name: 'concat-detail',
   computed: mapState({
     commonInfo: state => state.global.commonInfo,
+    time:function(){  //现实的倒计时
+			return func.formate(parseInt(this.datas.toTime)-this.now);
+		}
   }),
   data() {
     return {
       data: {},
       datas:[],
       isAndroid:false,
+      now:new Date().getTime(),  //倒计时开始时间
       printId:'',
       int:null,
       expend:true,
@@ -117,6 +128,10 @@ export default {
   created() {
   	this.isAndroid=localStorage.getItem("isAndroid");
 		this.getPickingInfo();
+		let self = this;
+			this.timeIntever = setInterval(function(){
+			self.now = new Date().getTime();
+		}, 1000);
   },
   destory(){
   	clearInterval(this.int)
@@ -215,7 +230,7 @@ export default {
 
 </script>
 <style lang="less" scoped>
-	.pre-content-pic{top: 44px;
+	.pre-content-pic{
 	.pic-item-info{
 		.printSingle{
 			background: #FFFFFF;
