@@ -301,6 +301,7 @@ export default {
 					e.init=true;  //初始状态：缺货和全部拣货按钮显示与否
 					e.pickStatus = '0';
 				})
+				console.log(tempObj)
 				Object.keys(tempObj).forEach((n)=>{
 					let oj=Object.assign({},tempObj[n]);
 					oj.orders=[Object.assign({},oj)];   //orders 是原始的数据
@@ -315,6 +316,7 @@ export default {
 				this.datas.products = listTmp;
 				this.listData.noPick = this.datas.products.concat([]);
 				this.listData.picked = [];
+				console.log(listTmp)
 			}else{
 				this.$router.push({path:'/fail',query:{text: res.message,title: '合单拣货',info: '', path: {name: 'concatPickList'}}})
 			}
@@ -470,10 +472,12 @@ export default {
 					})
 					return obj
 				})
-				let ObjPush={'isTempMergePick':'0',orderPickRequestDTOs:lists}
+				let ObjPush={'isTempMergePick':'0',orderPickRequestDTOs:lists};
+				console.log(lists)
+				
 				if(!this.isAllPicked){
 					this.isAllPicked=true;
-		    $request.post("/api/online-order/v1/protected/merge/finishpick",ObjPush).then(res=>{
+		   $request.post("/api/online-order/v1/protected/merge/finishpick",ObjPush).then(res=>{
 		    	if(res.success&&res.success==true){
 		    		this.isAllPicked=false;
 						if(res.data){

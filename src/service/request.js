@@ -11,7 +11,7 @@ Axios.defaults.headers['Content-Type'] = 'application/json';
 
 Axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest';
 
-Axios.defaults.baseURL = CONFIG.baseUrl;
+Axios.defaults.baseURL = CONFIG.baseUrl;   //如果做了代理配置，用下边的localhost
 //Axios.defaults.baseURL="http://localhost:8080"
 let timeouts = null;
 Axios.interceptors.request.use((config) => {
