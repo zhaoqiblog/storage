@@ -110,7 +110,7 @@ export default {
   				this.$router.push({name:'exchangeConfirm',query:{code:res.text}})
   			})
   		}else{
-			this.$router.push({name:'exchangeConfirm',query:{code:'6954767486390'}}) //商品有货位
+			this.$router.push({name:'exchangeConfirm',query:{code:'6921188800869'}}) //商品有货位
 //			this.$router.push({name:'exchangeConfirm',query:{code:'2302335000006'}})//商品无货位
   		}
   	}
