@@ -70,8 +70,9 @@
 				</router-link>
 			</div>
 			<div class="btn-submit">
-				<!--<router-link :to="{name: 'removeSuccess'}">-->
-					<button type="button" @click="submitRemove" :disabled="lRemoveGoods.safeNum==''||lRemoveGoods.availableNum==''||data.safeNum==''||data.availableNum==''">确定</button>
+					<button type="button" @click="submitRemove" 
+						:disabled="data? lRemoveGoods.safeNum==''||lRemoveGoods.availableNum==''||data.safeNum==''||data.availableNum=='' :lRemoveGoods.safeNum==''||lRemoveGoods.availableNum=='' "
+					>确定</button>
 				<!--</router-link>-->
 			</div>
 		</div>
