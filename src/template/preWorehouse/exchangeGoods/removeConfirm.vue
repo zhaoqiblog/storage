@@ -71,7 +71,14 @@
 			</div>
 			<div class="btn-submit">
 				<!--<router-link :to="{name: 'removeSuccess'}">-->
-					<button type="button" @click="submitRemove" :disabled="lRemoveGoods.safeNum==''||lRemoveGoods.availableNum==''||data.safeNum==''||data.availableNum==''">确定</button>
+				<!-- {{lRemoveGoods.safeNum}} -->
+				<!-- {{data.safeNum}} -->
+				<!-- {{data.data}} -->
+				<!-- :disabled="lRemoveGoods.safeNum==''||lRemoveGoods.availableNum==''||data.safeNum==''||data.data==''" -->
+					<button type="button" @click="submitRemove" 
+					:disabled="data? lRemoveGoods.safeNum==''||lRemoveGoods.availableNum==''||data.safeNum==''||data.data=='' :lRemoveGoods.safeNum==''||lRemoveGoods.availableNum=='' "
+					
+					>确定</button>
 				<!--</router-link>-->
 			</div>
 		</div>
@@ -169,6 +176,7 @@
 			},
 			/*修改现有库存'*/
 			changeNow(val){
+				console.log(val,this.data)
 				this.lRemoveGoods.availableNum=val;
 			},
 			/*修改安全库存*/

@@ -2,11 +2,9 @@
   <div class="shop-supply">
     <x-header class="" :left-options="{preventGoBack: true}" @on-click-back="back()">我的补货</x-header>
 		<tab v-model="index" active-color="#3DA5FE">
-			<tab-item v-for="(i,ins) in ['待补货','全部']" :key="ins">{{i}}</tab-item>
+			<tab-item v-for="(i,ins) in ['待补货','已完成']" :key="ins" @on-item-click="changeList">{{i}}</tab-item>
 		</tab>
     <div class="scroll-content" ref="scrollWrap" style="top: 88px;">
-      <!-- <div class="cm-store vux-1px-b"><span>{{commonInfo.costName}}</span></div> -->
-			
       <m-empty v-if="data.content && data.content.length == 0"></m-empty>
       <div class="list">
         <div class="item vux-1px-tb" v-for="item in data.content" :key="item.id" @click="toDetail(item.supplementBillNo)">
@@ -69,6 +67,8 @@ export default {
       },
       data: {
       	content:[],
+				noSupply:[],
+				finish:[]
       },
       showEnd: false // 最后一页
     }
@@ -95,20 +95,18 @@ export default {
         if(res.success) {
           const datas ={...res.data};
           this.data.content =this.data.content.concat(res.data.content)
-          this.data.content.forEach(function(item) {
-            let supplyNum = 0, products = []
-            // console.log(item)
-            /*if(item.supplementInvoicesDetails){
-            	console.log( item.supplementInvoicesDetails)
-	            item.supplementInvoicesDetails.forEach(function(detail) {
-	            	console.log(detail)
-	              supplyNum += detail.goodsSupplementNum,
-	              products.push(detail.goodsName)
-	            })
-            }
-            item.supplyNum = supplyNum*/
+          /* this.data.content.forEach(function(item) {
             item.products = item.goodsNames
-          })
+          }) */
+					if(index==0){
+						this.data.noSupply = this.data.content.map(function(item) {
+						  item.products = item.goodsNames
+						})
+					}else{
+						this.data.finish = this.data.content.map(function(item) {
+						  item.products = item.goodsNames
+						})
+					}
           this.page.totalPage=res.data.totalPages
         } else {
           this.$vux.toast.show({
@@ -118,6 +116,11 @@ export default {
         }
       })
     },
+		/*切换tab*/
+		changeList(){
+			this.page.pageNo=0;
+			this.getSupplyList()
+		},
     /**
      * 去补货详情页
      * @param  {String} orderId 单号
@@ -157,7 +160,7 @@ export default {
     this.$nextTick(function () {
       // this.scrollListen()
 			func.scrollListen(this, this.$refs.scrollWrap, () => {
-				
+				this.getSupplyList()
 			})
     })
   },
