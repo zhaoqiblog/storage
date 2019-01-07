@@ -1,8 +1,12 @@
 <template>
   <div class="shop-supply">
-    <x-header class="vux-1px-b" :left-options="{preventGoBack: true}" @on-click-back="back()">我的补货</x-header>
-    <div class="scroll-content" ref="scrollWrap">
-      <div class="cm-store vux-1px-b"><span>{{commonInfo.costName}}</span></div>
+    <x-header class="" :left-options="{preventGoBack: true}" @on-click-back="back()">我的补货</x-header>
+		<tab v-model="index" active-color="#3DA5FE">
+			<tab-item v-for="(i,ins) in ['待补货','全部']" :key="ins">{{i}}</tab-item>
+		</tab>
+    <div class="scroll-content" ref="scrollWrap" style="top: 88px;">
+      <!-- <div class="cm-store vux-1px-b"><span>{{commonInfo.costName}}</span></div> -->
+			
       <m-empty v-if="data.content && data.content.length == 0"></m-empty>
       <div class="list">
         <div class="item vux-1px-tb" v-for="item in data.content" :key="item.id" @click="toDetail(item.supplementBillNo)">
@@ -24,6 +28,10 @@
               <div class="name">补货商品：</div>
               <div class="value">{{item.products}}</div>
             </div>
+						<div class="cell" style="font-size: 12px;text-align: right;">
+							<button style="background: #FFFFFF;line-height:2;padding: 0 10px;border: 1px solid #D0D0D0;border-radius: 3px;color: #666;">删除此单</button>
+							<button style="background: rgb(61, 165, 254);color:#FFFFFF;line-height:2;padding: 0 10px;border: 1px solid #FFFFFF;border-radius: 3px;">去补货</button>
+						</div>
           </div>
         </div>
       </div>
@@ -34,14 +42,17 @@
 
 <script>
 import MEmpty from '@/components/MEmpty/index'
-import { XHeader } from 'vux'
+import { XHeader,Tab,TabItem, } from 'vux'
 import { mapState } from 'vuex';
 import factory from '@/factory.js'
 import $request from '@/service/request.js'
+import func from '@/func.js'
 export default {
   components: {
     XHeader,
-    MEmpty
+    MEmpty,
+		Tab,
+		TabItem,
   },
   name: 'supply',
   computed: mapState({
@@ -49,6 +60,7 @@ export default {
   }),
   data() {
     return {
+			index:0,  //当前tab
       // 分页
       page: {
         pageNo: 0,
@@ -85,7 +97,7 @@ export default {
           this.data.content =this.data.content.concat(res.data.content)
           this.data.content.forEach(function(item) {
             let supplyNum = 0, products = []
-            console.log(item)
+            // console.log(item)
             /*if(item.supplementInvoicesDetails){
             	console.log( item.supplementInvoicesDetails)
 	            item.supplementInvoicesDetails.forEach(function(detail) {
@@ -143,7 +155,10 @@ export default {
   },
   mounted() {
     this.$nextTick(function () {
-      this.scrollListen()
+      // this.scrollListen()
+			func.scrollListen(this, this.$refs.scrollWrap, () => {
+				
+			})
     })
   },
   activated () {

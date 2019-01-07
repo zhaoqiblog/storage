@@ -17,13 +17,13 @@
           <div class="item-left">商品信息</div>
           <div class="item-right">数量</div>
         </div>
-        <div class="item" v-for="(item, index) in data.supplementInvoicesDetails">
+        <div class="item" >
           <div class="proname vux-1px-b">
-            <div class="code" v-if="item.goodsWarehouse">{{item.goodsWarehouse.goodsBarCode}}</div>
-            <div class="name">{{item.goodsName}}</div>
+            <div class="code" v-if="data.supplementInvoicesDetails[0].goodsWarehouse">{{data.supplementInvoicesDetails[0].goodsWarehouse.goodsBarCode}}</div>
+            <div class="name">{{data.supplementInvoicesDetails[0].goodsName}}</div>
           </div>
-          <div class="list">
-            <goods-info-item  v-if="data.status == 0 && item.sysWarehouse && item.goodsWarehouse"
+          <div class="list" v-for="(item, index) in data.supplementInvoicesDetails">
+            <goods-info-item  v-if="data.status == 0 && item.sysWarehouse && item.goodsWarehouse" class="aaaaaa"
               :key="index"
               :name="'库位号' + item.sysWarehouse.warehousePlaceName"
               :unitq="item.goodsWarehouse.perNum"
@@ -36,7 +36,7 @@
               :label="item.id"
               v-model="item.goodsSupplementNum">
             </goods-info-item>
-            <goods-info-item v-if="data.status == 1 && item.sysWarehouse && item.goodsWarehouse"
+            <goods-info-item v-for="(item, index) in data.supplementInvoicesDetails" v-if="data.status == 1 && item.sysWarehouse && item.goodsWarehouse"
               :key="index"
               :name="'库位号' + item.sysWarehouse.warehousePlaceName"
               :unitq="item.goodsWarehouse.perNum"
@@ -256,5 +256,9 @@ export default {
       margin-bottom: 10px;
     }
   }
+}
+.aaaaaa{
+	margin-bottom: 6px;
+	.l-list-ct{background: #f4f4f4;}
 }
 </style>
