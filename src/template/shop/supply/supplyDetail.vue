@@ -17,13 +17,13 @@
           <div class="item-left">商品信息</div>
           <div class="item-right">数量</div>
         </div>
-        <div class="item" >
+        <div class="item" v-for="(item, index) in data.supplementInvoicesDetails" :key="index">
           <div class="proname vux-1px-b">
-            <div class="code" v-if="data.supplementInvoicesDetails[0].goodsWarehouse">{{data.supplementInvoicesDetails[0].goodsWarehouse.goodsBarCode}}</div>
-            <div class="name">{{data.supplementInvoicesDetails[0].goodsName}}</div>
+            <div class="code" v-if="item.goodsWarehouse">{{item.goodsWarehouse.goodsBarCode}}</div>
+            <div class="name">{{item.goodsName}}</div>
           </div>
-          <div class="list" v-for="(item, index) in data.supplementInvoicesDetails">
-            <goods-info-item  v-if="data.status == 0 && item.sysWarehouse && item.goodsWarehouse" class="aaaaaa"
+          <div class="list" >
+            <goods-info-item  v-if="data.status == 0 && item.sysWarehouse && item.goodsWarehouse" class="newdif"
               :key="index"
               :name="'库位号' + item.sysWarehouse.warehousePlaceName"
               :unitq="item.goodsWarehouse.perNum"
@@ -98,6 +98,12 @@ export default {
         if(res.success) {
           this.data = res.data
           this.data.supplyNum = 0
+					this.data.tmpobjs = this.data.supplementInvoicesDetails.map(item=>{
+						let e = []
+						if(item.goodsBarCode){
+							
+						}
+					})
           this.data.supplementInvoicesDetails.forEach(item => {
             this.data.supplyNum += item.goodsSupplementNum
           })
@@ -233,13 +239,13 @@ export default {
       font-size: 14px;
       color: #999;
       padding: 0 15px;
-      line-height: 50px;
+      line-height: 40px;
       .item-left {
         flex: 1;
       }
     }
     .proname {
-      padding: 15px;
+      padding: 10px 15px 15px;
       background-color: #fff;
       .code {
         font-size: 14px;
@@ -257,8 +263,35 @@ export default {
     }
   }
 }
-.aaaaaa{
+.newdif{
 	margin-bottom: 6px;
 	.l-list-ct{background: #f4f4f4;}
 }
+.list{
+		margin: 10px 5px;
+			.newdif{
+				.l-list-ct{
+					.l-list-content{
+						padding: 10px;
+						// position: relative;
+						.l-list-code{width: 60%;}
+						.l-list-name{height: auto;line-height: 2;position: static;}
+						.l-list-ctl{
+							border: none;
+							top: 25px;
+							right: 15px;
+							input{
+								border: none;
+							}
+						}
+						.l-list-info{
+							ul{
+								padding: 0;
+							}
+							}
+							
+					}
+				}
+			}
+			}
 </style>

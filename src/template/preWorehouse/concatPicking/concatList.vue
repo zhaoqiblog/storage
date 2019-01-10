@@ -594,7 +594,7 @@
 						if (res.data.mergetemp == 'yes') {
 							this.isTmpNumber = true
 						}
-						this.concatNumber= res.data.mergeNumLimitMap.orders
+						
 						console.log(this.timer)
 						if (status == 0) { //未拣货
 							if (pageNow == 1) { //第一页
@@ -629,6 +629,7 @@
 								}
 							})
 							this.data.noPick = this.data.noPick.concat(res.data.content)
+							console.log(this.data.noPick)
 							this.page.totalPage = res.data.totalPages
 							this.page.totalElements = res.data.totalElements
 						} else if (status == 2) { //拣货中
@@ -651,6 +652,7 @@
 							this.data.history = this.data.history.concat(res.data.content)
 							this.page2.totalPage = res.data.totalPages
 						}
+						this.concatNumber= res.data.mergeNumLimitMap.orders
 					} else {
 						this.$vux.toast.show({
 							type: 'text',
