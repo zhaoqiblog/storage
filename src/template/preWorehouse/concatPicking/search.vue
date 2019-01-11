@@ -40,6 +40,7 @@
 					:slotType="a.slotType"
 					:toDetailPage="toDetailPage"
 					:printOrder="printOrder"
+					:toTime="a.toTime"
 				>
 				</pre-search-item>
 				<m-empty v-if="searchList.content&&searchList.content.length==0&&isSe"></m-empty>
@@ -108,6 +109,8 @@
 					status:this.searchList.outerOrderType==3 ? 3 :'',
 					shopId:this.searchList.shopId
 				}
+				
+			delete obj.totalPages
 				$request.get("/api/online-order/v1/protected/searchOrders",obj).then((res)=>{
 					this.isSe=true;
 					if(this.page.page==1){
@@ -156,7 +159,6 @@
 			},
 			toDetailPage(id){
 				this.searchList.content.forEach((i)=>{
-					console.log(i.id,id,i.status)
 					if(i.id==id&&i.status==1){
 						this.$router.push({name:'searchDetail',query:{id:id}})
 					}else{

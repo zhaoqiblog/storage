@@ -17,6 +17,10 @@
    			</span>
    		</div>			       		
    		<div class="pre-list-item-content">
+			<div class="pre-list-time-out">
+				
+			<p class="not-over-time" v-if="parseInt(overText)>0&&(status==0 || status==2 || status==3 ||status==-9)">剩余 <span>{{overText}}</span> 分钟</p>
+			<p class="over-time" v-if="parseInt(overText)<0&&(status==0 || status==2 || status==3 ||status==-9)">已超时 <span>{{-parseInt(overText)}}</span> 分钟</p>
 			<ul class="search-item-list">
 				<li>
 					<img src="../../assets/pre/iconUser@3x.png"/> 
@@ -27,6 +31,7 @@
 					<span>{{customerPhone}}</span>
 				</li>
 			</ul>
+			</div>
    			<div class="button-to-pick">
 				<button @click.stop="print(id)"  v-if="status=='1'"
 					style="width: 70px;height: 30px;line-height: 29px;padding: 0;"
@@ -59,10 +64,14 @@ import {Group} from 'vux'
 		components:{Group},
 		data(){
 			return {
-				
+				overText:'',
 			}
 		},
 		created(){
+			this.setTime()
+		},
+		updated(){
+			this.setTime()
 		},
 		props:{
 			id:[String], //id
@@ -78,6 +87,7 @@ import {Group} from 'vux'
 			slotType:[String,Number],  //订单类别（极速达，预约
 			printOrder:[Function],  //打印按钮
 			toDetailPage:[Function],  // 标签点击进详情页
+			toTime:[String,Number],  //截至时间，倒计时用
 		},
 		methods:{
 			print(id){
@@ -85,6 +95,11 @@ import {Group} from 'vux'
 			},
 			toDetail(id){
 				this.toDetailPage(id)
+			},
+			setTime(){
+				let a = parseInt(new Date(this.toTime).getTime() - new Date().getTime())
+				// Math.abs();
+				this.overText = parseInt(a / (1000 * 60))
 			}
 		}
 	}
@@ -115,6 +130,9 @@ import {Group} from 'vux'
 	.pre-list-item-content{
 		display: flex;justify-content: space-between;align-items: center;
 		button{background: #3DA5FE;border-radius: 3px;color: #FFFFFF;font-size: 13px;padding: 3px 6px;border: none;}
+		.pre-list-time-out{margin-top: 10px;font-weight: 600;}
+		.not-over-time{color: #3DA5FE;;}
+		.over-time{color:  #D0021B;}
 	}
 }
 	.item-top{
@@ -122,11 +140,12 @@ import {Group} from 'vux'
 	}
 	.search-item-list{
 		padding: 10px 0;color: #333333;font-size: 14px;
+		display: flex;justify-content: space-between;
 		li{
 			img{width: 16px;margin-right: 3px;}
 			display: flex;justify-content: flex-start;align-items: center;
 			&:nth-child(2){
-				margin-top: 8px;
+				margin-left: 8px;
 			}
 		}
 	}
