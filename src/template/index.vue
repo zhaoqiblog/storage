@@ -212,6 +212,7 @@
         </div>
       </div>
     </scroller>
+		<p style="text-align: right; position: absolute;bottom: 0;right: 0;padding-right: 10px;color: #DDDDDD;font-size: 10px;">{{version}}</p>
   </div>
 </template>
 
@@ -224,6 +225,7 @@ import factory from '@/factory'
 import $request from '@/service/request.js'
 import $conf from 'configuration'
 import func from '@/func.js'
+import Cube from '../../CubeModule.json'
 export default {
   directives: {
     TransferDom
@@ -268,13 +270,15 @@ export default {
       currentStore:[],
       aaa:this.commonInfo,
       data:{},
-      roles:{'sim_receive_port':false,'sim_shopping_place':false,'sim_back_store':false,'sim_front_store':false}
+      roles:{'sim_receive_port':false,'sim_shopping_place':false,'sim_back_store':false,'sim_front_store':false},
+			version:''
     }
   },
   watch:{
   	
   },
   created(){
+		this.version = Cube.version
   	/*let obj ={a:1,b:2}
   	let c = {...obj,c:3}*/
   },
